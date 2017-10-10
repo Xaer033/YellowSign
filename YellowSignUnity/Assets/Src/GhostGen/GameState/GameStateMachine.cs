@@ -1,10 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 
 namespace GhostGen
 {
-	public class GameStateMachine : System.Object
+	public class GameStateMachine
 	{
 		public GameStateMachine( IStateFactory p_stateFactory )
 		{
@@ -19,7 +17,7 @@ namespace GhostGen
 				_currentState.Step( p_deltaTime );
 		}
 
-		public void ChangeState( int stateId )
+		public void ChangeState( int stateId, Hashtable changeStateInfo = null )
 		{
 			if (_currentId == stateId)
 				return;
@@ -28,7 +26,7 @@ namespace GhostGen
 				_currentState.Exit( );
 
 			_currentState = _stateFactory.CreateState( stateId );
-			_currentState.Init(this);
+			_currentState.Init(changeStateInfo);
 		}
         
 //------------------- Private Implementation -------------------

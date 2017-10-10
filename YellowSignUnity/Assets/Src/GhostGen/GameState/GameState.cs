@@ -1,9 +1,10 @@
-﻿
+﻿using System.Collections;
+
 namespace GhostGen
 {
 	public interface IGameState
 	{
-		void Init( GameStateMachine stateMachine);
+		void Init( Hashtable changeStateData );
 
 		void Step( float deltaTime );
 

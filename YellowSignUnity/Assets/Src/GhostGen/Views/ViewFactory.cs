@@ -10,9 +10,10 @@ namespace GhostGen
     {
         internal class AsyncBlock
         {
-            public static AsyncBlock Create(ResourceRequest p_request, OnViewCreated p_callback, Transform p_parent )
+            public static AsyncBlock Create(string name, ResourceRequest p_request, OnViewCreated p_callback, Transform p_parent )
             {
                 AsyncBlock block = new AsyncBlock();
+                block.name = name;
                 block.request = p_request;
                 block.callback = p_callback;
                 block.parent = p_parent;
@@ -22,6 +23,7 @@ namespace GhostGen
             public ResourceRequest request;
             public OnViewCreated callback;
             public Transform    parent;
+            public string name;
        
         }
 
@@ -48,6 +50,8 @@ namespace GhostGen
                 Assert.IsNotNull(block.request);
             
                 if(!block.request.isDone) { continue; }
+
+                Assert.IsNotNull(block.request.asset, "Asset: " + block.name + " couldn't be loaded!");
 
                 UIView view = _createView((UIView)block.request.asset, block.parent);
                 Assert.IsNotNull(view);
@@ -91,9 +95,9 @@ namespace GhostGen
         public bool CreateAsync<T>(string viewPath, OnViewCreated callback, Transform parent = null)
         {
             ResourceRequest request = Resources.LoadAsync<UIView>(viewPath);
-            if (request == null) { return false; }
 
-            AsyncBlock block = AsyncBlock.Create(request, callback, parent);
+            if (request == null) { return false; }
+            AsyncBlock block = AsyncBlock.Create(viewPath, request, callback, parent);
             _asyncList.Add(block);
 
             return true;
@@ -120,7 +124,8 @@ namespace GhostGen
             if(view != null)
             {
                 view.OnViewDispose();
-                GameObject.Destroy(view.gameObject);     
+                GameObject.Destroy(view.gameObject);
+                view = null;
             }
         }
 
