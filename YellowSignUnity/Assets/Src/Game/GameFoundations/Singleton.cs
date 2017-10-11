@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+
 using UnityEngine;
 using GhostGen;
 
@@ -11,10 +13,14 @@ public class Singleton : MonoBehaviour
     public SessionFlags         sessionFlags        { get; private set; }
 
     public GuiManager           gui                 { get { return _guiManager; } }
-    //public NetworkManager       networkManager      { get; private set; }
+    public GameplayResources    gameplayResources   { get { return _gameplayResources; } }
+    public NetworkManager       networkManager      { get; private set; }
 
     [SerializeField]
     private GuiManager _guiManager;
+
+    [SerializeField]
+    private GameplayResources _gameplayResources;
 
     private IStateFactory _stateFactory;
 
@@ -28,7 +34,7 @@ public class Singleton : MonoBehaviour
 
         sessionFlags = new SessionFlags();
 
-        //networkManager = gameObject.AddComponent<NetworkManager>();
+        networkManager = gameObject.AddComponent<NetworkManager>();
 
         Input.multiTouchEnabled = false; //This needs to go elsewere 
     }
@@ -59,6 +65,24 @@ public class Singleton : MonoBehaviour
 
     private void _postInit()
     {
-        _guiManager.PostInit();
+        //AbstractPostInit[] postInits = GameObject.FindObjectsOfType<AbstractPostInit>();
+
+        gui.PostInit();
+        networkManager.PostInit();
+        //System.Type typeOfMainClass = this.GetType();
+        
+        //PropertyInfo[] infoList = typeOfMainClass.GetProperties();
+        //for(int i = 0; i < infoList.Length; ++i)
+        //{
+        //    PropertyInfo propertyInfo = infoList[i];
+        //    if(typeof(IPostInit).IsAssignableFrom(propertyInfo.GetType()))
+        //    {
+        //        object instanceOfProperty = propertyInfo.GetValue(this);
+                
+        //        System.Type typeofMainProperty = instanceOfProperty.GetType();
+        //        MethodInfo methodOfMainProperty = typeofMainProperty.GetMethod("PostInit");
+        //        methodOfMainProperty.Invoke(instanceOfProperty, new object[0]);
+        //    }
+        //}
     }
 }

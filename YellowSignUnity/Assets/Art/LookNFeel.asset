@@ -31,21 +31,21 @@ MonoBehaviour:
   antialiasing:
     m_Enabled: 1
     m_Settings:
-      method: 0
+      method: 1
       fxaaSettings:
         preset: 0
       taaSettings:
-        jitterSpread: 0.762
-        sharpen: 0.14
-        stationaryBlending: 0.627
-        motionBlending: 0.945
+        jitterSpread: 0.449
+        sharpen: 0.32
+        stationaryBlending: 0.884
+        motionBlending: 0.932
   ambientOcclusion:
     m_Enabled: 1
     m_Settings:
-      intensity: 1.8
-      radius: 0.08
+      intensity: 1.27
+      radius: 0.56
       sampleCount: 10
-      downsampling: 1
+      downsampling: 0
       forceForwardCompatibility: 0
       ambientOnly: 0
       highPrecision: 0
@@ -79,16 +79,16 @@ MonoBehaviour:
   motionBlur:
     m_Enabled: 1
     m_Settings:
-      shutterAngle: 360
+      shutterAngle: 143
       sampleCount: 12
       frameBlending: 0.123
   eyeAdaptation:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
-      lowPercent: 49.000027
-      highPercent: 99
+      lowPercent: 45
+      highPercent: 95
       minLuminance: -5
-      maxLuminance: -3.2
+      maxLuminance: 1
       keyValue: 0.25
       dynamicKeyValue: 1
       adaptationType: 0
@@ -100,10 +100,10 @@ MonoBehaviour:
     m_Enabled: 1
     m_Settings:
       bloom:
-        intensity: 0.69
+        intensity: 0.83
         threshold: 1.06
-        softKnee: 0.323
-        radius: 2.77
+        softKnee: 0.42
+        radius: 2.65
         antiFlicker: 1
       lensDirt:
         texture: {fileID: 0}
@@ -120,12 +120,12 @@ MonoBehaviour:
         neutralWhiteLevel: 5.3
         neutralWhiteClip: 10
       basic:
-        postExposure: 0
-        temperature: -1
-        tint: 0.8
-        hueShift: 2
-        saturation: 0.963
-        contrast: 1.305
+        postExposure: 0.31
+        temperature: 0
+        tint: 0
+        hueShift: 0
+        saturation: 0.84
+        contrast: 1.29
       channelMixer:
         red: {x: 1, y: 0, z: 0}
         green: {x: 0, y: 1, z: 0}
@@ -134,9 +134,9 @@ MonoBehaviour:
       colorWheels:
         mode: 1
         log:
-          slope: {r: 1, g: 0.9510644, b: 0.6984718, a: 0.011627512}
-          power: {r: 0.8387911, g: 0.9250454, b: 1, a: -0.061265428}
-          offset: {r: 0.99487364, g: 1, b: 0.80625165, a: 0.018223235}
+          slope: {r: 1, g: 0.91926646, b: 0.87041306, a: 0.011494213}
+          power: {r: 0.7589052, g: 0.88047683, b: 1, a: 0}
+          offset: {r: 1, g: 0.9732058, b: 0.86589164, a: -0.011494617}
         linear:
           lift: {r: 0, g: 0, b: 0, a: 0}
           gamma: {r: 0, g: 0, b: 0, a: 0}
@@ -149,14 +149,14 @@ MonoBehaviour:
             - serializedVersion: 2
               time: 0
               value: 0
-              inSlope: 0
+              inSlope: 1
               outSlope: 1
               tangentMode: 0
             - serializedVersion: 2
               time: 1
               value: 1
               inSlope: 1
-              outSlope: 0
+              outSlope: 1
               tangentMode: 0
             m_PreInfinity: 2
             m_PostInfinity: 2
@@ -182,7 +182,7 @@ MonoBehaviour:
               tangentMode: 0
             m_PreInfinity: 2
             m_PostInfinity: 2
-            m_RotationOrder: 0
+            m_RotationOrder: 4
           m_Loop: 0
           m_ZeroValue: 0
           m_Range: 1
@@ -204,7 +204,7 @@ MonoBehaviour:
               tangentMode: 0
             m_PreInfinity: 2
             m_PostInfinity: 2
-            m_RotationOrder: 0
+            m_RotationOrder: 4
           m_Loop: 0
           m_ZeroValue: 0
           m_Range: 1
@@ -226,7 +226,7 @@ MonoBehaviour:
               tangentMode: 0
             m_PreInfinity: 2
             m_PostInfinity: 2
-            m_RotationOrder: 0
+            m_RotationOrder: 4
           m_Loop: 0
           m_ZeroValue: 0
           m_Range: 1
@@ -271,10 +271,10 @@ MonoBehaviour:
           m_ZeroValue: 0.5
           m_Range: 1
         e_CurrentEditingCurve: 0
-        e_CurveY: 0
-        e_CurveR: 1
-        e_CurveG: 1
-        e_CurveB: 1
+        e_CurveY: 1
+        e_CurveR: 0
+        e_CurveG: 0
+        e_CurveB: 0
   userLut:
     m_Enabled: 0
     m_Settings:
@@ -289,9 +289,9 @@ MonoBehaviour:
     m_Enabled: 1
     m_Settings:
       colored: 1
-      intensity: 0.121
-      size: 0.61
-      luminanceContribution: 0.928
+      intensity: 0.262
+      size: 0.98
+      luminanceContribution: 0.938
   vignette:
     m_Enabled: 1
     m_Settings:
@@ -305,7 +305,7 @@ MonoBehaviour:
       opacity: 1
       rounded: 0
   dithering:
-    m_Enabled: 1
+    m_Enabled: 0
   monitors:
     currentMonitorID: 0
     refreshOnPlay: 0

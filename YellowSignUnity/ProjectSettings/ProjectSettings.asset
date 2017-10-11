@@ -19,7 +19,7 @@ PlayerSettings:
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
   m_SplashScreenAnimation: 1
-  m_SplashScreenLogoStyle: 1
+  m_SplashScreenLogoStyle: 0
   m_SplashScreenDrawMode: 0
   m_SplashScreenBackgroundAnimationZoom: 1
   m_SplashScreenLogoAnimationZoom: 1
@@ -66,7 +66,7 @@ PlayerSettings:
   disableDepthAndStencilBuffers: 0
   defaultIsFullScreen: 1
   defaultIsNativeResolution: 1
-  runInBackground: 0
+  runInBackground: 1
   captureSingleScreen: 0
   muteOtherAudioSources: 0
   Prepare IOS For Recording: 0
@@ -88,7 +88,7 @@ PlayerSettings:
   visibleInBackground: 1
   allowFullscreenSwitch: 1
   graphicsJobMode: 0
-  macFullscreenMode: 2
+  macFullscreenMode: 1
   d3d9FullscreenMode: 1
   d3d11FullscreenMode: 1
   xboxSpeechDB: 0
@@ -233,7 +233,7 @@ PlayerSettings:
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: WindowsStandaloneSupport
     m_APIs: 150000000200000001000000
-    m_Automatic: 0
+    m_Automatic: 1
   - m_BuildTarget: MacStandaloneSupport
     m_APIs: 1000000011000000
     m_Automatic: 1

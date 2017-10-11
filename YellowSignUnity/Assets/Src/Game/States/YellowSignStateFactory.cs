@@ -24,7 +24,7 @@ public class YellowSignStateFactory : IStateFactory
             case YellowSignState.INTRO:                     return new IntroState();
             case YellowSignState.MAIN_MENU:                 return new MainMenuState();
             case YellowSignState.MULTIPLAYER_GAME_SETUP:    break;//eturn new GameplayState();
-            case YellowSignState.MULTIPLAYER_GAMEPLAY:      break;//eturn new PlayerSetupState();
+            case YellowSignState.MULTIPLAYER_GAMEPLAY:      return new GamePlayState();//eturn new PlayerSetupState();
             case YellowSignState.SINGLEPLAYER_GAME_SETUP:   break;//eturn new MultiplayerSetupState();
             case YellowSignState.SINGLEPLAYER_GAMEPLAY:     break;//return new MultiplayerSetupState();
             case YellowSignState.CREDITS:    break;

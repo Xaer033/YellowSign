@@ -7,20 +7,25 @@ public class IntroState : IGameState
 {
     private bool _gotoMainMenu = false;
 
-
+    
     public void Init(Hashtable changeStateData)
 	{
 		Debug.Log ("Entering In Intro State");
         DOTween.Init(true, true, LogBehaviour.ErrorsOnly);
-
-        _gotoMainMenu = true;
+        Singleton.instance.networkManager.Connect();
+        Singleton.instance.networkManager.onJoinedLobby += OnJoinedLobby;
+        Singleton.instance.networkManager.onJoinedRoom += OnJoinedRoom;
+        Singleton.instance.networkManager.onCustomEvent += OnCustomEvent;
+    
+        PhotonNetwork.automaticallySyncScene = true;
     }
     
     public void Step( float p_deltaTime )
 	{
 		if (_gotoMainMenu) 
 		{
-			Singleton.instance.gameStateMachine.ChangeState(YellowSignState.MAIN_MENU);
+			Singleton.instance.gameStateMachine.ChangeState(YellowSignState.MULTIPLAYER_GAMEPLAY);
+
             _gotoMainMenu = false;
 		}
     }
@@ -28,6 +33,36 @@ public class IntroState : IGameState
     public void Exit( )
 	{
 		Debug.Log ("Exiting In Intro State");
-	}
+
+        Singleton.instance.networkManager.onJoinedLobby -= OnJoinedLobby;
+        Singleton.instance.networkManager.onJoinedRoom -= OnJoinedRoom;
+        Singleton.instance.networkManager.onCustomEvent -= OnCustomEvent;
+    }
+
+    void OnJoinedLobby()
+    {
+        RoomOptions options = new RoomOptions();
+        PhotonNetwork.JoinOrCreateRoom("Poop", options, TypedLobby.Default);
+    }
     
+    void OnJoinedRoom()
+    {
+        RaiseEventOptions options = new RaiseEventOptions();
+        options.Receivers = ReceiverGroup.All;
+
+        Debug.Log("JOINED ROOM: Player count: " + PhotonNetwork.playerList.Length);
+        if(PhotonNetwork.playerList.Length > 1)
+        {
+            PhotonNetwork.RaiseEvent(1, null, true, options);
+        }
+    }
+
+    void OnCustomEvent(byte eventCode, object content, int senderId)
+    {
+        if(eventCode == 1)
+        {
+            _gotoMainMenu = true;
+            Singleton.instance.gui.screenFader.FadeIn();
+        }
+    }
 }
