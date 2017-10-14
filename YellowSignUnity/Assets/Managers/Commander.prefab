@@ -59,3 +59,4 @@ MonoBehaviour:
   localOwner:
     id: 0
     name: 
+  testPrefab: {fileID: 1852374461560344, guid: 36cc2eb45c0f24f4199b4cbd2f9be8ad, type: 2}

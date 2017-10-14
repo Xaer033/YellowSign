@@ -5,23 +5,46 @@ using TrueSync;
 
 public class Commander : TrueSyncBehaviour
 {
-    public enum CommandType
-    {
-        NO_ACTION = 0,
-        BUILD_TOWER = 1,
-        UPGRADE_TOWER,
-        DESTROY_TOWER,
-        SPAWN_CREEP,
-        CAST_SPELL
-    }
+    
+    public GameObject testPrefab;
+    private Queue<ICommand> _commandQueue = new Queue<ICommand>();
 
+
+    public void AddCommand(ICommand command)
+    {
+        _commandQueue.Enqueue(command);
+    }
+    
     public void Start()
     {
         Debug.Log("Start");
     }
+
+    public void Update()
+    {
+        bool lmd = Input.GetMouseButtonDown(0);
+        bool rmd = Input.GetMouseButtonDown(1);
+        bool mmd = Input.GetMouseButtonDown(2);
+
+        //bool commandSent = true;
+
+        if (lmd)
+        {
+            AddCommand(new BuildTowerCommand(2, 1, "poop_tower"));
+        }
+        if (rmd)
+        {
+            AddCommand(new SpawnCreepCommand("poop_creep"));
+        }
+        if(mmd)
+        {
+            AddCommand(new BuildTowerCommand(9, 9, "poop_tower"));
+        }
+    }
+
     public override void OnSyncedStart()
     {
-        base.OnSyncedStart();
+        TSRandom.instance.Initialize(42);
     }
     /**
      *  @brief Get local player data.
@@ -30,29 +53,59 @@ public class Commander : TrueSyncBehaviour
      */
     public override void OnSyncedInput()
     {
-        float randNum = Random.Range(0.0f, 1.0f);
-        if (randNum > 0.9f)
-        {
-            TrueSyncInput.SetInt(0, (int)CommandType.BUILD_TOWER);
-        }
-        else if(randNum > 0.7f)
-        {
-            TrueSyncInput.SetInt(0, (int)CommandType.SPAWN_CREEP);
-        }
-        else if (randNum > 0.5f)
-        {
-            TrueSyncInput.SetInt(0, (int)CommandType.CAST_SPELL);
-        }
+        byte iterKey = 0;
+        int commandCount = _commandQueue.Count;
+        TrueSyncInput.SetByte(iterKey++, localOwner.Id);
+        TrueSyncInput.SetInt(iterKey++, commandCount);
 
-        TrueSyncInput.SetByte(1, localOwner.Id);
+        while (_commandQueue.Count > 0)
+        {
+            ICommand ct = _commandQueue.Dequeue();
+            TrueSyncInput.SetByte(iterKey++, (byte)ct.commandType);
+            string jsonCommand = JsonUtility.ToJson(ct);
+            byte[] byteCommand = System.Text.Encoding.UTF8.GetBytes(jsonCommand);
+            TrueSyncInput.SetByteArray(iterKey++, byteCommand);
+        }
+        
     }
 
     public override void OnSyncedUpdate()
     {
-        int action = TrueSyncInput.GetInt(0);
-        byte ownerId = TrueSyncInput.GetByte(1);
+        byte iterKey = 0;
+        byte ownerId = TrueSyncInput.GetByte(iterKey++);
+        int commandCount = TrueSyncInput.GetInt(ownerId, iterKey++);
 
-        Debug.LogError("Player: " + ownerId + " did action:" + action);
+        for (int i = 0; i < commandCount; ++i)
+        {
+            CommandType type = (CommandType)TrueSyncInput.GetByte(ownerId, iterKey++);
+            byte[] byteCommand = TrueSyncInput.GetByteArray(ownerId, iterKey++);
+            string jsonCommand = System.Text.Encoding.UTF8.GetString(byteCommand);
+
+            ICommand command = null;
+            
+            switch(type)
+            {
+                case CommandType.BUILD_TOWER:
+                    command = JsonUtility.FromJson<BuildTowerCommand>(jsonCommand);
+                    break;
+                case CommandType.SPAWN_CREEP:
+                    command = JsonUtility.FromJson<SpawnCreepCommand>(jsonCommand);
+                    TSVector pos = new TSVector(TSRandom.Range(-10, 10), 0, TSRandom.Range(-10, 10));
+                    TrueSyncManager.SyncedInstantiate(testPrefab, pos, TSQuaternion.identity);
+                    break;
+            }
+            Debug.LogError(command.commandType);
+            //Execute commands!
+            //if (action > 0)
+            //{
+            //    Debug.LogError("Player: " + ownerId + " did action: " + action);
+            //}
+
+            //if(action == CommandType.BUILD_TOWER)
+            //{
+            //    TrueSyncManager.SyncedInstantiate()
+            //}
+        }
     }
 
 }
