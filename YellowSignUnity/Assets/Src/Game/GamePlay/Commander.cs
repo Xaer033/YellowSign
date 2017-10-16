@@ -5,20 +5,22 @@ using TrueSync;
 
 public class Commander : TrueSyncBehaviour
 {
-    
+    public GameObject target;
+    public Transform[] spawnPoints;
     public GameObject testPrefab;
     private Queue<ICommand> _commandQueue = new Queue<ICommand>();
 
     private CreepController _creepController;
-
+    private Seeker _seeker;
     public void AddCommand(ICommand command)
     {
         _commandQueue.Enqueue(command);
     }
     
-    public void Start()
+    public void Awake()
     {
         Debug.Log("Start");
+        _seeker = GetComponent<Seeker>();
         _creepController = new CreepController();
     }
 
@@ -97,12 +99,13 @@ public class Commander : TrueSyncBehaviour
                 case CommandType.SPAWN_CREEP:
                     command = JsonUtility.FromJson<SpawnCreepCommand>(jsonCommand);
                     for(int s = 0; s < 10; ++s)
-
                     {
-                        TSVector pos = new TSVector(TSRandom.Range(-range, range), 0, TSRandom.Range(-range, range));
-                        GameObject creep = TrueSyncManager.SyncedInstantiate(testPrefab, pos, TSQuaternion.identity);
-                        _creepController.AddCreep(creep.GetComponent<TSTransform>());
-
+                        Transform spawnPoint = spawnPoints[TSRandom.Range(0, spawnPoints.Length)];
+                        TSVector pos = spawnPoint.position.ToTSVector();
+                        GameObject creepObj = TrueSyncManager.SyncedInstantiate(testPrefab, pos, TSQuaternion.identity);
+                        Creep creep = new Creep(creepObj.GetComponent<TSTransform>());
+                        creep.Start(target.transform.position);
+                        _creepController.AddCreep(creep);
                     }
                     break;
             }

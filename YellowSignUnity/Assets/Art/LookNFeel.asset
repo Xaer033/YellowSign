@@ -42,8 +42,8 @@ MonoBehaviour:
   ambientOcclusion:
     m_Enabled: 1
     m_Settings:
-      intensity: 1.27
-      radius: 0.56
+      intensity: 1.76
+      radius: 0.21
       sampleCount: 10
       downsampling: 0
       forceForwardCompatibility: 0
@@ -69,19 +69,19 @@ MonoBehaviour:
       screenEdgeMask:
         intensity: 0.03
   depthOfField:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
-      focusDistance: 11.95
-      aperture: 3.1
+      focusDistance: 34.93
+      aperture: 0.2
       focalLength: 56
-      useCameraFov: 0
-      kernelSize: 1
+      useCameraFov: 1
+      kernelSize: 2
   motionBlur:
     m_Enabled: 1
     m_Settings:
-      shutterAngle: 143
-      sampleCount: 12
-      frameBlending: 0.123
+      shutterAngle: 102
+      sampleCount: 18
+      frameBlending: 0.041
   eyeAdaptation:
     m_Enabled: 1
     m_Settings:
@@ -100,10 +100,10 @@ MonoBehaviour:
     m_Enabled: 1
     m_Settings:
       bloom:
-        intensity: 0.83
-        threshold: 1.06
-        softKnee: 0.42
-        radius: 2.65
+        intensity: 1.11
+        threshold: 1.04
+        softKnee: 0.209
+        radius: 1.87
         antiFlicker: 1
       lensDirt:
         texture: {fileID: 0}
@@ -120,12 +120,12 @@ MonoBehaviour:
         neutralWhiteLevel: 5.3
         neutralWhiteClip: 10
       basic:
-        postExposure: 0.31
-        temperature: 0
+        postExposure: 0.2
+        temperature: -7.9
         tint: 0
         hueShift: 0
-        saturation: 0.84
-        contrast: 1.29
+        saturation: 0.908
+        contrast: 1.284
       channelMixer:
         red: {x: 1, y: 0, z: 0}
         green: {x: 0, y: 1, z: 0}
@@ -135,8 +135,8 @@ MonoBehaviour:
         mode: 1
         log:
           slope: {r: 1, g: 0.91926646, b: 0.87041306, a: 0.011494213}
-          power: {r: 0.7589052, g: 0.88047683, b: 1, a: 0}
-          offset: {r: 1, g: 0.9732058, b: 0.86589164, a: -0.011494617}
+          power: {r: 0.7589052, g: 0.88047683, b: 1, a: -0.031620555}
+          offset: {r: 1, g: 0.9732058, b: 0.86589164, a: -0.04311517}
         linear:
           lift: {r: 0, g: 0, b: 0, a: 0}
           gamma: {r: 0, g: 0, b: 0, a: 0}
@@ -288,18 +288,18 @@ MonoBehaviour:
   grain:
     m_Enabled: 1
     m_Settings:
-      colored: 1
-      intensity: 0.262
-      size: 0.98
-      luminanceContribution: 0.938
+      colored: 0
+      intensity: 0.315
+      size: 1.56
+      luminanceContribution: 0.952
   vignette:
     m_Enabled: 1
     m_Settings:
       mode: 0
       color: {r: 0, g: 0, b: 0, a: 1}
       center: {x: 0.5, y: 0.5}
-      intensity: 0.174
-      smoothness: 0.684
+      intensity: 0.082
+      smoothness: 0.52
       roundness: 1
       mask: {fileID: 0}
       opacity: 1
