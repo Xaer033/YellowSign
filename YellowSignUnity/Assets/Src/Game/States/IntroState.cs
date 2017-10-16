@@ -51,7 +51,7 @@ public class IntroState : IGameState
         options.Receivers = ReceiverGroup.All;
 
         Debug.Log("JOINED ROOM: Player count: " + PhotonNetwork.playerList.Length);
-        if(PhotonNetwork.playerList.Length == 3)
+        if(PhotonNetwork.playerList.Length == 2)
         {
             PhotonNetwork.RaiseEvent(1, null, true, options);
         }

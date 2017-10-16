@@ -364,8 +364,11 @@ namespace TrueSync.Physics3D {
             }
 
             addCounter = 0;
-            foreach (OverlapPair key in fullOverlaps)
+
+            int fullOverlapsCount = fullOverlaps.Count;
+            for (int i = 0; i < fullOverlapsCount; ++i)
             {
+                OverlapPair key = fullOverlaps[i];
                 if (this.CheckBothStaticNonKinematic(key.Entity1, key.Entity2)){
 					continue;
 				}

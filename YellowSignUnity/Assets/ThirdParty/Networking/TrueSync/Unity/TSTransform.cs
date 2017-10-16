@@ -11,6 +11,9 @@ namespace TrueSync {
         private const float DELTA_TIME_FACTOR = 10f;
 
         [SerializeField]
+        private TSRigidBody.InterpolateMode _interplateMode;
+
+        [SerializeField]
         [HideInInspector]
         [AddTracking]
         private TSVector _position;
@@ -337,12 +340,17 @@ namespace TrueSync {
             initialized = true;
         }
 
-        public void Update() {
-            if (Application.isPlaying) {
-                if (initialized) {
+        public void Update()
+        {
+            if (Application.isPlaying)
+            {
+                if (initialized)
+                {
                     UpdatePlayMode();
                 }
-            } else {
+            }
+            else
+            {
                 UpdateEditMode();
             }
         }
@@ -357,20 +365,19 @@ namespace TrueSync {
             }
         }
 
-        private void UpdatePlayMode() {
-			if (rb != null) {
-                if (rb.interpolation == TSRigidBody.InterpolateMode.Interpolate) {
-                    transform.position = Vector3.Lerp(transform.position, position.ToVector(), Time.deltaTime * DELTA_TIME_FACTOR);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, rotation.ToQuaternion(), Time.deltaTime * DELTA_TIME_FACTOR);
-                    transform.localScale = Vector3.Lerp(transform.localScale, scale.ToVector(), Time.deltaTime * DELTA_TIME_FACTOR);
-                    return;
-                } else if (rb.interpolation == TSRigidBody.InterpolateMode.Extrapolate) {
-                    transform.position = (position + rb.tsCollider.Body.TSLinearVelocity * Time.deltaTime * DELTA_TIME_FACTOR).ToVector();
-                    transform.rotation = Quaternion.Lerp(transform.rotation, rotation.ToQuaternion(), Time.deltaTime * DELTA_TIME_FACTOR);
-                    transform.localScale = Vector3.Lerp(transform.localScale, scale.ToVector(), Time.deltaTime * DELTA_TIME_FACTOR);
-                    return;
-                }
-			}
+        public void UpdatePlayMode() {
+            if (_interplateMode == TSRigidBody.InterpolateMode.Interpolate)
+            {
+                 transform.position = Vector3.Lerp(transform.position, position.ToVector(), Time.deltaTime * DELTA_TIME_FACTOR);
+                 transform.rotation = Quaternion.Lerp(transform.rotation, rotation.ToQuaternion(), Time.deltaTime * DELTA_TIME_FACTOR);
+                 transform.localScale = Vector3.Lerp(transform.localScale, scale.ToVector(), Time.deltaTime * DELTA_TIME_FACTOR);
+                            return;
+            } else if (_interplateMode == TSRigidBody.InterpolateMode.Extrapolate) {
+                            transform.position = (position + rb.tsCollider.Body.TSLinearVelocity * Time.deltaTime * DELTA_TIME_FACTOR).ToVector();
+                            transform.rotation = Quaternion.Lerp(transform.rotation, rotation.ToQuaternion(), Time.deltaTime * DELTA_TIME_FACTOR);
+                            transform.localScale = Vector3.Lerp(transform.localScale, scale.ToVector(), Time.deltaTime * DELTA_TIME_FACTOR);
+                            return;
+            }
 
             transform.position = position.ToVector();
             transform.rotation = rotation.ToQuaternion();

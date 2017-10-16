@@ -48,15 +48,16 @@ public class TestAI : TrueSyncBehaviour
         turnTimer -= delta;
 
         Vector3 lookDir = tsRigidBody.velocity.ToVector();
-
+        lookDir = lookDir.WithY(0);
+        lookDir = (lookDir.sqrMagnitude < 0.001f) ? new Vector3(0, 0, 1.0f) : lookDir;
         if (tsRigidBody.interpolation == TSRigidBody.InterpolateMode.Interpolate)
         {
             prevRot = currentRot;
-            currentRot = Quaternion.LookRotation(lookDir.WithY(0), Vector3.up);        
+            currentRot = Quaternion.LookRotation(lookDir, Vector3.up);        
         }
         else
         {
-            prevRot = currentRot = Quaternion.LookRotation(lookDir.WithY(0), Vector3.up);
+            prevRot = currentRot = Quaternion.LookRotation(lookDir, Vector3.up);
         }
     }
 }

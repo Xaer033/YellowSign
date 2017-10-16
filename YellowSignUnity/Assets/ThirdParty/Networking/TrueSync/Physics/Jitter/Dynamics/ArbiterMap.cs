@@ -159,6 +159,21 @@ namespace TrueSync.Physics3D {
 			get { return dictionaryKeys.Values; }
         }
 
+        public int GetCount()
+        {
+            return keysSortedList.Count;
+        }
+        public Arbiter GetByIndex(int index)
+        {
+            if(index < 0 || index >= keysSortedList.Count)
+            {
+                return null;
+            }
+
+            ArbiterKey key = keysSortedList[index];
+            return dictionaryKeys[key];
+        }
+
         internal void Add(ArbiterKey key, Arbiter arbiter)
         {
             keysSortedList.Add(key);

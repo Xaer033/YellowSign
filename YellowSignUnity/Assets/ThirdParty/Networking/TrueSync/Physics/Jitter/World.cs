@@ -703,7 +703,10 @@ namespace TrueSync.Physics3D
         }
 
         private void UpdateContacts(ArbiterMap selectedArbiterMap) {
-            foreach (Arbiter arbiter in selectedArbiterMap.Arbiters) {
+            int arbiterCount = selectedArbiterMap.GetCount();
+            for ( int i = 0; i < arbiterCount; ++i)
+            {
+                Arbiter arbiter = selectedArbiterMap.GetByIndex(i);
                 UpdateArbiterContacts(arbiter);
             }
 

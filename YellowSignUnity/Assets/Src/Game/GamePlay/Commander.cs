@@ -9,6 +9,7 @@ public class Commander : TrueSyncBehaviour
     public GameObject testPrefab;
     private Queue<ICommand> _commandQueue = new Queue<ICommand>();
 
+    private CreepController _creepController;
 
     public void AddCommand(ICommand command)
     {
@@ -18,6 +19,7 @@ public class Commander : TrueSyncBehaviour
     public void Start()
     {
         Debug.Log("Start");
+        _creepController = new CreepController();
     }
 
     public void Update()
@@ -40,6 +42,9 @@ public class Commander : TrueSyncBehaviour
         {
             AddCommand(new BuildTowerCommand(9, 9, "poop_tower"));
         }
+
+        //float lerpFactor = (Time.time - Time.fixedTime) / Time.fixedDeltaTime;
+        _creepController.Step(Time.deltaTime);
     }
 
     public override void OnSyncedStart()
@@ -82,7 +87,8 @@ public class Commander : TrueSyncBehaviour
             string jsonCommand = System.Text.Encoding.UTF8.GetString(byteCommand);
 
             ICommand command = null;
-            
+
+            int range = 5;
             switch(type)
             {
                 case CommandType.BUILD_TOWER:
@@ -90,8 +96,14 @@ public class Commander : TrueSyncBehaviour
                     break;
                 case CommandType.SPAWN_CREEP:
                     command = JsonUtility.FromJson<SpawnCreepCommand>(jsonCommand);
-                    TSVector pos = new TSVector(TSRandom.Range(-10, 10), 0, TSRandom.Range(-10, 10));
-                    TrueSyncManager.SyncedInstantiate(testPrefab, pos, TSQuaternion.identity);
+                    for(int s = 0; s < 10; ++s)
+
+                    {
+                        TSVector pos = new TSVector(TSRandom.Range(-range, range), 0, TSRandom.Range(-range, range));
+                        GameObject creep = TrueSyncManager.SyncedInstantiate(testPrefab, pos, TSQuaternion.identity);
+                        _creepController.AddCreep(creep.GetComponent<TSTransform>());
+
+                    }
                     break;
             }
             Debug.LogError(command.commandType);
@@ -106,6 +118,8 @@ public class Commander : TrueSyncBehaviour
             //    TrueSyncManager.SyncedInstantiate()
             //}
         }
+
+        _creepController.FixedStep(TrueSyncManager.DeltaTime);
     }
 
 }
