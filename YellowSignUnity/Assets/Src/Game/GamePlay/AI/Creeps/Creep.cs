@@ -6,7 +6,7 @@ using Pathfinding;
 
 public class Creep
 {
-    public const float REPATH_RATE = 2.0f;
+    public FP REPATH_RATE = 2.5f;
 
     public CreepState state { get; set; }
     public CreepStats stats { get; set; }
@@ -18,9 +18,9 @@ public class Creep
     private TSTransform _transform;
     private FP _nextRepath;
 
-    private List<Vector3> _vectorPath;
+    private List<TSVector> _vectorPath;
     private int _waypointIndex;
-    private FP _distanceToNextWaypoint = 0.5f;
+    private FP _distanceToNextWaypoint = 0.35f;
     private Vector3 _target;
 
     private Path _path = null;
@@ -30,9 +30,11 @@ public class Creep
     public Creep(TSTransform transform)
     {
         _transform = transform;
-        _seeker = transform.gameObject.AddComponent<Seeker>();
+        _seeker = transform.gameObject.GetComponent<Seeker>();
+        //_seeker.
         _nextRepath = 0;
         _waypointIndex = 0;
+        _vectorPath = new List<TSVector>();
     }
 
     public void Start(Vector3 target)
@@ -50,7 +52,7 @@ public class Creep
             RecalculatePath();
         }
 
-        Vector3 pos = _transform.position.ToVector();
+        TSVector pos = _transform.position;
 
         if (_vectorPath != null && _vectorPath.Count != 0)
         {
@@ -66,7 +68,7 @@ public class Creep
             var p1 = _vectorPath[_waypointIndex - 1];
             var p2 = _vectorPath[_waypointIndex];
 
-            pos += (p2 - p1).normalized * 4 * fixedDeltaTime.AsFloat();
+            pos += (p2 - p1).normalized * 1.5f * fixedDeltaTime;
 
             if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < _distanceToNextWaypoint * _distanceToNextWaypoint)
             {
@@ -76,7 +78,7 @@ public class Creep
         else
         {
             // Stand still
-            pos = _transform.position.ToVector();
+            pos = _transform.position;
 
         }
 
@@ -94,14 +96,14 @@ public class Creep
         //}
 
         
-        _transform.position = pos.ToTSVector();
+        _transform.position = pos;
         
     }
 
     public void RecalculatePath()
     {
         _canSearchAgain = false;
-        _nextRepath = TrueSyncManager.Time + REPATH_RATE * (TSRandom.value + 1);
+        _nextRepath = TrueSyncManager.Time + REPATH_RATE;// * (TSRandom.value + 1);
         _seeker.StartPath(_transform.position.ToVector(), _target, OnPathComplete);
     }
 
@@ -123,14 +125,18 @@ public class Creep
         }
 
 
-        Vector3 p1 = p.originalStartPoint;
-        Vector3 p2 = _transform.position.ToVector();
+        TSVector p1 = p.originalStartPoint.ToTSVector();
+        TSVector p2 = _transform.position;
         p1.y = p2.y;
-        float d = (p2 - p1).magnitude;
+        FP d = (p2 - p1).magnitude;
         _waypointIndex = 0;
 
-        _vectorPath = p.vectorPath;
-        Vector3 waypoint;
+        _vectorPath.Clear();
+        for(int i = 0; i < p.vectorPath.Count; ++i)
+        {
+            _vectorPath.Add(p.vectorPath[i].ToTSVector());
+        }
+        TSVector waypoint;
 
         if (_distanceToNextWaypoint > 0)
         {
@@ -138,7 +144,7 @@ public class Creep
             for (float t = 0; t <= d; t += dist )
             {
                 _waypointIndex--;
-                Vector3 pos = p1 + (p2 - p1) * t;
+                TSVector pos = p1 + (p2 - p1) * t;
 
                 do
                 {

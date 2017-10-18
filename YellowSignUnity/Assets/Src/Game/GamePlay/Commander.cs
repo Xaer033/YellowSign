@@ -98,7 +98,7 @@ public class Commander : TrueSyncBehaviour
                     break;
                 case CommandType.SPAWN_CREEP:
                     command = JsonUtility.FromJson<SpawnCreepCommand>(jsonCommand);
-                    for(int s = 0; s < 10; ++s)
+                    for(int s = 0; s < 5; ++s)
                     {
                         Transform spawnPoint = spawnPoints[TSRandom.Range(0, spawnPoints.Length)];
                         TSVector pos = spawnPoint.position.ToTSVector();

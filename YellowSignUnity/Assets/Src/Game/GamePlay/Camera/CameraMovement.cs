@@ -58,7 +58,7 @@ public class CameraMovement : MonoBehaviour
         _currentPos = transform.position + _velocity * Time.fixedDeltaTime;
         
         Vector3 friction = _velocity * -drag;
-        _velocity = _velocity + friction +  _acceleration * Time.fixedDeltaTime;
+        _velocity = _velocity + friction + _acceleration * Time.fixedDeltaTime;
 
         _acceleration = Vector3.zero;
     }
