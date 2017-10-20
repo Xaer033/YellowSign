@@ -5,12 +5,18 @@ using Pathfinding;
 
 public class Grid : MonoBehaviour
 {
+    public Transform[] spawnPoints;
+    public Transform target;
+
     private AstarPath _path;
     private GridGraph _graph;
     private Vector3 _start = new Vector3(0, 4, 5);
     private Vector3 _end = new Vector3(0, 0.0f, 8);
     private BoxCollider _clickCollider;
     private GameObject _clickObj;
+
+    private const int kInterval = 2;
+    private const int kHalfInterval = kInterval / 2;
 
     private int _clickLayer;
     // Use this for initialization
@@ -30,52 +36,38 @@ public class Grid : MonoBehaviour
         
         //_path.UpdateGraphs( new Bounds(Vector3.forward * 7.0f, Vector3.one));
 
-      // if( )
-       {
-           //Debug.Log(info.node.position + ", " + info.point);
-       }
         //_graph
 	}
-    void Update()
+    
+    public GridPosition GetGridPosition(Vector3 closestPosition)
     {
-        if(Input.GetMouseButton(0))
+        int mx = (int)Mathf.Round(closestPosition.x);
+        int mz = (int)Mathf.Round(closestPosition.z);
+        
+        return GridPosition.Create( mx - ((mx / kHalfInterval) % kInterval), 
+                                    mz - ((mz / kHalfInterval) % kInterval));
+    }
+
+    public bool CanBuildTower(Ray rayToGrid, out GridPosition gridPosition)
+    {
+        bool result = false;
+        gridPosition = GridPosition.Create(0, 0);
+
+        RaycastHit hit;
+        if (Physics.Raycast(rayToGrid, out hit, 100.0f, ~_clickLayer, QueryTriggerInteraction.Collide))
         {
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 1.0f;
-            
-            Ray ray = Camera.main.ScreenPointToRay(mousePos);
-            RaycastHit hit;
-            if(Physics.Raycast(ray, out hit, 100.0f, ~_clickLayer, QueryTriggerInteraction.Collide ))
-            {
-                Debug.Log("Gotcha");
-                int interval = 2;
-                int halfInterval = interval / 2;
-                
-                int mx = (int)Mathf.Round(hit.point.x);
-                int mz = (int)Mathf.Round(hit.point.z);
-                
-                Vector3 adjustedPos = new Vector3(
-                    mx -((mx / halfInterval) % interval), 
-                    0, 
-                    mz - ((mz / halfInterval) % interval));
-            
-                Color color = (_graph.GetNearest(adjustedPos).node.Walkable) ? Color.green : Color.red;
-                Debug.DrawRay(adjustedPos, Vector3.up * 2, color, 3.0f);
-            }
+            gridPosition = GetGridPosition(hit.point);
+            result = (_graph.GetNearest(gridPosition.ToVector3()).node.Walkable);
+
+            Color color = result ? Color.green : Color.red;
+            Debug.DrawRay(gridPosition.ToVector3(), Vector3.up, color);
         }
+
+        return result;
     }
-    void OnDrawGizmos()
+
+    public void UpdateGridPosition(Bounds bounds)
     {
-        Gizmos.DrawLine(_start, _end);
-
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = 1;
-
-        Ray ray = Camera.main.ScreenPointToRay(mousePos);
-        Gizmos.DrawRay(ray);
-    }
-       private void _constructLogicGrid()
-    {
-
+        _path.UpdateGraphs(bounds);
     }
 }

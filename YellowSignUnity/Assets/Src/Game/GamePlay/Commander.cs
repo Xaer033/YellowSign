@@ -1,57 +1,40 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TrueSync;
 
 public class Commander : TrueSyncBehaviour
 {
-    public GameObject target;
-    public Transform[] spawnPoints;
     public GameObject testPrefab;
     private Queue<ICommand> _commandQueue = new Queue<ICommand>();
 
-    private CreepController _creepController;
-    private Seeker _seeker;
+
+    private event Action<CommandType, ICommand> _onCommandExecute;
+    private event Action<FP> _onSyncedStep;
+
+
+    public event Action<CommandType, ICommand> onCommandExecute
+    {
+        add { _onCommandExecute += value; }
+        remove { _onCommandExecute -= value; }
+    }
+
+    public event Action<FP> onSyncedStep
+    {
+        add { _onSyncedStep += value; }
+        remove { _onSyncedStep -= value; }
+    }
+
     public void AddCommand(ICommand command)
     {
         _commandQueue.Enqueue(command);
     }
     
-    public void Awake()
-    {
-        Debug.Log("Start");
-        _seeker = GetComponent<Seeker>();
-        _creepController = new CreepController();
-    }
-
-    public void Update()
-    {
-        bool lmd = Input.GetMouseButtonDown(0);
-        bool rmd = Input.GetMouseButtonDown(1);
-        bool mmd = Input.GetMouseButtonDown(2);
-
-        //bool commandSent = true;
-
-        if (lmd)
-        {
-            AddCommand(new BuildTowerCommand(2, 1, "poop_tower"));
-        }
-        if (rmd)
-        {
-            AddCommand(new SpawnCreepCommand("poop_creep"));
-        }
-        if(mmd)
-        {
-            AddCommand(new BuildTowerCommand(9, 9, "poop_tower"));
-        }
-
-        //float lerpFactor = (Time.time - Time.fixedTime) / Time.fixedDeltaTime;
-        _creepController.Step(Time.deltaTime);
-    }
-
     public override void OnSyncedStart()
     {
         TSRandom.instance.Initialize(42);
+        Singleton.instance.notificationDispatcher.DispatchEvent("GameStart");
     }
     /**
      *  @brief Get local player data.
@@ -89,40 +72,30 @@ public class Commander : TrueSyncBehaviour
             string jsonCommand = System.Text.Encoding.UTF8.GetString(byteCommand);
 
             ICommand command = null;
-
-            int range = 5;
+            
             switch(type)
             {
                 case CommandType.BUILD_TOWER:
                     command = JsonUtility.FromJson<BuildTowerCommand>(jsonCommand);
                     break;
                 case CommandType.SPAWN_CREEP:
-                    command = JsonUtility.FromJson<SpawnCreepCommand>(jsonCommand);
-                    for(int s = 0; s < 5; ++s)
-                    {
-                        Transform spawnPoint = spawnPoints[TSRandom.Range(0, spawnPoints.Length)];
-                        TSVector pos = spawnPoint.position.ToTSVector();
-                        GameObject creepObj = TrueSyncManager.SyncedInstantiate(testPrefab, pos, TSQuaternion.identity);
-                        Creep creep = new Creep(creepObj.GetComponent<TSTransform>());
-                        creep.Start(target.transform.position);
-                        _creepController.AddCreep(creep);
-                    }
+                    command = JsonUtility.FromJson<SpawnCreepCommand>(jsonCommand); 
                     break;
             }
-            Debug.LogError(command.commandType);
-            //Execute commands!
-            //if (action > 0)
-            //{
-            //    Debug.LogError("Player: " + ownerId + " did action: " + action);
-            //}
 
-            //if(action == CommandType.BUILD_TOWER)
-            //{
-            //    TrueSyncManager.SyncedInstantiate()
-            //}
+            if(_onCommandExecute != null && type > 0 && command != null)
+            {
+                _onCommandExecute(type, command);
+            }
+
+            Debug.LogError(command.commandType);
         }
 
-        _creepController.FixedStep(TrueSyncManager.DeltaTime);
+        if(_onSyncedStep != null)
+        {
+            _onSyncedStep(TrueSyncManager.DeltaTime);
+        }
+
     }
 
 }

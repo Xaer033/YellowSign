@@ -6,7 +6,7 @@ using Pathfinding;
 
 public class Creep
 {
-    public FP REPATH_RATE = 2.5f;
+    public FP REPATH_RATE = 0.5f;
 
     public CreepState state { get; set; }
     public CreepStats stats { get; set; }
@@ -24,13 +24,16 @@ public class Creep
     private Vector3 _target;
 
     private Path _path = null;
+    private TSRigidBody _rigidBody;
 
     public bool flagForRemoval { get;  set; }
 
     public Creep(TSTransform transform)
     {
         _transform = transform;
-        _seeker = transform.gameObject.GetComponent<Seeker>();
+        _seeker = transform.GetComponent<Seeker>();
+        _rigidBody = transform.GetComponent<TSRigidBody>();
+
         //_seeker.
         _nextRepath = 0;
         _waypointIndex = 0;
@@ -53,7 +56,7 @@ public class Creep
         }
 
         TSVector pos = _transform.position;
-
+        TSVector force;
         if (_vectorPath != null && _vectorPath.Count != 0)
         {
             while ((_waypointIndex < _vectorPath.Count - 1 && (pos - _vectorPath[_waypointIndex]).sqrMagnitude < _distanceToNextWaypoint * _distanceToNextWaypoint) || _waypointIndex == 0)
@@ -68,9 +71,9 @@ public class Creep
             var p1 = _vectorPath[_waypointIndex - 1];
             var p2 = _vectorPath[_waypointIndex];
 
-            pos += (p2 - p1).normalized * 1.5f * fixedDeltaTime;
+            force = (p2 - p1).normalized * 100;
 
-            if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < _distanceToNextWaypoint * _distanceToNextWaypoint)
+            if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2.0f)
             {
                 flagForRemoval = true;
             }
@@ -79,7 +82,7 @@ public class Creep
         {
             // Stand still
             pos = _transform.position;
-
+            force = TSVector.zero;
         }
 
         // Rotate the character if the velocity is not extremely small
@@ -95,15 +98,14 @@ public class Creep
         //    transform.rotation = Quaternion.Slerp(rot, targetRot, Time.deltaTime * RotationSpeed);
         //}
 
-        
-        _transform.position = pos;
+        _rigidBody.AddForce(force * fixedDeltaTime, ForceMode.Force);
         
     }
 
     public void RecalculatePath()
     {
         _canSearchAgain = false;
-        _nextRepath = TrueSyncManager.Time + REPATH_RATE;// * (TSRandom.value + 1);
+        _nextRepath = TrueSyncManager.Time + REPATH_RATE * (TSRandom.value + 0.5f);
         _seeker.StartPath(_transform.position.ToVector(), _target, OnPathComplete);
     }
 
@@ -140,8 +142,8 @@ public class Creep
 
         if (_distanceToNextWaypoint > 0)
         {
-            float dist = _distanceToNextWaypoint.AsFloat() * 0.6f;
-            for (float t = 0; t <= d; t += dist )
+            FP dist = _distanceToNextWaypoint * 0.6f;
+            for (FP t = 0; t <= d; t += dist )
             {
                 _waypointIndex--;
                 TSVector pos = p1 + (p2 - p1) * t;

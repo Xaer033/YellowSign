@@ -8,6 +8,11 @@ TagManager:
   - Food
   - target
   - spawn
+  - grid_p1
+  - grid_p2
+  - grid_p3
+  - grid_p4
+  - commander
   layers:
   - Default
   - TransparentFX

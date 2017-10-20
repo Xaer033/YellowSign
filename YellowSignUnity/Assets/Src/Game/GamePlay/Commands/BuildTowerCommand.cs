@@ -2,14 +2,12 @@
 [System.Serializable]
 public struct BuildTowerCommand : ICommand
 {
-    public int gridX;
-    public int gridY;
+    public GridPosition position;
     public string type;
 
     public BuildTowerCommand(int x, int y, string towerType)
     {
-        gridX = x;
-        gridY = y;
+        position = GridPosition.Create(x, y);
         type = towerType;
     }
 

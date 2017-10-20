@@ -16,6 +16,9 @@ public class Singleton : MonoBehaviour
     public GameplayResources    gameplayResources   { get { return _gameplayResources; } }
     public NetworkManager       networkManager      { get; private set; }
 
+    public NotificationDispatcher notificationDispatcher { get; private set; }
+
+
     [SerializeField]
     private GuiManager _guiManager;
 
@@ -28,6 +31,7 @@ public class Singleton : MonoBehaviour
     public void Awake()
     {
         _instance = this;
+        GameObject.DontDestroyOnLoad(_instance);
 
         _stateFactory = new YellowSignStateFactory();
         gameStateMachine = new GameStateMachine(_stateFactory);
@@ -35,6 +39,7 @@ public class Singleton : MonoBehaviour
         sessionFlags = new SessionFlags();
 
         networkManager = gameObject.AddComponent<NetworkManager>();
+        notificationDispatcher = new NotificationDispatcher();
 
         Input.multiTouchEnabled = false; //This needs to go elsewere 
     }
