@@ -16,7 +16,10 @@ public class CreepController
     }
 
     private List<Creep> _creepList;
-   
+
+    public bool recalculatePaths { set; get; }
+
+
     public CreepController()
     {
         _creepList = new List<Creep>(200);
@@ -51,12 +54,19 @@ public class CreepController
             Creep c = _creepList[i];
             if(c.flagForRemoval)
             {
-                TrueSyncManager.SyncedDestroy(c.transform.gameObject);
+                //TrueSyncManager.SyncedDestroy(c.transform.gameObject);
+                GameObject.Destroy(c.transform.gameObject);
                 _creepList.RemoveAt(i);
                 continue;
             }
 
+            if(recalculatePaths)
+            {
+                c.RecalculatePath();
+            }
             c.FixedStep(fixedDeltaTime);
         }
+
+        recalculatePaths = false;
     }
 }

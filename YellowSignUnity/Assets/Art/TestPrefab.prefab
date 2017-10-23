@@ -52,8 +52,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4548851548478206}
   - component: {fileID: 114592980982282442}
-  - component: {fileID: 114473244443008938}
-  - component: {fileID: 114466109815026502}
   - component: {fileID: 114046154202308060}
   m_Layer: 0
   m_Name: TestPrefab
@@ -240,56 +238,6 @@ MonoBehaviour:
     tagsChange: -1
     tagsSet: -1
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
---- !u!114 &114466109815026502
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1852374461560344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8561a4124465f743903b76d8cf232a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mass:
-    _serializedValue: 4294967296
-  _useGravity: 0
-  _isKinematic: 0
-  _linearDrag:
-    _serializedValue: 34359738368
-  _angularDrag:
-    _serializedValue: 214748368
-  interpolation: 0
-  _constraints: 116
---- !u!114 &114473244443008938
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1852374461560344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2761f79677a73b84cbeba46eda8c3766, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isTrigger: 0
-  tsMaterial: {fileID: 0}
-  center:
-    x:
-      _serializedValue: 0
-    y:
-      _serializedValue: 2705829376
-    z:
-      _serializedValue: 0
-  lossyScale:
-    x:
-      _serializedValue: 4294967296
-    y:
-      _serializedValue: 4294967296
-    z:
-      _serializedValue: 4294967296
-  tsTransform: {fileID: 114592980982282442}
-  _size: {x: 0.49, y: 1.15, z: 0.45}
 --- !u!114 &114592980982282442
 MonoBehaviour:
   m_ObjectHideFlags: 1

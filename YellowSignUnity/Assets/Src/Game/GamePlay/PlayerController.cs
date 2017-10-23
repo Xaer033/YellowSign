@@ -11,13 +11,12 @@ public class PlayerController : TrueSyncBehaviour
     private CreepController _creepController;
 
     public void Start()
-    {   
+    {
+
         GameObject gridObj = GameObject.FindGameObjectWithTag("grid_p1");
         _grid = gridObj.GetComponent<Grid>();
 
         _commander = GetComponent<Commander>();
-        
-
         _commander.onCommandExecute += OnCommandExecute;
 
         _creepController = new CreepController();
@@ -78,6 +77,7 @@ public class PlayerController : TrueSyncBehaviour
                     GameObject towerObj = TrueSyncManager.SyncedInstantiate(gResources.basicTower, pos, TSQuaternion.identity);
                     Collider towerCollider = towerObj.GetComponent<Collider>();
                     _grid.UpdateGridPosition(towerCollider.bounds);
+                    _creepController.recalculatePaths = true;
                     break;
                 }
         }

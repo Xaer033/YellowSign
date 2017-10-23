@@ -6,7 +6,7 @@ using Pathfinding;
 
 public class Creep
 {
-    public FP REPATH_RATE = 0.5f;
+    public FP REPATH_RATE = 0.75f;
 
     public CreepState state { get; set; }
     public CreepStats stats { get; set; }
@@ -21,6 +21,9 @@ public class Creep
     private List<TSVector> _vectorPath;
     private int _waypointIndex;
     private FP _distanceToNextWaypoint = 0.35f;
+
+    private FP _drag = 5f;
+
     private Vector3 _target;
 
     private Path _path = null;
@@ -32,7 +35,7 @@ public class Creep
     {
         _transform = transform;
         _seeker = transform.GetComponent<Seeker>();
-        _rigidBody = transform.GetComponent<TSRigidBody>();
+        //_rigidBody = transform.GetComponent<TSRigidBody>();
 
         //_seeker.
         _nextRepath = 0;
@@ -50,14 +53,14 @@ public class Creep
     
     public void FixedStep(FP fixedDeltaTime)
     {
-        if (TrueSyncManager.Time >= _nextRepath && _canSearchAgain)
-        {
-            RecalculatePath();
-        }
+        //if (TrueSyncManager.Time >= _nextRepath && _canSearchAgain)
+        //{
+        //    RecalculatePath();
+        //}
 
         TSVector pos = _transform.position;
         TSVector force;
-        if (_vectorPath != null && _vectorPath.Count != 0)
+        if (_canSearchAgain && _vectorPath != null && _vectorPath.Count != 0)
         {
             while ((_waypointIndex < _vectorPath.Count - 1 && (pos - _vectorPath[_waypointIndex]).sqrMagnitude < _distanceToNextWaypoint * _distanceToNextWaypoint) || _waypointIndex == 0)
             {
@@ -68,11 +71,14 @@ public class Creep
             // We want to find the point on that segment that is 'moveNextDist' from our current position.
             // This can be visualized as finding the intersection of a circle with radius 'moveNextDist'
             // centered at our current position with that segment.
-            var p1 = _vectorPath[_waypointIndex - 1];
+            var p1 = pos;// _vectorPath[_waypointIndex - 1];
             var p2 = _vectorPath[_waypointIndex];
 
-            force = (p2 - p1).normalized * 100;
+            const int kSpeed = 5;
+            force = (p2 - p1).normalized * kSpeed;
+            force = force * (1 - fixedDeltaTime * _drag);
 
+            //Debug.DrawLine(pos.ToVector(), _vectorPath[_vectorPath.Count - 1].ToVector());
             if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2.0f)
             {
                 flagForRemoval = true;
@@ -98,7 +104,8 @@ public class Creep
         //    transform.rotation = Quaternion.Slerp(rot, targetRot, Time.deltaTime * RotationSpeed);
         //}
 
-        _rigidBody.AddForce(force * fixedDeltaTime, ForceMode.Force);
+        //_rigidBody.AddForce(force * fixedDeltaTime, ForceMode.Force);
+        _transform.position += force * fixedDeltaTime;
         
     }
 
@@ -138,23 +145,23 @@ public class Creep
         {
             _vectorPath.Add(p.vectorPath[i].ToTSVector());
         }
-        TSVector waypoint;
+        //TSVector waypoint;
 
-        if (_distanceToNextWaypoint > 0)
-        {
-            FP dist = _distanceToNextWaypoint * 0.6f;
-            for (FP t = 0; t <= d; t += dist )
-            {
-                _waypointIndex--;
-                TSVector pos = p1 + (p2 - p1) * t;
+        //if (_distanceToNextWaypoint > 0)
+        //{
+        //    FP dist = _distanceToNextWaypoint;
+        //    for (FP t = 0; t <= d; t += dist )
+        //    {
+        //        _waypointIndex--;
+        //        TSVector pos = p1 + (p2 - p1) * t;
 
-                do
-                {
-                    _waypointIndex++;
-                    waypoint = _vectorPath[_waypointIndex];
-                } while ((pos - waypoint).sqrMagnitude < _distanceToNextWaypoint * _distanceToNextWaypoint && _waypointIndex != _vectorPath.Count - 1);
-            }
-        }
+        //        do
+        //        {
+        //            _waypointIndex++;
+        //            waypoint = _vectorPath[_waypointIndex];
+        //        } while ((pos - waypoint).sqrMagnitude < _distanceToNextWaypoint * _distanceToNextWaypoint && _waypointIndex != _vectorPath.Count - 1);
+        //    }
+        //}
     }
 
 }
