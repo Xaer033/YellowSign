@@ -190,19 +190,25 @@ namespace Pathfinding {
 		/** Returns a constraint which will not filter the results */
 		public static NNConstraint None {
 			get {
-				return new NNConstraint {
-						   constrainWalkability = false,
-						   constrainArea = false,
-						   constrainTags = false,
-						   constrainDistance = false,
-						   graphMask = -1,
-				};
-			}
+                if(_noneConstraint == null)
+                {
+				    _noneConstraint =  new NNConstraint {
+						       constrainWalkability = false,
+						       constrainArea = false,
+						       constrainTags = false,
+						       constrainDistance = false,
+						       graphMask = -1,
+				    };
+                }
+                return _noneConstraint;
+            }
 		}
 
 		/** Default constructor. Equals to the property #Default */
 		public NNConstraint () {
 		}
+
+        private static NNConstraint _noneConstraint;
 	}
 
 	/** A special NNConstraint which can use different logic for the start node and end node in a path.

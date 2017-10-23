@@ -56,5 +56,7 @@ public class GamePlayState : IGameState
                 break;
             }
         }
+
+        Singleton.instance.gui.screenFader.FadeIn(1.5f);
     }
 }

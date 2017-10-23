@@ -51,7 +51,7 @@ public class IntroState : IGameState
         options.Receivers = ReceiverGroup.All;
 
         Debug.Log("JOINED ROOM: Player count: " + PhotonNetwork.playerList.Length);
-        if(PhotonNetwork.playerList.Length == 2)
+        if(PhotonNetwork.playerList.Length == 1)
         {
             PhotonNetwork.RaiseEvent(1, null, true, options);
         }
@@ -61,8 +61,10 @@ public class IntroState : IGameState
     {
         if(eventCode == 1)
         {
-            _gotoMainMenu = true;
-            Singleton.instance.gui.screenFader.FadeIn();
+            Singleton.instance.gui.screenFader.FadeOut(0.50f, ()=>
+            {
+                _gotoMainMenu = true;
+            });
         }
     }
 }

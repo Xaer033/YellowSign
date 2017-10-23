@@ -13,3 +13,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   commander: {fileID: 114438072306011958, guid: fc6815bf12db8b6408462e65cb6dd7f8,
     type: 2}
+  basicTower: {fileID: 1219185578201958, guid: 79af4031cb68b4346adf3d0b54065725, type: 2}

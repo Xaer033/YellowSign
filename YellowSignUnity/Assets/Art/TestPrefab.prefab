@@ -114,7 +114,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1852374461560344}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0.891, y: 0, z: 10.843}
+  m_LocalPosition: {x: 3.52, y: 0, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4353817081765244}
@@ -228,8 +228,8 @@ MonoBehaviour:
   detailedGizmos: 1
   startEndModifier:
     addPoints: 0
-    exactStartPoint: 1
-    exactEndPoint: 1
+    exactStartPoint: 0
+    exactEndPoint: 0
     useRaycasting: 0
     mask:
       serializedVersion: 2
@@ -254,13 +254,13 @@ MonoBehaviour:
   _mass:
     _serializedValue: 4294967296
   _useGravity: 0
-  _isKinematic: 1
+  _isKinematic: 0
   _linearDrag:
-    _serializedValue: 0
+    _serializedValue: 34359738368
   _angularDrag:
     _serializedValue: 214748368
   interpolation: 0
-  _constraints: 0
+  _constraints: 116
 --- !u!114 &114473244443008938
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -304,11 +304,11 @@ MonoBehaviour:
   _interplateMode: 1
   _position:
     x:
-      _serializedValue: -3826815744
+      _serializedValue: 15118284800
     y:
       _serializedValue: 0
     z:
-      _serializedValue: 46570332160
+      _serializedValue: 34359738368
   _rotation:
     x:
       _serializedValue: 0

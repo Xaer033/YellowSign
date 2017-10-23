@@ -34,7 +34,10 @@ public class Commander : TrueSyncBehaviour
     public override void OnSyncedStart()
     {
         TSRandom.instance.Initialize(42);
-        Singleton.instance.notificationDispatcher.DispatchEvent("GameStart");
+        if(Singleton.instance)
+        {
+            Singleton.instance.notificationDispatcher.DispatchEvent("GameStart");
+        }
     }
     /**
      *  @brief Get local player data.

@@ -2,7 +2,7 @@
 using UnityEngine.Assertions;
 using GhostGen;
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "GhostGen/Gui Manager")]
 public class GuiManager : ScriptableObject, IPostInit
 {
     public Canvas       mainCanvas      { get; private set; }
@@ -47,7 +47,7 @@ public class GuiManager : ScriptableObject, IPostInit
 
         GameObject prefab = Resources.Load<GameObject>("GUI/GuiPrefab");
         Assert.IsNotNull(prefab);
-        obj = GameObject.Instantiate<GameObject>(prefab, null, false);
+        obj = GameObject.Instantiate<GameObject>(prefab, Singleton.instance.transform, false);
 
         return obj;
     }

@@ -35,8 +35,8 @@ MonoBehaviour:
       fxaaSettings:
         preset: 0
       taaSettings:
-        jitterSpread: 0.449
-        sharpen: 0.32
+        jitterSpread: 0.53
+        sharpen: 0.45
         stationaryBlending: 0.884
         motionBlending: 0.932
   ambientOcclusion:
@@ -71,17 +71,17 @@ MonoBehaviour:
   depthOfField:
     m_Enabled: 1
     m_Settings:
-      focusDistance: 34.93
+      focusDistance: 50
       aperture: 0.2
-      focalLength: 56
+      focalLength: 81
       useCameraFov: 1
       kernelSize: 2
   motionBlur:
     m_Enabled: 1
     m_Settings:
-      shutterAngle: 360
-      sampleCount: 6
-      frameBlending: 0
+      shutterAngle: 336
+      sampleCount: 8
+      frameBlending: 0.06
   eyeAdaptation:
     m_Enabled: 1
     m_Settings:
@@ -120,12 +120,12 @@ MonoBehaviour:
         neutralWhiteLevel: 5.3
         neutralWhiteClip: 10
       basic:
-        postExposure: 0.2
+        postExposure: 0.29
         temperature: -7.9
         tint: 0
         hueShift: 0
-        saturation: 0.908
-        contrast: 1.284
+        saturation: 0.865
+        contrast: 1.225
       channelMixer:
         red: {x: 1, y: 0, z: 0}
         green: {x: 0, y: 1, z: 0}
@@ -134,9 +134,9 @@ MonoBehaviour:
       colorWheels:
         mode: 1
         log:
-          slope: {r: 1, g: 0.91926646, b: 0.87041306, a: 0.011494213}
-          power: {r: 0.7589052, g: 0.88047683, b: 1, a: -0.031620555}
-          offset: {r: 1, g: 0.9732058, b: 0.86589164, a: -0.04311517}
+          slope: {r: 1, g: 0.93373126, b: 0.805971, a: -0.039678495}
+          power: {r: 0.8436072, g: 0.8720557, b: 1, a: -0.048678122}
+          offset: {r: 0.9971979, g: 1, b: 0.8530658, a: 0.008057539}
         linear:
           lift: {r: 0, g: 0, b: 0, a: 0}
           gamma: {r: 0, g: 0, b: 0, a: 0}
@@ -289,8 +289,8 @@ MonoBehaviour:
     m_Enabled: 1
     m_Settings:
       colored: 0
-      intensity: 0.315
-      size: 1.56
+      intensity: 0.054
+      size: 0.85
       luminanceContribution: 0.952
   vignette:
     m_Enabled: 1
@@ -298,12 +298,12 @@ MonoBehaviour:
       mode: 0
       color: {r: 0, g: 0, b: 0, a: 1}
       center: {x: 0.5, y: 0.5}
-      intensity: 0.082
+      intensity: 0.18
       smoothness: 0.52
       roundness: 1
       mask: {fileID: 0}
       opacity: 1
-      rounded: 0
+      rounded: 1
   dithering:
     m_Enabled: 0
   monitors:
