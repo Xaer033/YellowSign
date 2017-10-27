@@ -103,8 +103,8 @@ MonoBehaviour:
     y: -36.59
     width: 7.46
     height: 9.45
-  speed: 18000
-  drag: 0.4
+  speed: 25000
+  drag: 15
   edgeLimit: 10
 --- !u!114 &114502472627372366
 MonoBehaviour:

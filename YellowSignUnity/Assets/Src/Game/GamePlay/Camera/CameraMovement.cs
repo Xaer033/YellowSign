@@ -54,11 +54,13 @@ public class CameraMovement : MonoBehaviour
         {
             _acceleration.z = 1.0f;
         }
+
+        float deltaTime = Time.fixedDeltaTime;
         _acceleration = _acceleration.normalized * speed;
-        _currentPos = transform.position + _velocity * Time.fixedDeltaTime;
-        
-        Vector3 friction = _velocity * -drag;
-        _velocity = _velocity + friction + _acceleration * Time.fixedDeltaTime;
+        _currentPos = transform.position + _velocity * deltaTime;
+
+        float dragForce = (1.0f - drag * deltaTime);
+        _velocity = (_velocity + _acceleration * deltaTime) * dragForce;
 
         _acceleration = Vector3.zero;
     }
