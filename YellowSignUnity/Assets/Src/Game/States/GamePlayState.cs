@@ -10,8 +10,14 @@ public class GamePlayState : IGameState
     private PlayerController _playerController;
     private NotificationDispatcher _notificationDispatcher;
 
+    private CreepSystem _creepSystem;
+    private TowerSystem _towerSystem;
+
     public void Init(Hashtable changeStateData)
     {
+        _creepSystem = new CreepSystem();
+        _towerSystem = new TowerSystem();
+
         //TrueSyncManager.RunSimulation();
         _notificationDispatcher = Singleton.instance.notificationDispatcher;
         _notificationDispatcher.AddListener("GameStart", OnGameStart);
@@ -50,10 +56,10 @@ public class GamePlayState : IGameState
         PlayerController[] list = GameObject.FindObjectsOfType<PlayerController>();
         for(int i = 0; i < list.Length; ++i)
         {
+            list[i].Setup(_creepSystem, _towerSystem);
             if (list[i].owner.Id == TrueSyncManager.LocalPlayer.Id)
             {
                 _playerController = list[i];
-                break;
             }
         }
 

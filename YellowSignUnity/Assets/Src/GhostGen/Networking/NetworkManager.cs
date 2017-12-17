@@ -8,6 +8,7 @@ using GhostGen;
 public class NetworkManager : Photon.PunBehaviour, IPostInit
 {
     public const string kGameVersion = "0.1.0";
+    public const int kMaxPlayers = 4;
 
     public event PhotonNetwork.EventCallback onCustomEvent;
 

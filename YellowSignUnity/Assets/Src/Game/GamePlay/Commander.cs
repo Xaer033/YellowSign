@@ -10,11 +10,11 @@ public class Commander : TrueSyncBehaviour
     private Queue<ICommand> _commandQueue = new Queue<ICommand>();
 
 
-    private event Action<CommandType, ICommand> _onCommandExecute;
+    private event Action<byte, CommandType, ICommand> _onCommandExecute;
     private event Action<FP> _onSyncedStep;
 
 
-    public event Action<CommandType, ICommand> onCommandExecute
+    public event Action<byte, CommandType, ICommand> onCommandExecute
     {
         add { _onCommandExecute += value; }
         remove { _onCommandExecute -= value; }
@@ -59,7 +59,6 @@ public class Commander : TrueSyncBehaviour
             byte[] byteCommand = System.Text.Encoding.UTF8.GetBytes(jsonCommand);
             TrueSyncInput.SetByteArray(iterKey++, byteCommand);
         }
-        
     }
 
     public override void OnSyncedUpdate()
@@ -88,7 +87,7 @@ public class Commander : TrueSyncBehaviour
 
             if(_onCommandExecute != null && type > 0 && command != null)
             {
-                _onCommandExecute(type, command);
+                _onCommandExecute(ownerId, type, command);
             }
 
             Debug.LogError(command.commandType);
@@ -98,7 +97,5 @@ public class Commander : TrueSyncBehaviour
         {
             _onSyncedStep(TrueSyncManager.DeltaTime);
         }
-
     }
-
 }

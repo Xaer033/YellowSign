@@ -8,7 +8,14 @@ public class PlayerController : TrueSyncBehaviour
     private Commander _commander;
     private Grid _grid;
 
-    private CreepController _creepController;
+    private CreepSystem _creepSystem;
+    private TowerSystem _towerSystem;
+
+    public void Setup(CreepSystem creepSystem, TowerSystem towerSystem)
+    {
+        _creepSystem = creepSystem;
+        _towerSystem = towerSystem;
+    }
 
     public void Start()
     {
@@ -18,8 +25,6 @@ public class PlayerController : TrueSyncBehaviour
 
         _commander = GetComponent<Commander>();
         _commander.onCommandExecute += OnCommandExecute;
-
-        _creepController = new CreepController();
     }
 
     public void CleanUp()
@@ -49,27 +54,32 @@ public class PlayerController : TrueSyncBehaviour
            _commander.AddCommand(new SpawnCreepCommand("poop_creep"));
         }
 
-        _creepController.Step(Time.deltaTime);
+        if(_creepSystem != null)
+        {
+            _creepSystem.Step(Time.deltaTime);
+        }
     }
     
-    private void OnCommandExecute(CommandType type, ICommand command)
+    private void OnCommandExecute(byte ownerId, CommandType type, ICommand command)
     {
         GameplayResources gResources = Singleton.instance.gameplayResources;
 
         switch(type)
         {
             case CommandType.SPAWN_CREEP:
-                for (int s = 0; s < 5; ++s)
                 {
-                    Transform spawnPoint = _grid.spawnPoints[TSRandom.Range(0, _grid.spawnPoints.Length)];
-                    TSVector pos = spawnPoint.position.ToTSVector();
-                    GameObject creepObj = TrueSyncManager.SyncedInstantiate(_commander.testPrefab, pos, TSQuaternion.identity);
-                    Creep creep = new Creep(creepObj.GetComponent<TSTransform>());
-                    creep.Start(_grid.target.transform.position);
-                    _creepController.AddCreep(creep);
+                    SpawnCreepCommand scc = (SpawnCreepCommand)command;
+                    for (int s = 0; s < 5; ++s)
+                    {
+                        Transform spawnPoint = _grid.spawnPoints[TSRandom.Range(0, _grid.spawnPoints.Length)];
+                        TSVector pos = spawnPoint.position.ToTSVector();
+                        GameObject creepObj = TrueSyncManager.SyncedInstantiate(_commander.testPrefab, pos, TSQuaternion.identity);
+                        Creep creep = new Creep(creepObj.GetComponent<TSTransform>());
+                        creep.Start(_grid.target.transform.position);
+                        _creepSystem.AddCreep(ownerId, creep);
+                    }
+                    break;
                 }
-                break;
-
             case CommandType.BUILD_TOWER:
                 {
                     BuildTowerCommand btc = (BuildTowerCommand)command;
@@ -77,7 +87,7 @@ public class PlayerController : TrueSyncBehaviour
                     GameObject towerObj = TrueSyncManager.SyncedInstantiate(gResources.basicTower, pos, TSQuaternion.identity);
                     Collider towerCollider = towerObj.GetComponent<Collider>();
                     _grid.UpdateGridPosition(towerCollider.bounds);
-                    _creepController.recalculatePaths = true;
+                    _creepSystem.recalculatePaths = true;
                     break;
                 }
         }
@@ -86,9 +96,9 @@ public class PlayerController : TrueSyncBehaviour
 
     override public void OnSyncedUpdate()
     {
-        if(_creepController != null)
+        if(_creepSystem != null)
         {
-            _creepController.FixedStep(TrueSyncManager.DeltaTime);
+            _creepSystem.FixedStep(TrueSyncManager.DeltaTime);
         }
     }
 

@@ -4,7 +4,7 @@ public struct SpawnCreepCommand : ICommand
 {
     public string type;
 
-    public SpawnCreepCommand( string creepType)
+    public SpawnCreepCommand(string creepType)
     {
         type = creepType;
     }
