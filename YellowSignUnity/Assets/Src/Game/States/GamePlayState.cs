@@ -44,13 +44,13 @@ public class GamePlayState : IGameState
     {
         _playerController.CleanUp();
 
-        SceneManager.UnloadSceneAsync("GameScene");
+        //SceneManager.UnloadSceneAsync("GameScene");
 
         TrueSyncManager.EndSimulation();
         TrueSyncManager.CleanUp();
     }
 
-    private void OnGameStart(Hashtable info)
+    private void OnGameStart(GhostGen.Event e)
     {
         _notificationDispatcher.RemoveListener("GameStart", OnGameStart);
         PlayerController[] list = GameObject.FindObjectsOfType<PlayerController>();

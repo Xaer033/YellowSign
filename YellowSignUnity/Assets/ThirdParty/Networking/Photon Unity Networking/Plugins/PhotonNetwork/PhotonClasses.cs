@@ -1305,7 +1305,7 @@ public class PhotonStream
 #endif
 
 
-#if !UNITY_MIN_5_3  && ! UNITY_2017
+#if !UNITY_MIN_5_3  && ! UNITY_2017 && !UNITY_2018
 // in Unity 5.3 and up, we have to use a SceneManager. This section re-implements it for older Unity versions
 
 #if UNITY_EDITOR
@@ -1393,8 +1393,9 @@ public class SceneManagerHelper
 #if UNITY_MIN_5_3
             return UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().name;
 #else
-            return UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().name;// System.IO.Path.GetFileNameWithoutExtension(UnityEditor.EditorApplication.currentScene);
-            #endif
+            
+            return System.IO.Path.GetFileNameWithoutExtension(UnityEditor.EditorApplication.currentScene);
+#endif
         }
     }
 #endif

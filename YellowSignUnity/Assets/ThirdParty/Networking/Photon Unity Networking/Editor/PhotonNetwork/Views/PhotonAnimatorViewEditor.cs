@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 #if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
 using UnityEditorInternal;
-#elif UNITY_5 || UNITY_5_0 || UNITY_2017
+#elif UNITY_5 || UNITY_5_0 || UNITY_2017 || UNITY_2018
 using UnityEditor.Animations;
 #endif
 
@@ -30,7 +30,7 @@ public class PhotonAnimatorViewEditor : Editor
     private Animator m_Animator;
     private PhotonAnimatorView m_Target;
 
-	#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_5_0 || UNITY_2017
+#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_5_0 || UNITY_2017 || UNITY_2018
     private AnimatorController m_Controller;
 #endif
 
@@ -75,7 +75,7 @@ public class PhotonAnimatorViewEditor : Editor
 	 
     private int GetLayerCount()
     {
-		#if UNITY_5 || UNITY_5_0 || UNITY_2017
+		#if UNITY_5 || UNITY_5_0 || UNITY_2017 || UNITY_2018
 		return (this.m_Controller == null) ? 0 : this.m_Controller.layers.Length;
 		#else
 		return (this.m_Controller == null) ? 0 : this.m_Controller.layerCount;
@@ -83,7 +83,7 @@ public class PhotonAnimatorViewEditor : Editor
     }
 
 
-	#if UNITY_5 || UNITY_5_0 || UNITY_2017
+	#if UNITY_5 || UNITY_5_0 || UNITY_2017 || UNITY_2018
     private RuntimeAnimatorController GetEffectiveController(Animator animator)
     {
         RuntimeAnimatorController controller = animator.runtimeAnimatorController;
@@ -107,7 +107,7 @@ public class PhotonAnimatorViewEditor : Editor
 
 #if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
         this.m_Controller = AnimatorController.GetEffectiveAnimatorController(this.m_Animator);
-#elif UNITY_5 || UNITY_5_0 || UNITY_2017
+#elif UNITY_5 || UNITY_5_0 || UNITY_2017 || UNITY_2018
         this.m_Controller = this.GetEffectiveController(this.m_Animator) as AnimatorController;
 #endif
 
