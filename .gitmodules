@@ -1,0 +1,3 @@
+[submodule "YellowSignUnity/Assets/ThirdParty/PostProcessing"]
+	path = YellowSignUnity/Assets/ThirdParty/PostProcessing
+	url = git@github.com:Unity-Technologies/PostProcessing.git

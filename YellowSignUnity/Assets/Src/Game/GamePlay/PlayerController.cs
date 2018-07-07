@@ -83,11 +83,15 @@ public class PlayerController : TrueSyncBehaviour
             case CommandType.BUILD_TOWER:
                 {
                     BuildTowerCommand btc = (BuildTowerCommand)command;
-                    TSVector pos = btc.position.ToTSVector();
-                    GameObject towerObj = TrueSyncManager.SyncedInstantiate(gResources.basicTower, pos, TSQuaternion.identity);
-                    Collider towerCollider = towerObj.GetComponent<Collider>();
-                    _grid.UpdateGridPosition(towerCollider.bounds);
-                    _creepSystem.recalculatePaths = true;
+
+                    if(_grid.CanBuildTowerAtPos(btc.position))
+                    {
+                        TSVector pos = btc.position.ToTSVector();
+                        GameObject towerObj = TrueSyncManager.SyncedInstantiate(gResources.basicTower, pos, TSQuaternion.identity);
+                        Collider towerCollider = towerObj.GetComponent<Collider>();
+                        _grid.UpdateGridPosition(towerCollider.bounds);
+                        _creepSystem.recalculatePaths = true;
+                    }
                     break;
                 }
         }

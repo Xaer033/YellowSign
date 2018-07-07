@@ -59,13 +59,7 @@ public class Grid : MonoBehaviour
         if (Physics.Raycast(rayToGrid, out hit, 100.0f, ~_clickLayer, QueryTriggerInteraction.Collide))
         {
             gridPosition = GetGridPosition(hit.point);
-            bool isWalkable = _graph.GetNearest(gridPosition.ToVector3()).node.Walkable;
-
-            Bounds testBounds = _getApproximateBoundsFromGridPos(gridPosition);
-            GraphUpdateObject guo = new GraphUpdateObject(testBounds);
-            guo.modifyWalkability = true;
-            guo.setWalkability = false;
-            if(isWalkable && GraphUpdateUtilities.UpdateGraphsNoBlock(guo, _startNode, _endNode, true))
+            if(CanBuildTowerAtPos(gridPosition))
             {
                 result = true;
             }
@@ -75,6 +69,20 @@ public class Grid : MonoBehaviour
         }
 
         return result;
+    }
+
+    public bool CanBuildTowerAtPos(GridPosition gridPosition)
+    {
+
+        GraphNode nodeAtPos = _graph.GetNearest(gridPosition.ToVector3()).node;
+        bool isWalkable = nodeAtPos.Walkable;
+        Debug.Log("Log: " + nodeAtPos.Tag);
+
+        Bounds testBounds = _getApproximateBoundsFromGridPos(gridPosition);
+        GraphUpdateObject guo = new GraphUpdateObject(testBounds);
+        guo.modifyWalkability = true;
+        guo.setWalkability = false;
+        return GraphUpdateUtilities.UpdateGraphsNoBlock(guo, _startNode, _endNode, true);
     }
 
     public void UpdateGridPosition(Bounds bounds)
