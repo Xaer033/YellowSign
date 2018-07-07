@@ -8,8 +8,11 @@ public class CreepSystem
     private const int kMaxCreeps = 200;
 
     private List<List<Creep>> _creeps;
+    private List<Pathfinding.Path> _generatingPath;
+
 
     public bool recalculatePaths { set; get; }
+
     
     public CreepSystem()
     {
@@ -20,6 +23,8 @@ public class CreepSystem
         {
             _creeps.Add(new List<Creep>(200));
         }
+
+        _generatingPath = new List<Pathfinding.Path>(10);
     }
 
     public void AddCreep(int owner, Creep creep)
@@ -58,6 +63,8 @@ public class CreepSystem
 
     public void FixedStep(FP fixedDeltaTime)
     {
+        _generatingPath.Clear();
+
         for (int o = 0; o < _creeps.Count; ++o)
         {
             int count = _creeps[o].Count;
@@ -74,10 +81,15 @@ public class CreepSystem
 
                 if (recalculatePaths)
                 {
-                    c.RecalculatePath();
+                    _generatingPath.Add(c.RecalculatePath());
                 }
                 c.FixedStep(fixedDeltaTime);
             }
+        }
+
+        for(int i = 0; i < _generatingPath.Count; ++i)
+        {
+            //AstarPath.BlockUntilCalculated(_generatingPath[i]);
         }
 
         recalculatePaths = false;

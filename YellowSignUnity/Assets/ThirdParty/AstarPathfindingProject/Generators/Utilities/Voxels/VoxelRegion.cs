@@ -817,7 +817,7 @@ namespace Pathfinding.Voxels {
 				voxelArea.compactSpans[i].reg = srcReg[i];
 			}
 
-			Pathfinding.Util.ListPool<int>.Release(stack);
+			Pathfinding.Util.ListPool<int>.Release(ref stack);
 
 
 			// Some debug code not currently used
@@ -932,20 +932,17 @@ namespace Pathfinding.Voxels {
 					int x, z;
 					this.VectorToIndex(c.Position, out x, out z);
 
-					// Out of bounds
-					if (x < 0 || z < 0 || x >= voxelArea.width || z >= voxelArea.depth) {
-						c = c.Next;
-						continue;
-					}
+					// Check for out of bounds
+					if (x >= 0 && z >= 0 && x < voxelArea.width && z < voxelArea.depth) {
+						int y = (int)((c.Position.y - voxelOffset.y)/cellHeight);
+						int rad = (int)(c.maxRange / cellHeight);
 
-					int y = (int)((c.Position.y - voxelOffset.y)/cellHeight);
-					int rad = (int)(c.maxRange / cellHeight);
-
-					CompactVoxelCell cell = voxelArea.compactCells[x+z*voxelArea.width];
-					for (int i = (int)cell.index; i < cell.index+cell.count; i++) {
-						CompactVoxelSpan s = voxelArea.compactSpans[i];
-						if (System.Math.Abs(s.y - y) <= rad && reg[i] != 0) {
-							bits[union_find_find(counter, (int)reg[i] & ~BorderReg)] |= RelevantSurfaceSet;
+						CompactVoxelCell cell = voxelArea.compactCells[x+z*voxelArea.width];
+						for (int i = (int)cell.index; i < cell.index+cell.count; i++) {
+							CompactVoxelSpan s = voxelArea.compactSpans[i];
+							if (System.Math.Abs(s.y - y) <= rad && reg[i] != 0) {
+								bits[union_find_find(counter, (int)reg[i] & ~BorderReg)] |= RelevantSurfaceSet;
+							}
 						}
 					}
 

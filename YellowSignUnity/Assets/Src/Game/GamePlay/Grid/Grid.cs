@@ -12,6 +12,8 @@ public class Grid : MonoBehaviour
     private GridGraph _graph;
     private Vector3 _start = new Vector3(0, 4, 5);
     private Vector3 _end = new Vector3(0, 0.0f, 8);
+    private GraphNode _startNode;
+    private GraphNode _endNode;
     private BoxCollider _clickCollider;
     private GameObject _clickObj;
 
@@ -33,10 +35,10 @@ public class Grid : MonoBehaviour
         _clickCollider.center = _graph.center;
         _clickCollider.size = new Vector3(_graph.Width, 0.1f, _graph.Depth) * _graph.nodeSize;
         _clickObj.transform.SetParent(transform);
-        
-        //_path.UpdateGraphs( new Bounds(Vector3.forward * 7.0f, Vector3.one));
 
-        //_graph
+        _startNode = _graph.GetNearest(spawnPoints[0].position).node;
+        _endNode = _graph.GetNearest(target.position).node;
+
 	}
     
     public GridPosition GetGridPosition(Vector3 closestPosition)
@@ -57,7 +59,16 @@ public class Grid : MonoBehaviour
         if (Physics.Raycast(rayToGrid, out hit, 100.0f, ~_clickLayer, QueryTriggerInteraction.Collide))
         {
             gridPosition = GetGridPosition(hit.point);
-            result = (_graph.GetNearest(gridPosition.ToVector3()).node.Walkable);
+            bool isWalkable = _graph.GetNearest(gridPosition.ToVector3()).node.Walkable;
+
+            Bounds testBounds = _getApproximateBoundsFromGridPos(gridPosition);
+            GraphUpdateObject guo = new GraphUpdateObject(testBounds);
+            guo.modifyWalkability = true;
+            guo.setWalkability = false;
+            if(isWalkable && GraphUpdateUtilities.UpdateGraphsNoBlock(guo, _startNode, _endNode, true))
+            {
+                result = true;
+            }
 
             Color color = result ? Color.green : Color.red;
             Debug.DrawRay(gridPosition.ToVector3(), Vector3.up, color);
@@ -69,5 +80,10 @@ public class Grid : MonoBehaviour
     public void UpdateGridPosition(Bounds bounds)
     {
         _path.UpdateGraphs(bounds);
+    }
+
+    private Bounds _getApproximateBoundsFromGridPos(GridPosition pos)
+    {
+        return new Bounds(pos.ToVector3(), Vector3.one * 0.75f);
     }
 }

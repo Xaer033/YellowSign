@@ -109,11 +109,11 @@ public class Creep
         
     }
 
-    public void RecalculatePath()
+    public Path RecalculatePath()
     {
         _canSearchAgain = false;
         _nextRepath = TrueSyncManager.Time + REPATH_RATE * (TSRandom.value + 0.5f);
-        _seeker.StartPath(_transform.position.ToVector(), _target, OnPathComplete);
+        return _seeker.StartPath(_transform.position.ToVector(), _target, OnPathComplete);
     }
 
     public void OnPathComplete(Path _p)

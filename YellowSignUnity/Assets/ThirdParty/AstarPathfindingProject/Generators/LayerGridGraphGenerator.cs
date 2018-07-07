@@ -19,7 +19,7 @@ namespace Pathfinding {
 	 */
 	public class LayerGridGraph : GridGraph, IUpdatableGraph {
 		// This function will be called when this graph is destroyed
-		public override void OnDestroy () {
+		protected override void OnDestroy () {
 			base.OnDestroy();
 
 			// Clean up a reference in a static variable which otherwise should point to this graph forever and stop the GC from collecting it
@@ -47,6 +47,11 @@ namespace Pathfinding {
 		internal int lastScannedWidth;
 		internal int lastScannedDepth;
 
+		/** All nodes in this graph.
+		 * \snippet MiscSnippets.cs LayerGridGraph.nodes1
+		 *
+		 * \see #GetNodes
+		 */
 		public new LevelGridNode[] nodes;
 
 		public override bool uniformWidthDepthGrid {
@@ -175,7 +180,33 @@ namespace Pathfinding {
 			return counter;
 		}
 
-		public new void UpdateArea (GraphUpdateObject o) {
+		/** Node in the specified cell in the first layer.
+		* Returns null if the coordinate is outside the grid.
+		*
+		* \snippet MiscSnippets.cs GridGraph.GetNode
+		*
+		* If you know the coordinate is inside the grid and you are looking to maximize performance then you
+		* can look up the node in the internal array directly which is slightly faster.
+		* \see #nodes
+		*/
+		public override GridNodeBase GetNode (int x, int z) {
+			if (x < 0 || z < 0 || x >= width || z >= depth) return null;
+			return nodes[x + z*width];
+		}
+
+		/** Node in the specified cell.
+		 * Returns null if the coordinate is outside the grid.
+		 *
+		 * If you know the coordinate is inside the grid and you are looking to maximize performance then you
+		 * can look up the node in the internal array directly which is slightly faster.
+		 * \see #nodes
+		 */
+		public GridNodeBase GetNode (int x, int z, int layer) {
+			if (x < 0 || z < 0 || x >= width || z >= depth || layer < 0 || layer >= layerCount) return null;
+			return nodes[x + z*width + layer*width*depth];
+		}
+
+		void IUpdatableGraph.UpdateArea (GraphUpdateObject o) {
 			if (nodes == null || nodes.Length != width*depth*layerCount) {
 				Debug.LogWarning("The Grid Graph is not scanned, cannot update area ");
 				//Not scanned
@@ -331,7 +362,7 @@ namespace Pathfinding {
 			}
 		}
 
-		public override IEnumerable<Progress> ScanInternal () {
+		protected override IEnumerable<Progress> ScanInternal () {
 			// Not possible to have a negative node size
 			if (nodeSize <= 0) yield break;
 
@@ -445,6 +476,7 @@ namespace Pathfinding {
 			RaycastHit[] hits = collision.CheckHeightAll(pos);
 			var up = transform.WorldUpAtGraphPosition(pos);
 
+			// Reverse array
 			for (int i = 0; i < hits.Length/2; i++) {
 				RaycastHit tmp = hits[i];
 
@@ -544,6 +576,13 @@ namespace Pathfinding {
 					node.GraphIndex = graphIndex;
 				}
 
+#if ASTAR_SET_LEVELGRIDNODE_HEIGHT
+				node.height = lln.height;
+#endif
+				node.position = (Int3)lln.position;
+				node.Walkable = lln.walkable;
+				node.WalkableErosion = node.Walkable;
+
 				if (isNewNode || resetPenalties) {
 					node.Penalty = initialPenalty;
 
@@ -555,13 +594,6 @@ namespace Pathfinding {
 				if (isNewNode || resetTags) {
 					node.Tag = 0;
 				}
-
-#if ASTAR_SET_LEVELGRIDNODE_HEIGHT
-				node.height = lln.height;
-#endif
-				node.position = (Int3)lln.position;
-				node.Walkable = lln.walkable;
-				node.WalkableErosion = node.Walkable;
 
 				//Adjust penalty based on the surface slope
 				if (lln.hit.normal != Vector3.zero && (penaltyAngle || cosAngle > 0.0001f)) {
@@ -733,11 +765,17 @@ namespace Pathfinding {
 
 			var graphPosition = transform.InverseTransform(position);
 
-			int x = Mathf.Clamp(Mathf.RoundToInt(graphPosition.x-0.5F), 0, width-1);
-			int z = Mathf.Clamp(Mathf.RoundToInt(graphPosition.z-0.5F), 0, depth-1);
+			float xf = graphPosition.x;
+			float zf = graphPosition.z;
+			int x = Mathf.Clamp((int)xf, 0, width-1);
+			int z = Mathf.Clamp((int)zf, 0, depth-1);
 
 			var minNode = GetNearestNode(position, x, z, null);
-			return new NNInfoInternal(minNode);
+			var nn = new NNInfoInternal(minNode);
+
+			float y = transform.InverseTransform((Vector3)minNode.position).y;
+			nn.clampedPosition = transform.Transform(new Vector3(Mathf.Clamp(xf, x, x+1f), y, Mathf.Clamp(zf, z, z+1f)));
+			return nn;
 		}
 
 		private LevelGridNode GetNearestNode (Vector3 position, int x, int z, NNConstraint constraint) {
@@ -767,8 +805,10 @@ namespace Pathfinding {
 
 			position = transform.InverseTransform(position);
 
-			int x = Mathf.Clamp(Mathf.RoundToInt(position.x-0.5F), 0, width-1);
-			int z = Mathf.Clamp(Mathf.RoundToInt(position.z-0.5F), 0, depth-1);
+			float xf = position.x;
+			float zf = position.z;
+			int x = Mathf.Clamp((int)xf, 0, width-1);
+			int z = Mathf.Clamp((int)zf, 0, depth-1);
 
 			LevelGridNode minNode;
 			float minDist = float.PositiveInfinity;
@@ -779,8 +819,7 @@ namespace Pathfinding {
 				minDist = ((Vector3)minNode.position-globalPosition).sqrMagnitude;
 			}
 
-			if (minNode != null) {
-				if (overlap == 0) return new NNInfoInternal(minNode);
+			if (minNode != null && overlap > 0) {
 				overlap--;
 			}
 
@@ -794,7 +833,7 @@ namespace Pathfinding {
 
 				// Check if the nodes are within distance limit
 				if (nodeSize*w > maxDist) {
-					return new NNInfoInternal(minNode);
+					break;
 				}
 
 				for (nx = x-w; nx <= x+w; nx++) {
@@ -840,10 +879,19 @@ namespace Pathfinding {
 				}
 
 				if (minNode != null) {
-					if (overlap == 0) return new NNInfoInternal(minNode);
+					if (overlap == 0) break;
 					overlap--;
 				}
 			}
+
+			var nn = new NNInfoInternal(minNode);
+			if (minNode != null) {
+				// Closest point on the node if the node is treated as a square
+				var nx = minNode.XCoordinateInGrid;
+				var nz = minNode.ZCoordinateInGrid;
+				nn.clampedPosition = transform.Transform(new Vector3(Mathf.Clamp(xf, nx, nx+1f), transform.InverseTransform((Vector3)minNode.position).y, Mathf.Clamp(zf, nz, nz+1f)));
+			}
+			return nn;
 		}
 
 		/** Returns if \a node is connected to it's neighbour in the specified direction.
@@ -854,7 +902,7 @@ namespace Pathfinding {
 			return node.GetConnection(dir);
 		}
 
-		public override void SerializeExtraInfo (GraphSerializationContext ctx) {
+		protected override void SerializeExtraInfo (GraphSerializationContext ctx) {
 			if (nodes == null) {
 				ctx.writer.Write(-1);
 				return;
@@ -872,7 +920,7 @@ namespace Pathfinding {
 			}
 		}
 
-		public override void DeserializeExtraInfo (GraphSerializationContext ctx) {
+		protected override void DeserializeExtraInfo (GraphSerializationContext ctx) {
 			int count = ctx.reader.ReadInt32();
 
 			if (count == -1) {
@@ -891,7 +939,7 @@ namespace Pathfinding {
 			}
 		}
 
-		public override void PostDeserialization () {
+		protected override void PostDeserialization (GraphSerializationContext ctx) {
 			UpdateTransform();
 			lastScannedWidth = width;
 			lastScannedDepth = depth;
@@ -1159,7 +1207,7 @@ namespace Pathfinding {
 
 		public override void UpdateRecursiveG (Path path, PathNode pathNode, PathHandler handler) {
 			handler.heap.Add(pathNode);
-			UpdateG(path, pathNode);
+			pathNode.UpdateG(path);
 
 			LayerGridGraph graph = GetGridGraph(GraphIndex);
 			int[] neighbourOffsets = graph.neighbourOffsets;
@@ -1209,7 +1257,7 @@ namespace Pathfinding {
 						otherPN.cost = neighbourCosts[i];
 
 						otherPN.H = path.CalculateHScore(other);
-						other.UpdateG(path, otherPN);
+						otherPN.UpdateG(path);
 
 						handler.heap.Add(otherPN);
 					} else {
@@ -1228,18 +1276,6 @@ namespace Pathfinding {
 
 							other.UpdateRecursiveG(path, otherPN, handler);
 						}
-						//Or if the path from this node ("other") to the current ("current") is better
-#if ASTAR_NO_TRAVERSAL_COST
-						else if (otherPN.G+tmpCost < pathNode.G)
-#else
-						else if (otherPN.G+tmpCost+path.GetTraversalCost(this) < pathNode.G)
-#endif
-						{
-							pathNode.parent = otherPN;
-							pathNode.cost = tmpCost;
-
-							UpdateRecursiveG(path, pathNode, handler);
-						}
 					}
 				}
 			}
@@ -1257,13 +1293,11 @@ namespace Pathfinding {
 			ctx.writer.Write((ulong)gridConnections);
 		}
 
-		static System.Version V3_9_0 = new System.Version(3, 9, 0);
-
 		public override void DeserializeNode (GraphSerializationContext ctx) {
 			base.DeserializeNode(ctx);
 			position = ctx.DeserializeInt3();
 			gridFlags = ctx.reader.ReadUInt16();
-			if (ctx.meta.version < V3_9_0) {
+			if (ctx.meta.version < AstarSerializer.V3_9_0) {
 #if ASTAR_LEVELGRIDNODE_FEW_LAYERS
 				// Set the upper 16 bits for compatibility
 				gridConnections = ctx.reader.ReadUInt16() | 0xFFFF0000U;

@@ -20,15 +20,20 @@ namespace Pathfinding {
 		 */
 		public ITransform transform;
 
+		public RichPath () {
+			Clear();
+		}
+
 		public void Clear () {
 			parts.Clear();
 			currentPart = 0;
+			Endpoint = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 		}
 
 		/** Use this for initialization.
 		 *
-		 * \param s Optionally provide in order to take tag penalties into account. May be null if you do not use a Seeker\
-		 * \param p Path to follow
+		 * \param seeker Optionally provide in order to take tag penalties into account. May be null if you do not use a Seeker\
+		 * \param path Path to follow
 		 * \param mergePartEndpoints If true, then adjacent parts that the path is split up in will
 		 * try to use the same start/end points. For example when using a link on a navmesh graph
 		 * Instead of first following the path to the center of the node where the link is and then
@@ -36,13 +41,13 @@ namespace Pathfinding {
 		 * which usually makes more sense.
 		 * \param simplificationMode The path can optionally be simplified. This can be a bit expensive for long paths.
 		 */
-		public void Initialize (Seeker s, Path p, bool mergePartEndpoints, bool simplificationMode) {
-			if (p.error) throw new System.ArgumentException("Path has an error");
+		public void Initialize (Seeker seeker, Path path, bool mergePartEndpoints, bool simplificationMode) {
+			if (path.error) throw new System.ArgumentException("Path has an error");
 
-			List<GraphNode> nodes = p.path;
+			List<GraphNode> nodes = path.path;
 			if (nodes.Count == 0) throw new System.ArgumentException("Path traverses no nodes");
 
-			seeker = s;
+			this.seeker = seeker;
 			// Release objects back to object pool
 			// Yeah, I know, it's casting... but this won't be called much
 			for (int i = 0; i < parts.Count; i++) {
@@ -52,15 +57,17 @@ namespace Pathfinding {
 				else if (specialPart != null) ObjectPool<RichSpecial>.Release(ref specialPart);
 			}
 
-			parts.Clear();
-			currentPart = 0;
+			Clear();
 
 			// Initialize new
+			Endpoint = path.vectorPath[path.vectorPath.Count-1];
 
 			//Break path into parts
 			for (int i = 0; i < nodes.Count; i++) {
 				if (nodes[i] is TriangleMeshNode) {
-					var graph = AstarData.GetGraph(nodes[i]);
+					var graph = AstarData.GetGraph(nodes[i]) as NavmeshBase;
+					if (graph == null) throw new System.Exception("Found a TriangleMeshNode that was not in a NavmeshBase graph");
+
 					RichFunnel f = ObjectPool<RichFunnel>.Claim().Initialize(this, graph);
 
 					f.funnelSimplification = simplificationMode;
@@ -77,13 +84,13 @@ namespace Pathfinding {
 					i--;
 
 					if (sIndex == 0) {
-						f.exactStart = p.vectorPath[0];
+						f.exactStart = path.vectorPath[0];
 					} else {
 						f.exactStart = (Vector3)nodes[mergePartEndpoints ? sIndex-1 : sIndex].position;
 					}
 
 					if (i == nodes.Count-1) {
-						f.exactEnd = p.vectorPath[p.vectorPath.Count-1];
+						f.exactEnd = path.vectorPath[path.vectorPath.Count-1];
 					} else {
 						f.exactEnd = (Vector3)nodes[mergePartEndpoints ? i+1 : i].position;
 					}
@@ -116,6 +123,8 @@ namespace Pathfinding {
 				}
 			}
 		}
+
+		public Vector3 Endpoint { get; private set; }
 
 		/** True if we have completed (called NextPart for) the last part in the path */
 		public bool CompletedAllParts {
@@ -151,7 +160,7 @@ namespace Pathfinding {
 		List<TriangleMeshNode> nodes;
 		public Vector3 exactStart;
 		public Vector3 exactEnd;
-		NavGraph graph;
+		NavmeshBase graph;
 		int currentNode;
 		Vector3 currentPosition;
 		int checkForDestroyedNodesCounter;
@@ -169,7 +178,7 @@ namespace Pathfinding {
 		}
 
 		/** Works like a constructor, but can be used even for pooled objects. Returns \a this for easy chaining */
-		public RichFunnel Initialize (RichPath path, NavGraph graph) {
+		public RichFunnel Initialize (RichPath path, NavmeshBase graph) {
 			if (graph == null) throw new System.ArgumentNullException("graph");
 			if (this.graph != null) throw new System.InvalidOperationException("Trying to initialize an already initialized object. " + graph);
 
@@ -214,14 +223,12 @@ namespace Pathfinding {
 			left.Add(exactStart);
 			right.Add(exactStart);
 
-
 			this.nodes.Clear();
 
-			var raycastableGraph = graph as IRaycastableGraph;
-			if (raycastableGraph != null && funnelSimplification) {
+			if (funnelSimplification) {
 				List<GraphNode> tmp = Pathfinding.Util.ListPool<GraphNode>.Claim(end-start);
 
-				SimplifyPath(raycastableGraph, nodes, start, end, tmp, exactStart, exactEnd);
+				SimplifyPath(graph, nodes, start, end, tmp, exactStart, exactEnd);
 
 				if (this.nodes.Capacity < tmp.Count) this.nodes.Capacity = tmp.Count;
 
@@ -231,7 +238,7 @@ namespace Pathfinding {
 					if (node != null) this.nodes.Add(node);
 				}
 
-				Pathfinding.Util.ListPool<GraphNode>.Release(tmp);
+				Pathfinding.Util.ListPool<GraphNode>.Release(ref tmp);
 			} else {
 				if (this.nodes.Capacity < end-start) this.nodes.Capacity = (end-start);
 				for (int i = start; i <= end; i++) {
@@ -345,14 +352,9 @@ namespace Pathfinding {
 		/** Split funnel at node index \a splitIndex and throw the nodes up to that point away and replace with \a prefix.
 		 * Used when the AI has happened to get sidetracked and entered a node outside the funnel.
 		 */
-		void UpdateFunnelCorridor (int splitIndex, TriangleMeshNode prefix) {
-			if (splitIndex > 0) {
-				nodes.RemoveRange(0, splitIndex-1);
-				//This is a node which should be removed, we replace it with the prefix
-				nodes[0] = prefix;
-			} else {
-				nodes.Insert(0, prefix);
-			}
+		void UpdateFunnelCorridor (int splitIndex, List<TriangleMeshNode> prefix) {
+			nodes.RemoveRange(0, splitIndex);
+			nodes.InsertRange(0, prefix);
 
 			left.Clear();
 			right.Clear();
@@ -453,157 +455,116 @@ namespace Pathfinding {
 			return position;
 		}
 
+		/** Cached object to avoid unnecessary allocations */
+		static Queue<TriangleMeshNode> navmeshClampQueue = new Queue<TriangleMeshNode>();
+		/** Cached object to avoid unnecessary allocations */
+		static List<TriangleMeshNode> navmeshClampList = new List<TriangleMeshNode>();
+		/** Cached object to avoid unnecessary allocations */
+		static Dictionary<TriangleMeshNode, TriangleMeshNode> navmeshClampDict = new Dictionary<TriangleMeshNode, TriangleMeshNode>();
+
 		/** Searches for the node the agent is inside.
 		 * This will also clamp the position to the navmesh
 		 * and repair the funnel cooridor if the agent moves slightly outside it.
 		 *
-		 * Assumes the check for if the position is inside nodes[currentNode] has already been done.
-		 *
 		 * \returns True if nodes along the path have been destroyed so that a path recalculation is required
 		 */
 		bool ClampToNavmeshInternal (ref Vector3 position) {
-			if (nodes[currentNode].Destroyed) {
+			var previousNode = nodes[currentNode];
+
+			if (previousNode.Destroyed) {
 				return true;
 			}
 
-			var i3Pos = (Int3)position;
-
 			// Check if we are in the same node as we were in during the last frame and otherwise do a more extensive search
-			if (nodes[currentNode].ContainsPoint(i3Pos)) {
+			if (previousNode.ContainsPoint(position)) {
 				return false;
 			}
 
 			// This part of the code is relatively seldom called
 			// Most of the time we are still on the same node as during the previous frame
 
-			// Otherwise check the 2 nodes ahead and 2 nodes back
-			// If they contain the node in XZ space, then we probably moved into those nodes
+			var que = navmeshClampQueue;
+			var allVisited = navmeshClampList;
+			var parent = navmeshClampDict;
+			previousNode.TemporaryFlag1 = true;
+			parent[previousNode] = null;
+			que.Enqueue(previousNode);
+			allVisited.Add(previousNode);
 
-			// 2 nodes ahead
-			for (int i = currentNode+1, t = System.Math.Min(currentNode+3, nodes.Count); i < t; i++) {
-				// If the node is destroyed, make sure we recalculate a new path quickly
-				if (nodes[i].Destroyed) {
-					return true;
-				}
+			float bestDistance = float.PositiveInfinity;
+			Vector3 bestPoint = position;
+			TriangleMeshNode bestNode = null;
 
-				// We found a node which contains our current position in XZ space
-				if (nodes[i].ContainsPoint(i3Pos)) {
-					currentNode = i;
-					return false;
-				}
-			}
+			while (que.Count > 0) {
+				var node = que.Dequeue();
 
-			// 2 nodes behind
-			for (int i = currentNode-1, t = System.Math.Max(currentNode-3, 0); i > t; i--) {
-				if (nodes[i].Destroyed) {
-					return true;
-				}
-
-				if (nodes[i].ContainsPoint(i3Pos)) {
-					currentNode = i;
-					return false;
-				}
-			}
-
-			// We need to separate this into its own method because it will create a delegate and
-			// if that delegate is created in the same method then the JIT may decide it needs to
-			// allocate some things even though we never actually get to the point where the code
-			// creates the delegate, and that would cause unnecessary allocations every frame.
-			return ClampToNavmeshInternalFull(ref position);
-		}
-
-		bool ClampToNavmeshInternalFull (ref Vector3 position) {
-			int closestNodeInPath = 0;
-			float closestDist = float.PositiveInfinity;
-			bool closestIsInPath = false;
-			TriangleMeshNode closestNode = null;
-
-			// If we still couldn't find a good node
-			// Check all nodes in the whole path
-
-			// We are checking for if any node is destroyed in the loop
-			// So we can reset this counter
-			checkForDestroyedNodesCounter = 0;
-
-			for (int i = 0, t = nodes.Count; i < t; i++) {
-				if (nodes[i].Destroyed) {
-					return true;
-				}
-
-				Vector3 close = nodes[i].ClosestPointOnNode(position);
-				float d = (close-position).sqrMagnitude;
-				if (d < closestDist) {
-					closestDist = d;
-					closestNodeInPath = i;
-					closestNode = nodes[i];
-					closestIsInPath = true;
-				}
-			}
-
-			// Loop through all neighbours of all nodes in the path
-			// and find the closet point on them
-			// We cannot just look on the ones in the path since it is impossible
-			// to know if we are outside the navmesh completely or if we have just
-			// stepped in to an adjacent node
-
-			// Need to make a copy because ref parameters cannot be used inside delegates
-			var posCopy = position;
-			int containingIndex = nodes.Count-1;
-			int closestIsNeighbourOf = 0;
-
-			System.Action<GraphNode> del = node => {
-				// Check so that this neighbour we are processing is neither the node after the current node or the node before the current node in the path
-				// This is done for optimization, we have already checked those nodes earlier
-				if (!(containingIndex > 0 && node == nodes[containingIndex-1]) && !(containingIndex < nodes.Count-1 && node == nodes[containingIndex+1])) {
-					// Check if the neighbour was a mesh node
-					var triNode = node as TriangleMeshNode;
-					if (triNode != null) {
-						// Find the distance to the closest point on it from our current position
-						var close = triNode.ClosestPointOnNode(posCopy);
-						float dist = (close-posCopy).sqrMagnitude;
-
-						// Is that distance better than the best distance seen so far
-						if (dist < closestDist) {
-							closestDist = dist;
-							closestIsNeighbourOf = containingIndex;
-							closestNode = triNode;
-							closestIsInPath = false;
-						}
-					}
-				}
-			};
-
-			// Loop through all the nodes in the path in reverse order
-			// The callback needs to know about the index, so we store it
-			// in a local variable which it can read
-			for (; containingIndex >= 0; containingIndex--) {
-				// Loop through all neighbours of the node
-				nodes[containingIndex].GetConnections(del);
-			}
-
-			// Check if the closest node
-			// was on the path already or if we need to adjust it
-			if (closestIsInPath) {
-				// If we have found a node
 				// Snap to the closest point in XZ space (keep the Y coordinate)
 				// If we would have snapped to the closest point in 3D space, the agent
 				// might slow down when traversing slopes
-				currentNode = closestNodeInPath;
-				position = nodes[closestNodeInPath].ClosestPointOnNodeXZ(position);
-			} else {
-				// Snap to the closest point in XZ space on the node
-				position = closestNode.ClosestPointOnNodeXZ(position);
+				var closest = node.ClosestPointOnNodeXZ(position);
+				var dist = VectorMath.MagnitudeXZ(closest - position);
+
+				// Check if this node is any closer than the previous best node.
+				// Allow for a small margin to both avoid floating point errors and to allow
+				// moving past very small local minima.
+				if (dist <= bestDistance * 1.05f + 0.001f) {
+					if (dist < bestDistance) {
+						bestDistance = dist;
+						bestPoint = closest;
+						bestNode = node;
+					}
+
+					for (int i = 0; i < node.connections.Length; i++) {
+						var neighbour = node.connections[i].node as TriangleMeshNode;
+						if (neighbour != null && !neighbour.TemporaryFlag1) {
+							neighbour.TemporaryFlag1 = true;
+							parent[neighbour] = node;
+							que.Enqueue(neighbour);
+							allVisited.Add(neighbour);
+						}
+					}
+				}
+			}
+
+			for (int i = 0; i < allVisited.Count; i++) allVisited[i].TemporaryFlag1 = false;
+			allVisited.ClearFast();
+
+			var closestNodeInPath = nodes.IndexOf(bestNode);
+
+			// Move the x and z coordinates of the chararacter but not the y coordinate
+			// because the navmesh surface may not line up with the ground
+			position.x = bestPoint.x;
+			position.z = bestPoint.z;
+
+			// Check if the closest node
+			// was on the path already or if we need to adjust it
+			if (closestNodeInPath == -1) {
+				// Reuse this list, because why not.
+				var prefix = navmeshClampList;
+
+				while (closestNodeInPath == -1) {
+					prefix.Add(bestNode);
+					bestNode = parent[bestNode];
+					closestNodeInPath = nodes.IndexOf(bestNode);
+				}
 
 				// We have found a node containing the position, but it is outside the funnel
 				// Recalculate the funnel to include this node
 				exactStart = position;
-				UpdateFunnelCorridor(closestIsNeighbourOf, closestNode);
+				UpdateFunnelCorridor(closestNodeInPath, prefix);
+
+				prefix.ClearFast();
 
 				// Restart from the first node in the updated path
 				currentNode = 0;
+			} else {
+				currentNode = closestNodeInPath;
 			}
 
-			return false;
+			parent.Clear();
+			// Do a quick check to see if the next node in the path has been destroyed
+			// If that is the case then we should plan a new path immediately
+			return currentNode + 1 < nodes.Count && nodes[currentNode+1].Destroyed;
 		}
 
 		/** Fill wallBuffer with all navmesh wall segments close to the current position.
