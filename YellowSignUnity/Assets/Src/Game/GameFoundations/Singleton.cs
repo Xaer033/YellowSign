@@ -19,7 +19,7 @@ public class Singleton : MonoBehaviour
     public GameplayResources    gameplayResources   { get { return gameConfig.gameplayResources; } }
     public NetworkManager       networkManager      { get; private set; }
 
-    public NotificationDispatcher notificationDispatcher { get; private set; }
+    public EventDispatcher      notificationDispatcher { get; private set; }
     
     private IStateFactory<YellowSignState> _stateFactory;
 
@@ -109,7 +109,7 @@ public class Singleton : MonoBehaviour
         _stateFactory = new YellowSignStateFactory();
         gameStateMachine = new GameStateMachine<YellowSignState>(_stateFactory);
         sessionFlags = new SessionFlags();
-        notificationDispatcher = new NotificationDispatcher();
+        notificationDispatcher = new EventDispatcher();
 
         networkManager = gameObject.AddComponent<NetworkManager>();
         Input.multiTouchEnabled = false; //This needs to go elsewere 

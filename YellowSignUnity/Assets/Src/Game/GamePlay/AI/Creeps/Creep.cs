@@ -13,6 +13,12 @@ public class Creep
 
     public TSTransform transform { get { return _transform; } }
 
+    public bool flagForRemoval { get;  set; }
+    public bool reachedTarget { get; set; }
+
+    public byte ownerId { get; set; }
+    public byte targetOwnerId { get; set; }
+
     private Seeker _seeker;
     private bool _canSearchAgain;
     private TSTransform _transform;
@@ -23,16 +29,13 @@ public class Creep
     private FP _distanceToNextWaypoint = 0.35f;
 
     private FP _drag = 5f;
-
     private Vector3 _target;
-
     private Path _path = null;
     private TSRigidBody _rigidBody;
 
-    public bool flagForRemoval { get;  set; }
-
-    public Creep(TSTransform transform)
+    public Creep(byte p_ownerId, TSTransform transform)
     {
+        ownerId = p_ownerId;
         _transform = transform;
         _seeker = transform.GetComponent<Seeker>();
         //_rigidBody = transform.GetComponent<TSRigidBody>();
@@ -43,10 +46,13 @@ public class Creep
         _vectorPath = new List<TSVector>();
     }
 
-    public void Start(Vector3 target)
+    public void Start(byte p_targetOwnerId, Vector3 target)
     {
+        targetOwnerId = p_targetOwnerId;
         _target = target;
+
         _canSearchAgain = true;
+        reachedTarget = false;
 
         RecalculatePath();
     }
@@ -85,12 +91,11 @@ public class Creep
 
             //}
 
-
-
-            //Debug.DrawLine(pos.ToVector(), _vectorPath[_vectorPath.Count - 1].ToVector());
+            
             if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2)
             {
                 flagForRemoval = true;
+                reachedTarget = true;
             }
         }
         else

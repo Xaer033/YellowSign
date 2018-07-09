@@ -418,7 +418,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4084499714283086, guid: e61e7243322a37b428e92da265080831, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -56.4
+      value: -58.99
       objectReference: {fileID: 0}
     - target: {fileID: 4084499714283086, guid: e61e7243322a37b428e92da265080831, type: 2}
       propertyPath: m_LocalRotation.x
@@ -439,31 +439,6 @@ Prefab:
     - target: {fileID: 4084499714283086, guid: e61e7243322a37b428e92da265080831, type: 2}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
-        type: 2}
-      propertyPath: temporalAntialiasing.jitterSpread
-      value: 0.578
-      objectReference: {fileID: 0}
-    - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
-        type: 2}
-      propertyPath: temporalAntialiasing.sharpness
-      value: 0.51
-      objectReference: {fileID: 0}
-    - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
-        type: 2}
-      propertyPath: temporalAntialiasing.stationaryBlending
-      value: 0.932
-      objectReference: {fileID: 0}
-    - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
-        type: 2}
-      propertyPath: temporalAntialiasing.motionBlending
-      value: 0.831
-      objectReference: {fileID: 0}
-    - target: {fileID: 20032051856053358, guid: e61e7243322a37b428e92da265080831,
-        type: 2}
-      propertyPath: m_RenderingPath
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e61e7243322a37b428e92da265080831, type: 2}
@@ -2805,6 +2780,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11424684, guid: 0017db9755b5cb442a00a702420c1076, type: 2}
+      propertyPath: playerPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 489014, guid: 0017db9755b5cb442a00a702420c1076, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2837,6 +2816,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11424684, guid: 0017db9755b5cb442a00a702420c1076, type: 2}
+      propertyPath: playerPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 1715948360407970, guid: fc6815bf12db8b6408462e65cb6dd7f8,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0017db9755b5cb442a00a702420c1076, type: 2}
   m_IsPrefabAsset: 0

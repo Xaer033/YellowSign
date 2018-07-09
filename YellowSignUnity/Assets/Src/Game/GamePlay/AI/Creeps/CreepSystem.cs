@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TrueSync;
+using GhostGen;
 
-public class CreepSystem
+public class CreepSystem : GhostGen.EventDispatcher
 {
     private const int kMaxCreeps = 200;
 
@@ -71,6 +72,12 @@ public class CreepSystem
             for (int i = count - 1; i >= 0; --i)
             {
                 Creep c = _creeps[o][i];
+
+                if(c.reachedTarget)
+                {
+                    DispatchEvent(CreepEventType.REACHED_GOAL, false, c);
+                }
+
                 if (c.flagForRemoval)
                 {
                     //TrueSyncManager.SyncedDestroy(c.transform.gameObject);

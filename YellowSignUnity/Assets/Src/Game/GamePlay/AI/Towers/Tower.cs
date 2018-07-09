@@ -7,11 +7,9 @@ using TrueSync;
 
 public class Tower
 {
-    public TowerStats stats { get; private set; }
-    public TowerState state { get; private set; }
-
-    enum State
+    public enum BehaviorState
     {
+        MOCK,
         SPAWNING,
         IDLE,
         TARGETING,
@@ -19,17 +17,25 @@ public class Tower
         RECOVERING
     }
 
-    private State _currentState;
+    public TowerStats stats { get; private set; }
+    public TowerState state { get; private set; }
+    public GameObject view  { get; private set; }
+
+    public BehaviorState behaviorState { get; set; }
+
     private FP _spawnTime;
     private CreepSystem _creepSystem;
+    private ITowerBrain _towerBrain;
 
-
-	public Tower(TowerStats pStat, CreepSystem creepSystem)
+	public Tower(ITowerBrain brain, TowerStats pStat, GameObject view, CreepSystem creepSystem)
     {
         stats = pStat;
+        state = TowerState.CreateFromStats(stats);
+        behaviorState = BehaviorState.SPAWNING;
+
+        _towerBrain = brain;
         _creepSystem = creepSystem;
 
-        _currentState = State.SPAWNING;
         _spawnTime = TrueSyncManager.Time;
 	}
 	
@@ -40,39 +46,9 @@ public class Tower
 
     public void FixedStep(FP fixedDeltaTime)
     {
-        switch(_currentState)
+        if(_towerBrain != null)
         {
-            case State.SPAWNING:    _doSpawning();      break;
-            case State.IDLE:        _doIdling();        break;
-            case State.TARGETING:   _doTargeting();     break;
-            case State.ATTACKING:   _doAttacking();     break;
-            case State.RECOVERING:  _doRecovering();    break;
+            _towerBrain.FixedStep(this, fixedDeltaTime, _creepSystem);
         }
     }
-    
-    private void _doSpawning()
-    {
-
-    }
-
-    private void _doIdling()
-    {
-
-    }
-
-    private void _doTargeting()
-    {
-
-    }
-
-    private void _doAttacking()
-    {
-
-    }
-
-    private void _doRecovering()
-    {
-
-    }
-
 }

@@ -1,13 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 public enum AttackType
-{
-    NONE = -1,
-    NORMAL,
-    FIRE,
-    ICE,
-    POISON,
-    CHAOS
+{ 
+    NONE,           // Boring...
+    HIT_SCAN,       // Instant gratification
+    PROJECTILE,     // Visible missles
+    AOE             // Area of effect around the tower
 }

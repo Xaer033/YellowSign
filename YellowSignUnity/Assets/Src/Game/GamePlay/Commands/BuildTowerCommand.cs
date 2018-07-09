@@ -10,11 +10,6 @@ public struct BuildTowerCommand : ICommand
         position = pos;
         type = towerType;
     }
-
-    public bool allowMultiplePerTick
-    {
-        get { return false; }
-    }
     
     public CommandType commandType
     {

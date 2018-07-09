@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TrueSync;
+using UnityEngine;
 
 public class Commander : TrueSyncBehaviour
 {
-    public GameObject testPrefab;
     private Queue<ICommand> _commandQueue = new Queue<ICommand>();
-
-
+    
     private event Action<byte, CommandType, ICommand> _onCommandExecute;
     private event Action<FP> _onSyncedStep;
 

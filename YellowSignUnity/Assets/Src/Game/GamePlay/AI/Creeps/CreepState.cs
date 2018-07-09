@@ -1,6 +1,6 @@
 ﻿using TrueSync;
 
-public class CreepState
+public struct CreepState
 {
     public TSVector position;
     public TSQuaternion rotation;

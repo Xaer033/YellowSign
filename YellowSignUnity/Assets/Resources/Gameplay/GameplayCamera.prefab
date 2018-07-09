@@ -37,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1233162908182086}
   m_LocalRotation: {x: 0.4013618, y: -0, z: -0, w: 0.9159196}
-  m_LocalPosition: {x: 0.8, y: 22.08, z: -56.4}
+  m_LocalPosition: {x: 0.8, y: 22.08, z: -58.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -104,7 +104,7 @@ MonoBehaviour:
   worldLimit:
     serializedVersion: 2
     x: -4.72
-    y: -56.1
+    y: -59
     width: 7.46
     height: 26.3
   speed: 25000
@@ -128,10 +128,10 @@ MonoBehaviour:
   stopNaNPropagation: 1
   antialiasingMode: 3
   temporalAntialiasing:
-    jitterSpread: 0.744
-    sharpness: 0.25
-    stationaryBlending: 0.95
-    motionBlending: 0.85
+    jitterSpread: 0.578
+    sharpness: 0.51
+    stationaryBlending: 0.932
+    motionBlending: 0.831
   subpixelMorphologicalAntialiasing:
     quality: 2
   fastApproximateAntialiasing:

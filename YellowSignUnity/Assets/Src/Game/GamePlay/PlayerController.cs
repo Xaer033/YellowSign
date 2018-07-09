@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using TrueSync;
+using UnityEngine;
 
 public class PlayerController : TrueSyncBehaviour
 {
@@ -29,6 +28,7 @@ public class PlayerController : TrueSyncBehaviour
         _commander.onCommandExecute += OnCommandExecute;
 
         _highlighter = GameObject.Instantiate<GameObject>(highlighterPrefab);
+        Debug.Log("Owner: " + localOwner.Id);
     }
 
     public void CleanUp()
@@ -90,9 +90,9 @@ public class PlayerController : TrueSyncBehaviour
                     {
                         Transform spawnPoint = _grid.spawnPoints[TSRandom.Range(0, _grid.spawnPoints.Length)];
                         TSVector pos = spawnPoint.position.ToTSVector();
-                        GameObject creepObj = TrueSyncManager.SyncedInstantiate(_commander.testPrefab, pos, TSQuaternion.identity);
-                        Creep creep = new Creep(creepObj.GetComponent<TSTransform>());
-                        creep.Start(_grid.target.transform.position);
+                        GameObject creepObj = TrueSyncManager.SyncedInstantiate(gResources.basicCreep, pos, TSQuaternion.identity);
+                        Creep creep = new Creep(ownerId, creepObj.GetComponent<TSTransform>());
+                        creep.Start((byte)(ownerId == 0 ? 1 : 0), _grid.target.transform.position);
                         _creepSystem.AddCreep(ownerId, creep);
                     }
                     break;

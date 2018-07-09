@@ -1,12 +1,13 @@
 ﻿using TrueSync;
 using UnityEngine;
 
-
+[System.Flags]
 public enum CreepType
 {
     NONE = 0,
-    GROUND,
-    AIR
+    GROUND = 1,
+    AIR = 2,
+    BOTH = GROUND | AIR
 }
 
 
@@ -14,7 +15,7 @@ public enum CreepType
 public class CreepStats : ScriptableObject
 {
     public CreepType creepType;
-    public FP speed;
+    public FP baseSpeed;
     public int maxHealth;
-    public int armor;
+    public int baseArmor;
 }

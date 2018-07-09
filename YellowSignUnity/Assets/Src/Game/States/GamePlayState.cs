@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class GamePlayState : IGameState
 {
     private PlayerController _playerController;
-    private NotificationDispatcher _notificationDispatcher;
+    private EventDispatcher _notificationDispatcher;
 
     private CreepSystem _creepSystem;
     private TowerSystem _towerSystem;
@@ -50,7 +50,7 @@ public class GamePlayState : IGameState
         TrueSyncManager.CleanUp();
     }
 
-    private void OnGameStart(GhostGen.Event e)
+    private void OnGameStart(GhostGen.GeneralEvent e)
     {
         _notificationDispatcher.RemoveListener("GameStart", OnGameStart);
         PlayerController[] list = GameObject.FindObjectsOfType<PlayerController>();
