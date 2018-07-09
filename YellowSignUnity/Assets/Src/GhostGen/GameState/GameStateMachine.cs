@@ -1,13 +1,14 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace GhostGen
 {
-	public class GameStateMachine
+	public class GameStateMachine<T>
 	{
-		public GameStateMachine( IStateFactory p_stateFactory )
+		public GameStateMachine( IStateFactory<T> p_stateFactory )
 		{
 			_currentState 	= null;
-			_currentId 		= -6666666;
+            _currentId      = default(T);
 			_stateFactory 	= p_stateFactory;
 		}
 
@@ -17,10 +18,10 @@ namespace GhostGen
 				_currentState.Step( p_deltaTime );
 		}
 
-		public void ChangeState( int stateId, Hashtable changeStateInfo = null )
+		public void ChangeState( T stateId, Hashtable changeStateInfo = null )
 		{
-			if (_currentId == stateId)
-				return;
+			if (EqualityComparer<T>.Default.Equals(_currentId, stateId))
+                return;
 
 			if( _currentState != null )
 				_currentState.Exit( );
@@ -31,9 +32,9 @@ namespace GhostGen
         
 //------------------- Private Implementation -------------------
 //--------------------------------------------------------------
-		private IStateFactory 	_stateFactory;
+		private IStateFactory<T> 	_stateFactory;
 		private IGameState 		_currentState;
        
-		private int _currentId;
+		private T _currentId;
 	}
 }

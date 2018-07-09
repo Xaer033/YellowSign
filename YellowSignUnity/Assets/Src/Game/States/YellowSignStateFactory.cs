@@ -1,23 +1,23 @@
 ﻿using UnityEngine;
 using GhostGen;
 
-public class YellowSignState
+public enum YellowSignState
 {
-    public const int NO_STATE = -1;
+    NO_STATE = -1,
 
-    public const int INTRO = 1;
-    public const int MAIN_MENU = 2;
-    public const int MULTIPLAYER_GAMEPLAY = 3;
-    public const int MULTIPLAYER_GAME_SETUP = 4;
-    public const int SINGLEPLAYER_GAMEPLAY = 5;
-    public const int SINGLEPLAYER_GAME_SETUP = 6;
-    public const int CREDITS = 7;
+    INTRO = 1,
+    MAIN_MENU = 2,
+    MULTIPLAYER_GAMEPLAY = 3,
+    MULTIPLAYER_GAME_SETUP = 4,
+    SINGLEPLAYER_GAMEPLAY = 5,
+    SINGLEPLAYER_GAME_SETUP = 6,
+    CREDITS = 7
 }
 
 
-public class YellowSignStateFactory : IStateFactory
+public class YellowSignStateFactory : IStateFactory<YellowSignState>
 {
-    public IGameState CreateState(int stateId)
+    public IGameState CreateState(YellowSignState stateId)
     {
         switch (stateId)
         {

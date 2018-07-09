@@ -1,8 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TrueSync;
 using UnityEngine;
-using TrueSync;
 
+
+public enum CreepType
+{
+    NONE = 0,
+    GROUND,
+    AIR
+}
+
+
+[CreateAssetMenu(menuName = "YellowSign/CreepStats")]
 public class CreepStats : ScriptableObject
 {
     public CreepType creepType;

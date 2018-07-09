@@ -53,33 +53,42 @@ public class Creep
     
     public void FixedStep(FP fixedDeltaTime)
     {
-        //if (TrueSyncManager.Time >= _nextRepath && _canSearchAgain)
-        //{
-        //    RecalculatePath();
-        //}
+        if(TrueSyncManager.Time >= _nextRepath && _canSearchAgain)
+        {
+            RecalculatePath();
+        }
 
         TSVector pos = _transform.position;
         TSVector force;
-        if (_canSearchAgain && _vectorPath != null && _vectorPath.Count != 0)
+        if (/*_canSearchAgain &&*/ _vectorPath != null && _vectorPath.Count != 0)
         {
             while ((_waypointIndex < _vectorPath.Count - 1 && (pos - _vectorPath[_waypointIndex]).sqrMagnitude < _distanceToNextWaypoint * _distanceToNextWaypoint) || _waypointIndex == 0)
             {
                 _waypointIndex++;
             }
 
-            // Current path segment goes from vectorPath[wp-1] to vectorPath[wp]
-            // We want to find the point on that segment that is 'moveNextDist' from our current position.
-            // This can be visualized as finding the intersection of a circle with radius 'moveNextDist'
-            // centered at our current position with that segment.
-            var p1 = pos;// _vectorPath[_waypointIndex - 1];
+           
+            var p1 = pos;
             var p2 = _vectorPath[_waypointIndex];
 
             const int kSpeed = 5;
-            force = (p2 - p1).normalized * kSpeed;
+            TSVector dirNormalized = (p2 - p1).normalized;
+            force = dirNormalized * kSpeed;
             force = force * (1 - fixedDeltaTime * _drag);
 
+            _transform.rotation = TSQuaternion.LookRotation(dirNormalized, _transform.up);
+            //RaycastHit hit;
+            //if(Physics.Raycast(transform.position.ToVector(), dirNormalized.ToVector(), out hit, 1.0f, ~LayerMask.NameToLayer("creep"), QueryTriggerInteraction.Collide))
+            //{
+            //    FP dist = hit.distance;
+            //    force += (transform.forward * 4 * dist);
+
+            //}
+
+
+
             //Debug.DrawLine(pos.ToVector(), _vectorPath[_vectorPath.Count - 1].ToVector());
-            if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2.0f)
+            if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2)
             {
                 flagForRemoval = true;
             }
@@ -112,11 +121,10 @@ public class Creep
     public Path RecalculatePath()
     {
         _canSearchAgain = false;
-        _nextRepath = TrueSyncManager.Time + REPATH_RATE * (TSRandom.value + 0.5f);
-        return _seeker.StartPath(_transform.position.ToVector(), _target, OnPathComplete);
+        return _seeker.StartPath(_transform.position.ToVector(), _target, onPathComplete);
     }
 
-    public void OnPathComplete(Path _p)
+    private void onPathComplete(Path _p)
     {
         ABPath p = _p as ABPath;
 

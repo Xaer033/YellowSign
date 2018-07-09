@@ -2,5 +2,7 @@
 public interface ICommand
 {
     CommandType commandType { get; }
-    //byte ownerId { get; }
+    bool allowMultiplePerTick { get; }
+
+    //byte getOwnerId();
 }

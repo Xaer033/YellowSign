@@ -5,12 +5,17 @@ public struct BuildTowerCommand : ICommand
     public GridPosition position;
     public string type;
 
-    public BuildTowerCommand(int x, int y, string towerType)
+    public BuildTowerCommand(GridPosition pos,  string towerType)
     {
-        position = GridPosition.Create(x, y);
+        position = pos;
         type = towerType;
     }
 
+    public bool allowMultiplePerTick
+    {
+        get { return false; }
+    }
+    
     public CommandType commandType
     {
         get

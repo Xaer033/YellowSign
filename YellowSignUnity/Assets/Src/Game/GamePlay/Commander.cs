@@ -55,8 +55,7 @@ public class Commander : TrueSyncBehaviour
         {
             ICommand ct = _commandQueue.Dequeue();
             TrueSyncInput.SetByte(iterKey++, (byte)ct.commandType);
-            string jsonCommand = JsonUtility.ToJson(ct);
-            byte[] byteCommand = System.Text.Encoding.UTF8.GetBytes(jsonCommand);
+            byte[] byteCommand = CommandFactory.ToByteArray(ct);
             TrueSyncInput.SetByteArray(iterKey++, byteCommand);
         }
     }
@@ -71,26 +70,14 @@ public class Commander : TrueSyncBehaviour
         {
             CommandType type = (CommandType)TrueSyncInput.GetByte(ownerId, iterKey++);
             byte[] byteCommand = TrueSyncInput.GetByteArray(ownerId, iterKey++);
-            string jsonCommand = System.Text.Encoding.UTF8.GetString(byteCommand);
+            ICommand command = CommandFactory.CreateFromByteArray(type, byteCommand);
 
-            ICommand command = null;
-            
-            switch(type)
-            {
-                case CommandType.BUILD_TOWER:
-                    command = JsonUtility.FromJson<BuildTowerCommand>(jsonCommand);
-                    break;
-                case CommandType.SPAWN_CREEP:
-                    command = JsonUtility.FromJson<SpawnCreepCommand>(jsonCommand); 
-                    break;
-            }
+            Debug.LogErrorFormat("Owner: {0}, Type: {0}", ownerId, command.commandType);
 
             if(_onCommandExecute != null && type > 0 && command != null)
             {
                 _onCommandExecute(ownerId, type, command);
             }
-
-            Debug.LogError(command.commandType);
         }
 
         if(_onSyncedStep != null)

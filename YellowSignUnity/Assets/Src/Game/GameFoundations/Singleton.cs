@@ -12,8 +12,8 @@ public class Singleton : MonoBehaviour
     private bool firstScene = false;
 
     public GameConfig           gameConfig          { get; private set; }
-    public GameStateMachine     gameStateMachine    { get; private set; }
     public SessionFlags         sessionFlags        { get; private set; }
+    public GameStateMachine<YellowSignState> gameStateMachine    { get; private set; }
 
     public GuiManager           gui                 { get { return gameConfig.guiManager; } }
     public GameplayResources    gameplayResources   { get { return gameConfig.gameplayResources; } }
@@ -21,7 +21,7 @@ public class Singleton : MonoBehaviour
 
     public NotificationDispatcher notificationDispatcher { get; private set; }
     
-    private IStateFactory _stateFactory;
+    private IStateFactory<YellowSignState> _stateFactory;
 
     private static object _lock = new object();
 
@@ -107,7 +107,7 @@ public class Singleton : MonoBehaviour
         gameConfig = Resources.Load<GameConfig>("GameConfig");
 
         _stateFactory = new YellowSignStateFactory();
-        gameStateMachine = new GameStateMachine(_stateFactory);
+        gameStateMachine = new GameStateMachine<YellowSignState>(_stateFactory);
         sessionFlags = new SessionFlags();
         notificationDispatcher = new NotificationDispatcher();
 

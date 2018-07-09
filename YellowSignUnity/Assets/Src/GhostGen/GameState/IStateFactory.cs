@@ -4,8 +4,8 @@ using System.Collections;
 
 namespace GhostGen
 {
-	public interface IStateFactory 
-	{
-		IGameState CreateState( int stateId );
+	public interface IStateFactory<T>
+    {
+		IGameState CreateState( T stateId );
 	}
 }

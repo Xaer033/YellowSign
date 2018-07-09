@@ -16,6 +16,7 @@ public class Grid : MonoBehaviour
     private GraphNode _endNode;
     private BoxCollider _clickCollider;
     private GameObject _clickObj;
+    private RaycastHit[] _hitResults = new RaycastHit[5];
 
     private const int kInterval = 2;
     private const int kHalfInterval = kInterval / 2;
@@ -43,9 +44,12 @@ public class Grid : MonoBehaviour
     
     public GridPosition GetGridPosition(Vector3 closestPosition)
     {
-        int mx = (int)Mathf.Round(closestPosition.x);
-        int mz = (int)Mathf.Round(closestPosition.z);
-        
+        int mx = (int)Mathf.RoundToInt(closestPosition.x);
+        int mz = (int)Mathf.RoundToInt(closestPosition.z);
+
+        GridPosition tmp = GridPosition.Create(mx, mz);
+        Debug.DrawRay(tmp.ToVector3(), Vector3.up, Color.grey);
+
         return GridPosition.Create( mx - ((mx / kHalfInterval) % kInterval), 
                                     mz - ((mz / kHalfInterval) % kInterval));
     }
@@ -54,10 +58,13 @@ public class Grid : MonoBehaviour
     {
         bool result = false;
         gridPosition = GridPosition.Create(0, 0);
-
-        RaycastHit hit;
-        if (Physics.Raycast(rayToGrid, out hit, 100.0f, ~_clickLayer, QueryTriggerInteraction.Collide))
+        
+        if (Physics.RaycastNonAlloc(rayToGrid, _hitResults, 100.0f, ~_clickLayer, QueryTriggerInteraction.Collide) > 0)
         {
+            RaycastHit hit = _hitResults[0]; // Only care about the first one
+
+            Debug.DrawRay(hit.point, Vector3.up, Color.blue);
+
             gridPosition = GetGridPosition(hit.point);
             if(CanBuildTowerAtPos(gridPosition))
             {
@@ -73,16 +80,20 @@ public class Grid : MonoBehaviour
 
     public bool CanBuildTowerAtPos(GridPosition gridPosition)
     {
-
-        GraphNode nodeAtPos = _graph.GetNearest(gridPosition.ToVector3()).node;
+        NNInfoInternal nodeInfo = _graph.GetNearest(gridPosition.ToVector3());
+        GraphNode nodeAtPos = nodeInfo.node;
         bool isWalkable = nodeAtPos.Walkable;
-        Debug.Log("Log: " + nodeAtPos.Tag);
 
+        bool isBuildable = nodeAtPos.Tag != 1;
+        
         Bounds testBounds = _getApproximateBoundsFromGridPos(gridPosition);
         GraphUpdateObject guo = new GraphUpdateObject(testBounds);
         guo.modifyWalkability = true;
         guo.setWalkability = false;
-        return GraphUpdateUtilities.UpdateGraphsNoBlock(guo, _startNode, _endNode, true);
+
+        bool wontBlock = GraphUpdateUtilities.UpdateGraphsNoBlock(guo, _startNode, _endNode, true);
+       
+        return isWalkable && isBuildable && wontBlock;
     }
 
     public void UpdateGridPosition(Bounds bounds)

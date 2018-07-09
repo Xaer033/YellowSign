@@ -9,6 +9,11 @@ public struct SpawnCreepCommand : ICommand
         type = creepType;
     }
 
+    public bool allowMultiplePerTick
+    {
+        get { return true; }
+    }
+
     public CommandType commandType
     {
         get

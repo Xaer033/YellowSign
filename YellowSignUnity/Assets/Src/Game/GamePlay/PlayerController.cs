@@ -5,11 +5,14 @@ using TrueSync;
 
 public class PlayerController : TrueSyncBehaviour
 {
+    public GameObject highlighterPrefab; // Move this to external resources
+
     private Commander _commander;
     private Grid _grid;
-
     private CreepSystem _creepSystem;
     private TowerSystem _towerSystem;
+    private GameObject _highlighter;
+    private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
 
     public void Setup(CreepSystem creepSystem, TowerSystem towerSystem)
     {
@@ -19,12 +22,13 @@ public class PlayerController : TrueSyncBehaviour
 
     public void Start()
     {
-
         GameObject gridObj = GameObject.FindGameObjectWithTag("grid_p1");
         _grid = gridObj.GetComponent<Grid>();
 
         _commander = GetComponent<Commander>();
         _commander.onCommandExecute += OnCommandExecute;
+
+        _highlighter = GameObject.Instantiate<GameObject>(highlighterPrefab);
     }
 
     public void CleanUp()
@@ -35,17 +39,30 @@ public class PlayerController : TrueSyncBehaviour
 
     public void Update()
     {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 1.0f;
+
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+        GridPosition pos;
+        bool canBuildTower = _grid.CanBuildTower(ray, out pos);
+
+        if(_highlighter && canBuildTower)
+        {
+            _highlighter.SetActive(true);
+            _highlighter.transform.position = pos.ToVector3();
+        }
+        else
+        {
+            _highlighter.SetActive(false);
+        }
+
         if(Input.GetMouseButtonDown(0))
         {
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 1.0f;
-
-            Ray ray = Camera.main.ScreenPointToRay(mousePos);
-            GridPosition pos;
-            bool canBuildTower = _grid.CanBuildTower(ray, out pos);
-            if(canBuildTower)
+            if(canBuildTower && !_towerBlocker.Contains(pos))
             {
-                _commander.AddCommand(new BuildTowerCommand(pos.x, pos.z, "poop_tower"));
+                ICommand command = CommandFactory.CreateCommand(CommandType.BUILD_TOWER, new object[] { pos, "poop_tower" });
+                _commander.AddCommand(command);
+                _towerBlocker.Add(pos); // Prevents trying to add multiple towers to the same spot before next sync Update
             }
         }
 
@@ -90,8 +107,16 @@ public class PlayerController : TrueSyncBehaviour
                         GameObject towerObj = TrueSyncManager.SyncedInstantiate(gResources.basicTower, pos, TSQuaternion.identity);
                         Collider towerCollider = towerObj.GetComponent<Collider>();
                         _grid.UpdateGridPosition(towerCollider.bounds);
-                        _creepSystem.recalculatePaths = true;
+                        _towerBlocker.Remove(btc.position);
+                        Debug.Log("Tower BUilt");
                     }
+                    else
+                    {
+                        Debug.Log("Tower Denied");
+                    }
+
+                    _creepSystem.recalculatePaths = true;
+
                     break;
                 }
         }

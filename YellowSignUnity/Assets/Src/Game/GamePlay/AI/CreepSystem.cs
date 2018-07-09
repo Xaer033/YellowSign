@@ -89,7 +89,7 @@ public class CreepSystem
 
         for(int i = 0; i < _generatingPath.Count; ++i)
         {
-            //AstarPath.BlockUntilCalculated(_generatingPath[i]);
+            AstarPath.BlockUntilCalculated(_generatingPath[i]);
         }
 
         recalculatePaths = false;
