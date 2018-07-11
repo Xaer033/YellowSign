@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 4466321355867322}
   - component: {fileID: 135111084220204994}
   - component: {fileID: 114234308396808210}
+  - component: {fileID: 114006405693211276}
   m_Layer: 9
   m_Name: BasicTower
   m_TagString: Untagged
@@ -437,6 +438,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1752920457692442}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114006405693211276
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1219185578201958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0399d60257d445b4180c59ea03d06ca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114234308396808210
 MonoBehaviour:
   m_ObjectHideFlags: 1

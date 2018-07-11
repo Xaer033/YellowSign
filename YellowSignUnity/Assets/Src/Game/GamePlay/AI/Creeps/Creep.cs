@@ -32,6 +32,7 @@ public class Creep
     private Vector3 _target;
     private Path _path = null;
     private TSRigidBody _rigidBody;
+    private FP _speed;
 
     public Creep(byte p_ownerId, TSTransform transform)
     {
@@ -44,6 +45,8 @@ public class Creep
         _nextRepath = 0;
         _waypointIndex = 0;
         _vectorPath = new List<TSVector>();
+
+        _speed = 5 + TrueSync.TSRandom.Range(-2.0f, 2.0f);
     }
 
     public void Start(byte p_targetOwnerId, Vector3 target)
@@ -76,10 +79,9 @@ public class Creep
            
             var p1 = pos;
             var p2 = _vectorPath[_waypointIndex];
-
-            const int kSpeed = 5;
+            
             TSVector dirNormalized = (p2 - p1).normalized;
-            force = dirNormalized * kSpeed;
+            force = dirNormalized * _speed;
             force = force * (1 - fixedDeltaTime * _drag);
 
             _transform.rotation = TSQuaternion.LookRotation(dirNormalized, _transform.up);

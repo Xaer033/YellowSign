@@ -7,6 +7,7 @@ using UnityEngine;
 public class GameplayResources : ScriptableObject
 {
     public Commander commander;
-    public GameObject basicTower;
+    //public GameObject basicTower;
     public GameObject basicCreep;
+    public TowerFactory towerFactory;
 }

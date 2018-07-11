@@ -104,10 +104,12 @@ public class PlayerController : TrueSyncBehaviour
                     if(_grid.CanBuildTowerAtPos(btc.position))
                     {
                         TSVector pos = btc.position.ToTSVector();
-                        GameObject towerObj = TrueSyncManager.SyncedInstantiate(gResources.basicTower, pos, TSQuaternion.identity);
-                        Collider towerCollider = towerObj.GetComponent<Collider>();
-                        _grid.UpdateGridPosition(towerCollider.bounds);
+                        Tower tower = gResources.towerFactory.Create("basic_tower", btc.position.ToTSVector(), TSQuaternion.identity);
+                        _towerSystem.AddTower(tower);
+
+                        _grid.UpdateGridPosition(tower.view.bounds);
                         _towerBlocker.Remove(btc.position);
+
                         Debug.Log("Tower BUilt");
                     }
                     else

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   commander: {fileID: 114438072306011958, guid: fc6815bf12db8b6408462e65cb6dd7f8,
     type: 2}
-  basicTower: {fileID: 1219185578201958, guid: 79af4031cb68b4346adf3d0b54065725, type: 2}
   basicCreep: {fileID: 1852374461560344, guid: 36cc2eb45c0f24f4199b4cbd2f9be8ad, type: 2}
+  towerFactory: {fileID: 11400000, guid: 821842834dc7a7c4582025ec8954a463, type: 2}

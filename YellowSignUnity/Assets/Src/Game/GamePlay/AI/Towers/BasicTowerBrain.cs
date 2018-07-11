@@ -32,7 +32,7 @@ public class BasicTowerBrain : AbstractTowerBrain
     private void _doTargeting(Tower tower, FP fixedDeltaTime)
     {
         // Target enemy based off of some criteria (lowest health/closest range, etc.)
-        var colliderList = Physics.OverlapSphere(tower.view.transform.position, tower.stats.baseRange, ~LayerMask.NameToLayer("creep"), QueryTriggerInteraction.Collide);
+        var colliderList = Physics.OverlapSphere(tower.view.position.ToVector(), tower.stats.baseRange, ~LayerMask.NameToLayer("creep"), QueryTriggerInteraction.Collide);
         if(colliderList != null && colliderList.Length > 0)
         {
 

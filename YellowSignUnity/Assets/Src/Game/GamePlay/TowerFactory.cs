@@ -1,47 +1,58 @@
-﻿using System.Collections;
+﻿using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using UnityEngine;
 using TrueSync;
+using UnityEngine;
+using System;
+using System.Reflection;
+using System.Reflection.Emit;
+using Sirenix.Serialization;
 
+[ShowOdinSerializedPropertiesInInspector]
 [System.Serializable]
 public class TowerDef
 {
-    public string       towerId;
-
-    [SerializeField]
-    public AbstractTowerBrain  brain;
+    [OdinSerialize]
+    public ITowerBrain  brain;
 
     public TowerStats   stats;
-    public GameObject   view;
+
+    [OdinSerialize]
+    public ITowerView   view;
 }
 
+[ShowOdinSerializedPropertiesInInspector]
 [CreateAssetMenu(menuName = "YellowSign/TowerFactory")]
-public class TowerFactory : ScriptableObject
+public class TowerFactory : SerializedScriptableObject
 {
-    public List<TowerDef> _towerList;
+    //[OdinSerialize]
+    [SerializeField]
+    private Dictionary<string, TowerDef> _towerDefMap;
 
-    private Dictionary<string, TowerDef> _towerDefMap = new Dictionary<string, TowerDef>();
-
-    public void Awake()
-    {
-        if(_towerList != null)
-        {
-            for(int i = 0; i < _towerList.Count; ++i)
-            {
-                _towerDefMap[_towerList[i].towerId] = _towerList[i];
-            }        
-        }
-    }
+    //public void Awake()
+    //{
+    //    if(_towerList != null)
+    //    {
+    //        for(int i = 0; i < _towerList.Count; ++i)
+    //        {
+    //            _towerDefMap[_towerList[i].towerId] = _towerList[i];
+    //        }        
+    //    }
+    //}
 
 
     public Tower Create(string towerId, TSVector position, TSQuaternion rotation)
     {
         TowerDef def = _towerDefMap[towerId];
-        GameObject towerView = TrueSyncManager.SyncedInstantiate(def.view, position, rotation);
-        //Collider towerCollider = towerObj.GetComponent<Collider>();
+        GameObject towerGameObject = TrueSyncManager.SyncedInstantiate(def.view.gameObject, position, rotation);
+        ITowerView towerView = towerGameObject.GetComponent<ITowerView>();
 
         Tower tower = new Tower(def.brain, def.stats, towerView, null);
         return tower;
     }
 
+    [Button]
+    private void buildTowerIdClass()
+    {
+        Debug.LogWarning("Building list");
+    }
 }

@@ -54,8 +54,9 @@ GameObject:
   - component: {fileID: 114592980982282442}
   - component: {fileID: 114046154202308060}
   - component: {fileID: 136956601578921986}
+  - component: {fileID: 114185550140802318}
   m_Layer: 10
-  m_Name: TestPrefab
+  m_Name: BasicCreepView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -243,6 +244,27 @@ MonoBehaviour:
   traversableTags: -1
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask: -1
+--- !u!114 &114185550140802318
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1852374461560344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb6a34d769a1e4ac7b0b30e433aa443c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  smoothType: 0
+  subdivisions: 4
+  iterations: 2
+  strength: 0.2
+  uniformLength: 1
+  maxSegmentLength: 2
+  bezierTangentLength: 0.14
+  offset: 0.2
+  factor: 0.1
 --- !u!114 &114592980982282442
 MonoBehaviour:
   m_ObjectHideFlags: 1

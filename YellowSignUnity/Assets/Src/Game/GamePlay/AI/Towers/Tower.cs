@@ -19,7 +19,7 @@ public class Tower
 
     public TowerStats stats { get; private set; }
     public TowerState state { get; private set; }
-    public GameObject view  { get; private set; }
+    public ITowerView view  { get; private set; }
 
     public BehaviorState behaviorState { get; set; }
 
@@ -27,10 +27,12 @@ public class Tower
     private CreepSystem _creepSystem;
     private ITowerBrain _towerBrain;
 
-	public Tower(ITowerBrain brain, TowerStats pStat, GameObject view, CreepSystem creepSystem)
+	public Tower(ITowerBrain brain, TowerStats pStat, ITowerView pView, CreepSystem creepSystem)
     {
+        view = pView;
         stats = pStat;
         state = TowerState.CreateFromStats(stats);
+
         behaviorState = BehaviorState.SPAWNING;
 
         _towerBrain = brain;

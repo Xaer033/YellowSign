@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -20,7 +20,7 @@ MonoBehaviour:
   defaultRecyclable: 1
   defaultAutoPlay: 3
   defaultUpdateType: 0
-  defaultTimeScaleIndependent: 1
+  defaultTimeScaleIndependent: 0
   defaultEaseType: 6
   defaultEaseOvershootOrAmplitude: 1.70158
   defaultEasePeriod: 0
