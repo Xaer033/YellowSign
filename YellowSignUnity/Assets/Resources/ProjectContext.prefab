@@ -53,4 +53,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _installers: []
   _installerPrefabs: []
-  _scriptableObjectInstallers: []
+  _scriptableObjectInstallers:
+  - {fileID: 11400000, guid: 67e36d59d298dc84fa733768c2c1717d, type: 2}
+  _settings:
+    _ensureDeterministicDestructionOrderOnApplicationQuit: 1
+    _displayWarningWhenResolvingDuringInstall: 1
+    _validationRootResolveMethod: 0
+    _validationErrorResponse: 0
+    _signalSettings:
+      _defaultSyncMode: 0
+      _missingHandlerDefaultResponse: 2
+      _requireStrictUnsubscribe: 0
+      _defaultAsyncTickPriority: 1

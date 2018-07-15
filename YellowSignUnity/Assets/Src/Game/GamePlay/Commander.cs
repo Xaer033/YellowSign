@@ -2,14 +2,23 @@
 using System.Collections.Generic;
 using TrueSync;
 using UnityEngine;
+using Zenject;
 
 public class Commander : TrueSyncBehaviour
 {
     private Queue<ICommand> _commandQueue = new Queue<ICommand>();
-    
+
+    private event Action _onStart;
     private event Action<byte, CommandType, ICommand> _onCommandExecute;
     private event Action<FP> _onSyncedStep;
+    private event Action<float> _onFrameUpdate;
 
+
+    public event Action onStart
+    {
+        add { _onStart += value; }
+        remove { _onStart -= value; }
+    }
 
     public event Action<byte, CommandType, ICommand> onCommandExecute
     {
@@ -23,17 +32,28 @@ public class Commander : TrueSyncBehaviour
         remove { _onSyncedStep -= value; }
     }
 
+    public event Action<float> onFrameUpdate
+    {
+        add { _onFrameUpdate += value; }
+        remove { _onFrameUpdate -= value; }
+    }
+
     public void AddCommand(ICommand command)
     {
         _commandQueue.Enqueue(command);
     }
-    
+
     public override void OnSyncedStart()
     {
         TSRandom.instance.Initialize(42);
         if(Singleton.instance)
         {
             Singleton.instance.notificationDispatcher.DispatchEvent("GameStart");
+        }
+
+        if(_onStart != null)
+        {
+            _onStart();
         }
     }
     /**
@@ -80,6 +100,14 @@ public class Commander : TrueSyncBehaviour
         if(_onSyncedStep != null)
         {
             _onSyncedStep(TrueSyncManager.DeltaTime);
+        }
+    }
+
+    public void Update()
+    {
+        if(_onFrameUpdate != null)
+        {
+            _onFrameUpdate(Time.deltaTime);
         }
     }
 }

@@ -4,19 +4,26 @@ using UnityEngine;
 using GhostGen;
 using TrueSync;
 using UnityEngine.SceneManagement;
+using Zenject;
 
 public class GamePlayState : IGameState
 {
-    private PlayerController _playerController;
+    private PlayerController[] _playerList;
     private EventDispatcher _notificationDispatcher;
 
+    [Inject]
     private CreepSystem _creepSystem;
+    [Inject]
     private TowerSystem _towerSystem;
+    [Inject]
+    private TowerFactory _towerFactory;
+    [Inject]
+    private GameplayResources _gameplayResources;
 
     public void Init(Hashtable changeStateData)
     {
-        _creepSystem = new CreepSystem();
-        _towerSystem = new TowerSystem();
+        //_creepSystem = new CreepSystem();
+        //_towerSystem = new TowerSystem();
 
         //TrueSyncManager.RunSimulation();
         _notificationDispatcher = Singleton.instance.notificationDispatcher;
@@ -42,7 +49,10 @@ public class GamePlayState : IGameState
 
     public void Exit()
     {
-        _playerController.CleanUp();
+        for(int i = 0; i < _playerList.Length; ++i)
+        {
+            _playerList[i].CleanUp();
+        }
 
         //SceneManager.UnloadSceneAsync("GameScene");
 
@@ -53,14 +63,11 @@ public class GamePlayState : IGameState
     private void OnGameStart(GhostGen.GeneralEvent e)
     {
         _notificationDispatcher.RemoveListener("GameStart", OnGameStart);
-        PlayerController[] list = GameObject.FindObjectsOfType<PlayerController>();
-        for(int i = 0; i < list.Length; ++i)
+        _playerList = GameObject.FindObjectsOfType<PlayerController>();
+
+        for(int i = 0; i < _playerList.Length; ++i)
         {
-            list[i].Setup(_creepSystem, _towerSystem);
-            if (list[i].owner.Id == TrueSyncManager.LocalPlayer.Id)
-            {
-                _playerController = list[i];
-            }
+            _playerList[i].Initialize();
         }
 
         Singleton.instance.gui.screenFader.FadeIn(1.5f);

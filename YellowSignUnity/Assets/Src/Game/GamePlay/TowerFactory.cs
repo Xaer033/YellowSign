@@ -6,6 +6,7 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 using Sirenix.Serialization;
+using Zenject;
 
 [ShowOdinSerializedPropertiesInInspector]
 [System.Serializable]
@@ -28,6 +29,8 @@ public class TowerFactory : SerializedScriptableObject
     [SerializeField]
     private Dictionary<string, TowerDef> _towerDefMap;
 
+    [Inject]
+    private Tower.Factory _towerFactory;
     //public void Awake()
     //{
     //    if(_towerList != null)
@@ -45,8 +48,8 @@ public class TowerFactory : SerializedScriptableObject
         TowerDef def = _towerDefMap[towerId];
         GameObject towerGameObject = TrueSyncManager.SyncedInstantiate(def.view.gameObject, position, rotation);
         ITowerView towerView = towerGameObject.GetComponent<ITowerView>();
-
-        Tower tower = new Tower(def.brain, def.stats, towerView, null);
+        
+        Tower tower = _towerFactory.Create(def.brain, def.stats, towerView);
         return tower;
     }
 

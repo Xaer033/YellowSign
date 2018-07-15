@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName ="YellowSign/Gameplay Resources")]
 public class GameplayResources : ScriptableObject
 {
-    public Commander commander;
+    //public Commander commander;
     //public GameObject basicTower;
     public GameObject basicCreep;
-    public TowerFactory towerFactory;
+    //public TowerFactory towerFactory;
+
+    public GameObject highlighterPrefab;
 }

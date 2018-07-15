@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TrueSync;
-
+using Zenject;
 
 
 public class Tower
 {
+    public class Factory : PlaceholderFactory<ITowerBrain, TowerStats, ITowerView, Tower>
+    {
+        
+    }
+
     public enum BehaviorState
     {
         MOCK,

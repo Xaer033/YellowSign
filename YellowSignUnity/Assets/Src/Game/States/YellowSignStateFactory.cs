@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using GhostGen;
+using Zenject;
 
 public enum YellowSignState
 {
@@ -15,9 +16,14 @@ public enum YellowSignState
 }
 
 
-public class YellowSignStateFactory : IStateFactory<YellowSignState>
+public class YellowSignStateFactory : Installer, IStateFactory<YellowSignState>
 {
-    public IGameState CreateState(YellowSignState stateId)
+    public override void InstallBindings()
+    {
+        Container.Bind<IGameState>().FromMethod<YellowSignState>(CreateState).AsTransient();
+    }
+
+    public IGameState CreateState(YellowSignState stateId, InjectContext ctx)
     {
         switch (stateId)
         {
@@ -33,4 +39,5 @@ public class YellowSignStateFactory : IStateFactory<YellowSignState>
         Debug.LogError("Error: state ID: " + stateId + " does not exist!");
         return null;
     }
+    
 }

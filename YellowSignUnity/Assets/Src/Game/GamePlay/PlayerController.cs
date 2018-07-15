@@ -1,41 +1,50 @@
 ﻿using System.Collections.Generic;
 using TrueSync;
 using UnityEngine;
+using Zenject;
 
-public class PlayerController : TrueSyncBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public GameObject highlighterPrefab; // Move this to external resources
-
     private Commander _commander;
     private Grid _grid;
     private CreepSystem _creepSystem;
     private TowerSystem _towerSystem;
+    private TowerFactory _towerFactory;
+    private GameplayResources _gameplayResources;
     private GameObject _highlighter;
     private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
-
-    public void Setup(CreepSystem creepSystem, TowerSystem towerSystem)
+    
+    public void Initialize(
+        CreepSystem creepSystem, 
+        TowerSystem towerSystem, 
+        TowerFactory towerFactory,
+        GameplayResources gameplayResources)
     {
         _creepSystem = creepSystem;
         _towerSystem = towerSystem;
+        _towerFactory = towerFactory;
+        _gameplayResources = gameplayResources;
     }
 
     public void Start()
     {
+        
         GameObject gridObj = GameObject.FindGameObjectWithTag("grid_p1");
         _grid = gridObj.GetComponent<Grid>();
 
         _commander = GetComponent<Commander>();
         _commander.onCommandExecute += OnCommandExecute;
+        _commander.onSyncedStep += OnSyncStep;
 
-        _highlighter = GameObject.Instantiate<GameObject>(highlighterPrefab);
-        Debug.Log("Owner: " + localOwner.Id);
+        _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
+        Debug.Log("Owner: " + _commander.localOwner.Id);
     }
 
     public void CleanUp()
     {
         _commander.onCommandExecute -= OnCommandExecute;
+        _commander.onSyncedStep -= OnSyncStep;
     }
-
 
     public void Update()
     {
@@ -60,7 +69,7 @@ public class PlayerController : TrueSyncBehaviour
         {
             if(canBuildTower && !_towerBlocker.Contains(pos))
             {
-                ICommand command = CommandFactory.CreateCommand(CommandType.BUILD_TOWER, new object[] { pos, "poop_tower" });
+                ICommand command = CommandFactory.CreateCommand(CommandType.BUILD_TOWER, new object[] { pos, "basic_tower" });
                 _commander.AddCommand(command);
                 _towerBlocker.Add(pos); // Prevents trying to add multiple towers to the same spot before next sync Update
             }
@@ -104,7 +113,7 @@ public class PlayerController : TrueSyncBehaviour
                     if(_grid.CanBuildTowerAtPos(btc.position))
                     {
                         TSVector pos = btc.position.ToTSVector();
-                        Tower tower = gResources.towerFactory.Create("basic_tower", btc.position.ToTSVector(), TSQuaternion.identity);
+                        Tower tower = _towerFactory.Create(btc.type, btc.position.ToTSVector(), TSQuaternion.identity);
                         _towerSystem.AddTower(tower);
 
                         _grid.UpdateGridPosition(tower.view.bounds);
@@ -125,13 +134,16 @@ public class PlayerController : TrueSyncBehaviour
         
     }
 
-    override public void OnSyncedUpdate()
+    private void OnSyncStep(FP fixedDeltaTime)
     {
         if(_creepSystem != null)
         {
-            _creepSystem.FixedStep(TrueSyncManager.DeltaTime);
+            _creepSystem.FixedStep(fixedDeltaTime);
         }
-    }
 
-    
+        if(_towerSystem != null)
+        {
+            _towerSystem.FixedStep(fixedDeltaTime);
+        }   
+    }
 }
