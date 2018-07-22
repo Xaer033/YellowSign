@@ -5,52 +5,40 @@ using UnityEngine;
 using GhostGen;
 
 
-public class Singleton : MonoBehaviour 
+public class Singleton : IInitializable, ITickable, ILateDisposable
 {
-    [SerializeField]
-    private bool firstScene = false;
-
     public GameConfig           gameConfig          { get; private set; }
     public SessionFlags         sessionFlags        { get; private set; }
-
-    [Inject]
+    
     public GameStateMachine<YellowSignState> gameStateMachine    { get; private set; }
 
     public GuiManager           gui                 { get { return gameConfig.guiManager; } }
     public NetworkManager       networkManager      { get; private set; }
 
     public EventDispatcher      notificationDispatcher { get; private set;}
-   
+
+    private GameObject _singleGameObject;
 
     private static object _lock = new object();
 
     private static bool applicationIsQuitting = false;
     private static Singleton _instance = null;
+    
 
-
-    public void Awake()
+    public Singleton(GameStateMachine<YellowSignState> gsMachine)
     {
-        if(firstScene)
-        {
-            _instance = this;
-            _initialize();
-        }
-        else
-        {
-            if(_instance != null)
-            {
-                Destroy(gameObject);
-            }
-        }
+        gameStateMachine = gsMachine;
+        
+        _initialize();
+        _instance = this;
     }
 
-    public void Start()
+    public void Initialize()
     {
         gameStateMachine.ChangeState(gameConfig.initalState);
     }
 
-
-    public void Update()
+    public void Tick()
     {
         gameStateMachine.Step(Time.deltaTime);
         gui.Step(Time.deltaTime);
@@ -61,41 +49,21 @@ public class Singleton : MonoBehaviour
         get
         {
 
-            //if (applicationIsQuitting)
-            //{
-            //    Debug.LogWarning("[Singleton] Instance " +
-            //        "already destroyed on application quit." +
-            //        " Won't create again - returning null.");
-            //    return null;
-            //}
+            if(applicationIsQuitting)
+            {
+                Debug.LogWarning("[Singleton] Instance " +
+                    "already destroyed on application quit." +
+                    " Won't create again - returning null.");
+                return null;
+            }
 
-            //if (_instance == null)
-            //{
-            //    _instance = FindObjectOfType<Singleton>();
-
-            //    if (FindObjectsOfType<Singleton>().Length > 1)
-            //    {
-            //        Debug.LogError("[Singleton] Something went really wrong " +
-            //            " - there should never be more than 1 singleton!" +
-            //            " Reopenning the scene might fix it.");
-            //        return _instance;
-            //    }
-
-            //    if (_instance == null)
-            //    {
-            //        lock (_lock)
-            //        {
-            //            GameObject singleton = new GameObject();
-            //            _instance = singleton.AddComponent<Singleton>();
-            //            _instance._initialize();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Debug.Log("[Singleton] Using instance already created: " +
-            //            _instance.gameObject.name);
-            //    }
-            //}
+            if(_instance == null)
+            {
+                    Debug.LogError("[Singleton] Something went really wrong " +
+                        " - there should never be more than 1 singleton!" +
+                        " Reopenning the scene might fix it.");
+                    return _instance;          
+            }
             return _instance;
         }
     }
@@ -104,19 +72,16 @@ public class Singleton : MonoBehaviour
     {
         Debug.Log("Booted");
 
-        name = "(singleton)";
-        DontDestroyOnLoad(gameObject);
+        _singleGameObject = new GameObject();
+        _singleGameObject.name = "(singleton)";
+        GameObject.DontDestroyOnLoad(_singleGameObject);
 
         gameConfig = Resources.Load<GameConfig>("GameConfig");
-
-
-        //_stateFactory = Container.Instantiate<YellowSignStateFactory>();
-        //gameStateMachine = new GameStateMachine<YellowSignState>(_stateFactory);
 
         sessionFlags = new SessionFlags();
         notificationDispatcher = new EventDispatcher();
 
-        networkManager = gameObject.AddComponent<NetworkManager>();
+        networkManager = _singleGameObject.AddComponent<NetworkManager>();
         Input.multiTouchEnabled = false; //This needs to go elsewere 
 
         _postInit();
@@ -145,7 +110,7 @@ public class Singleton : MonoBehaviour
         //}
     }
 
-    public void OnDestroy()
+    public void LateDispose()
     {
         applicationIsQuitting = true;
     }

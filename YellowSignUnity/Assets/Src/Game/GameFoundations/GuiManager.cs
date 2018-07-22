@@ -47,7 +47,8 @@ public class GuiManager : ScriptableObject, IPostInit
 
         GameObject prefab = Resources.Load<GameObject>("GUI/GuiPrefab");
         Assert.IsNotNull(prefab);
-        obj = GameObject.Instantiate<GameObject>(prefab, Singleton.instance.transform, false);
+        obj = GameObject.Instantiate<GameObject>(prefab, null, false);
+        DontDestroyOnLoad(obj);
 
         return obj;
     }

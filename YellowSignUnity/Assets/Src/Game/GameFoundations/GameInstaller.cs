@@ -17,9 +17,12 @@ public class GameInstaller : ScriptableObjectInstaller
         Container.Bind<TowerSystem>().AsSingle();
         Container.Bind<TowerFactory>().FromInstance(towerFactory).AsSingle();
         Container.Bind<GameplayResources>().FromInstance(gameplayResources).AsSingle();
-        Container.Bind<GameStateMachine<YellowSignState>>().AsSingle();
         Container.Bind<IStateFactory<YellowSignState>>().To<YellowSignStateFactory>().AsTransient();
+        Container.Bind<GameStateMachine<YellowSignState>>().AsSingle();
         Container.BindFactory<ITowerBrain, TowerStats, ITowerView, Tower, Tower.Factory>();
+        Container.Bind<Singleton>().AsSingle().NonLazy();
+
         Debug.Log("Poop");
-    }
+     }
+    
 }
