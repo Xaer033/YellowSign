@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public struct TowerState
+﻿public struct TowerState
 {
     public int health;
     public int attackDamage;
@@ -18,8 +14,6 @@ public struct TowerState
 
     public static TowerState CreateFromStats(TowerStats stats)
     {
-        TowerState state = new TowerState(stats);
-        return state;
+        return new TowerState(stats);
     }
-
 }

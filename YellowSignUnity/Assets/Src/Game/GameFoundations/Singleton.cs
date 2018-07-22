@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-
+using Zenject;
 using UnityEngine;
 using GhostGen;
 
@@ -13,20 +12,21 @@ public class Singleton : MonoBehaviour
 
     public GameConfig           gameConfig          { get; private set; }
     public SessionFlags         sessionFlags        { get; private set; }
+
+    [Inject]
     public GameStateMachine<YellowSignState> gameStateMachine    { get; private set; }
 
     public GuiManager           gui                 { get { return gameConfig.guiManager; } }
-    public GameplayResources    gameplayResources   { get { return gameConfig.gameplayResources; } }
     public NetworkManager       networkManager      { get; private set; }
 
-    public EventDispatcher      notificationDispatcher { get; private set; }
-    
-    private IStateFactory<YellowSignState> _stateFactory;
+    public EventDispatcher      notificationDispatcher { get; private set;}
+   
 
     private static object _lock = new object();
 
     private static bool applicationIsQuitting = false;
     private static Singleton _instance = null;
+
 
     public void Awake()
     {
@@ -37,12 +37,13 @@ public class Singleton : MonoBehaviour
         }
         else
         {
-            if (_instance != null)
+            if(_instance != null)
             {
                 Destroy(gameObject);
             }
         }
     }
+
     public void Start()
     {
         gameStateMachine.ChangeState(gameConfig.initalState);
@@ -55,59 +56,63 @@ public class Singleton : MonoBehaviour
         gui.Step(Time.deltaTime);
     }
 
-
     public static Singleton instance
     {
         get
         {
-            if (applicationIsQuitting)
-            {
-                Debug.LogWarning("[Singleton] Instance " +
-                    "already destroyed on application quit." +
-                    " Won't create again - returning null.");
-                return null;
-            }
 
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<Singleton>();
+            //if (applicationIsQuitting)
+            //{
+            //    Debug.LogWarning("[Singleton] Instance " +
+            //        "already destroyed on application quit." +
+            //        " Won't create again - returning null.");
+            //    return null;
+            //}
 
-                if (FindObjectsOfType<Singleton>().Length > 1)
-                {
-                    Debug.LogError("[Singleton] Something went really wrong " +
-                        " - there should never be more than 1 singleton!" +
-                        " Reopenning the scene might fix it.");
-                    return _instance;
-                }
+            //if (_instance == null)
+            //{
+            //    _instance = FindObjectOfType<Singleton>();
 
-                if (_instance == null)
-                {
-                    lock (_lock)
-                    {
-                        GameObject singleton = new GameObject();
-                        _instance = singleton.AddComponent<Singleton>();
-                        _instance._initialize();
-                    }
-                }
-                else
-                {
-                    Debug.Log("[Singleton] Using instance already created: " +
-                        _instance.gameObject.name);
-                }
-            }
+            //    if (FindObjectsOfType<Singleton>().Length > 1)
+            //    {
+            //        Debug.LogError("[Singleton] Something went really wrong " +
+            //            " - there should never be more than 1 singleton!" +
+            //            " Reopenning the scene might fix it.");
+            //        return _instance;
+            //    }
+
+            //    if (_instance == null)
+            //    {
+            //        lock (_lock)
+            //        {
+            //            GameObject singleton = new GameObject();
+            //            _instance = singleton.AddComponent<Singleton>();
+            //            _instance._initialize();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Debug.Log("[Singleton] Using instance already created: " +
+            //            _instance.gameObject.name);
+            //    }
+            //}
             return _instance;
         }
     }
 
     private void _initialize()
     {
+        Debug.Log("Booted");
+
         name = "(singleton)";
         DontDestroyOnLoad(gameObject);
 
         gameConfig = Resources.Load<GameConfig>("GameConfig");
 
-        _stateFactory = new YellowSignStateFactory();
-        gameStateMachine = new GameStateMachine<YellowSignState>(_stateFactory);
+
+        //_stateFactory = Container.Instantiate<YellowSignStateFactory>();
+        //gameStateMachine = new GameStateMachine<YellowSignState>(_stateFactory);
+
         sessionFlags = new SessionFlags();
         notificationDispatcher = new EventDispatcher();
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TrueSync;
+using Zenject;
 
 public class TowerSystem
 {
@@ -19,7 +20,7 @@ public class TowerSystem
 
     public void Step(float deltaTime)
     {
-        float lerpFactory = deltaTime * 10.0f;
+        //float lerpFactory = deltaTime * 10.0f;
         int count = _towerList.Count;
         for (int i = 0; i < count; ++i)
         {

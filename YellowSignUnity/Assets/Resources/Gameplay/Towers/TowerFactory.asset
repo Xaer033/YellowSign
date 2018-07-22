@@ -36,7 +36,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 1
     - Name: 
       Entry: 7
       Data: 
@@ -46,30 +46,6 @@ MonoBehaviour:
     - Name: 
       Entry: 7
       Data: 2|TowerDef, Assembly-CSharp
-    - Name: brain
-      Entry: 10
-      Data: 0
-    - Name: stats
-      Entry: 10
-      Data: 1
-    - Name: view
-      Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 1
-      Data: faffaaa
-    - Name: 
-      Entry: 7
-      Data: 3|TowerDef, Assembly-CSharp
     - Name: brain
       Entry: 10
       Data: 0

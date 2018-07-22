@@ -10,15 +10,23 @@ public class GamePlayState : IGameState
 {
     private PlayerController[] _playerList;
     private EventDispatcher _notificationDispatcher;
-
-    [Inject]
+    
     private CreepSystem _creepSystem;
-    [Inject]
     private TowerSystem _towerSystem;
-    [Inject]
     private TowerFactory _towerFactory;
-    [Inject]
     private GameplayResources _gameplayResources;
+
+    public GamePlayState(
+        CreepSystem creepSystem, 
+        TowerSystem towerSystem, 
+        TowerFactory towerFactory, 
+        GameplayResources gameplayResources)
+    {
+        _creepSystem = creepSystem;
+        _towerSystem = towerSystem;
+        _towerFactory = towerFactory;
+        _gameplayResources = gameplayResources;
+    }
 
     public void Init(Hashtable changeStateData)
     {
@@ -67,7 +75,11 @@ public class GamePlayState : IGameState
 
         for(int i = 0; i < _playerList.Length; ++i)
         {
-            _playerList[i].Initialize();
+            _playerList[i].Initialize(
+                _creepSystem, 
+                _towerSystem, 
+                _towerFactory, 
+                _gameplayResources);
         }
 
         Singleton.instance.gui.screenFader.FadeIn(1.5f);

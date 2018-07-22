@@ -7,12 +7,12 @@ public class PlayerController : MonoBehaviour
 {
     private Commander _commander;
     private Grid _grid;
+    private GameObject _highlighter;
+    private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
     private CreepSystem _creepSystem;
     private TowerSystem _towerSystem;
     private TowerFactory _towerFactory;
     private GameplayResources _gameplayResources;
-    private GameObject _highlighter;
-    private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
     
     public void Initialize(
         CreepSystem creepSystem, 
@@ -24,11 +24,12 @@ public class PlayerController : MonoBehaviour
         _towerSystem = towerSystem;
         _towerFactory = towerFactory;
         _gameplayResources = gameplayResources;
+        _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
+
     }
 
     public void Start()
-    {
-        
+    {        
         GameObject gridObj = GameObject.FindGameObjectWithTag("grid_p1");
         _grid = gridObj.GetComponent<Grid>();
 
@@ -36,7 +37,6 @@ public class PlayerController : MonoBehaviour
         _commander.onCommandExecute += OnCommandExecute;
         _commander.onSyncedStep += OnSyncStep;
 
-        _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
         Debug.Log("Owner: " + _commander.localOwner.Id);
     }
 
@@ -55,14 +55,17 @@ public class PlayerController : MonoBehaviour
         GridPosition pos;
         bool canBuildTower = _grid.CanBuildTower(ray, out pos);
 
-        if(_highlighter && canBuildTower)
+        if(_highlighter)
         {
-            _highlighter.SetActive(true);
-            _highlighter.transform.position = pos.ToVector3();
-        }
-        else
-        {
-            _highlighter.SetActive(false);
+            if(canBuildTower)
+            {
+                _highlighter.SetActive(true);
+                _highlighter.transform.position = pos.ToVector3();
+            }
+            else
+            {
+                _highlighter.SetActive(false);
+            }
         }
 
         if(Input.GetMouseButtonDown(0))
@@ -88,8 +91,6 @@ public class PlayerController : MonoBehaviour
     
     private void OnCommandExecute(byte ownerId, CommandType type, ICommand command)
     {
-        GameplayResources gResources = Singleton.instance.gameplayResources;
-
         switch(type)
         {
             case CommandType.SPAWN_CREEP:
@@ -99,7 +100,7 @@ public class PlayerController : MonoBehaviour
                     {
                         Transform spawnPoint = _grid.spawnPoints[TSRandom.Range(0, _grid.spawnPoints.Length)];
                         TSVector pos = spawnPoint.position.ToTSVector();
-                        GameObject creepObj = TrueSyncManager.SyncedInstantiate(gResources.basicCreep, pos, TSQuaternion.identity);
+                        GameObject creepObj = TrueSyncManager.SyncedInstantiate(_gameplayResources.basicCreep, pos, TSQuaternion.identity);
                         Creep creep = new Creep(ownerId, creepObj.GetComponent<TSTransform>());
                         creep.Start((byte)(ownerId == 0 ? 1 : 0), _grid.target.transform.position);
                         _creepSystem.AddCreep(ownerId, creep);

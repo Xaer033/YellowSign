@@ -20,24 +20,26 @@ public class YellowSignStateFactory : Installer, IStateFactory<YellowSignState>
 {
     public override void InstallBindings()
     {
-        Container.Bind<IGameState>().FromMethod<YellowSignState>(CreateState).AsTransient();
+        Container.Bind<IntroState>().AsTransient();
+        Container.Bind<MainMenuState>().AsTransient();
+        Container.Bind<GamePlayState>().AsTransient();
     }
 
-    public IGameState CreateState(YellowSignState stateId, InjectContext ctx)
+    public IGameState CreateState(YellowSignState stateId)
     {
         switch (stateId)
         {
-            case YellowSignState.INTRO:                     return new IntroState();
-            case YellowSignState.MAIN_MENU:                 return new MainMenuState();
-            case YellowSignState.MULTIPLAYER_GAME_SETUP:    break;//eturn new GameplayState();
-            case YellowSignState.MULTIPLAYER_GAMEPLAY:      return new GamePlayState();//eturn new PlayerSetupState();
-            case YellowSignState.SINGLEPLAYER_GAME_SETUP:   break;//eturn new MultiplayerSetupState();
+            case YellowSignState.INTRO:                     return Container.Instantiate<IntroState>();
+            case YellowSignState.MAIN_MENU:                 return Container.Instantiate<MainMenuState>();
+            case YellowSignState.MULTIPLAYER_GAME_SETUP:    break;//return new GameplayState();
+            case YellowSignState.MULTIPLAYER_GAMEPLAY:      return Container.Instantiate<GamePlayState>();//eturn new PlayerSetupState();
+            case YellowSignState.SINGLEPLAYER_GAME_SETUP:   break;//return new MultiplayerSetupState();
             case YellowSignState.SINGLEPLAYER_GAMEPLAY:     break;//return new MultiplayerSetupState();
-            case YellowSignState.CREDITS:    break;
+            case YellowSignState.CREDITS:                   break;
         }
 
         Debug.LogError("Error: state ID: " + stateId + " does not exist!");
         return null;
     }
-    
+
 }
