@@ -6,8 +6,13 @@ using DG.Tweening;
 public class IntroState : IGameState
 {
     private bool _gotoMainMenu = false;
+    private GameStateMachine<YellowSignState> gStateMachine;
 
-    
+    public IntroState(GameStateMachine<YellowSignState> gameStateMachine)
+    {
+        gStateMachine = gameStateMachine;
+    }
+
     public void Init(Hashtable changeStateData)
 	{
 		Debug.Log ("Entering In Intro State");
@@ -24,8 +29,7 @@ public class IntroState : IGameState
 	{
 		if (_gotoMainMenu) 
 		{
-			Singleton.instance.gameStateMachine.ChangeState(YellowSignState.MULTIPLAYER_GAMEPLAY);
-
+            gStateMachine.ChangeState(YellowSignState.MULTIPLAYER_GAMEPLAY);
             _gotoMainMenu = false;
 		}
     }
@@ -61,9 +65,12 @@ public class IntroState : IGameState
     {
         if(eventCode == 1)
         {
+
+            Debug.Log("Fade Out Started");
             Singleton.instance.gui.screenFader.FadeOut(0.50f, ()=>
             {
                 _gotoMainMenu = true;
+                Debug.Log("Fade Out Complete");
             });
         }
     }

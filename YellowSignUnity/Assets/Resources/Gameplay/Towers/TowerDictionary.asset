@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8860d1ea8ac06734f971b326886ba76b, type: 3}
+  m_Name: TowerDictionary
+  m_EditorClassIdentifier: 
+  _towerDefList:
+  - towerId: basic_tower
+    towerDef:
+      brain: {fileID: 11400000, guid: 3f81046e8de9f2845b03b69f8c2e6206, type: 2}
+      stats: {fileID: 11400000, guid: c04e5e02788b3d640b37b32ed4a06cc9, type: 2}
+      view: {fileID: 1219185578201958, guid: 79af4031cb68b4346adf3d0b54065725, type: 2}

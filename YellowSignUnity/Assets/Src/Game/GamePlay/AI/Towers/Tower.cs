@@ -7,9 +7,38 @@ using Zenject;
 
 public class Tower
 {
-    public class Factory : PlaceholderFactory<ITowerBrain, TowerStats, ITowerView, Tower>
+    public class Factory : PlaceholderFactory<string, TSVector, TSQuaternion, Tower>
     {
-        
+
+    }
+
+    public class DynamicFactory : IFactory<string, TSVector, TSQuaternion, Tower>, IValidatable
+    {
+        private DiContainer _container;
+        private TowerDictionary _towerDefs;
+
+        public DynamicFactory(TowerDictionary towerDefs, DiContainer container)
+        {
+            _container = container;
+            _towerDefs = towerDefs;
+        }
+
+        public Tower Create(string towerId, TSVector position, TSQuaternion rotation)
+        {
+            TowerDef def = _towerDefs.GetDef(towerId);
+            GameObject towerGameObject = TrueSyncManager.SyncedInstantiate(def.view.gameObject, position, rotation);
+            ITowerView towerView = towerGameObject.GetComponent<ITowerView>();
+
+            Tower tower = _container.Instantiate<Tower>(new object[] { def.stats, towerView, def.brain });
+            return tower;
+        }
+
+        public void Validate()
+        {
+            TowerDef def = _towerDefs.GetDef("basic_tower");
+             _container.Instantiate<Tower>(new object[] { null, null, null });
+            
+        }
     }
 
     public enum BehaviorState

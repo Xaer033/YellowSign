@@ -7,16 +7,16 @@ public enum YellowSignState
     NO_STATE = -1,
 
     INTRO = 1,
-    MAIN_MENU = 2,
-    MULTIPLAYER_GAMEPLAY = 3,
-    MULTIPLAYER_GAME_SETUP = 4,
-    SINGLEPLAYER_GAMEPLAY = 5,
-    SINGLEPLAYER_GAME_SETUP = 6,
-    CREDITS = 7
+    MAIN_MENU,
+    MULTIPLAYER_GAMEPLAY,
+    MULTIPLAYER_GAME_SETUP,
+    SINGLEPLAYER_GAMEPLAY,
+    SINGLEPLAYER_GAME_SETUP,
+    CREDITS
 }
 
 
-public class YellowSignStateFactory : Installer, IStateFactory<YellowSignState>
+public class YellowSignStateFactory : ScriptableObjectInstaller, IStateFactory<YellowSignState>
 {
     public override void InstallBindings()
     {

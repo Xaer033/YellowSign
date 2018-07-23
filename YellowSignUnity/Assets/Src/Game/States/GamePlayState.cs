@@ -13,13 +13,13 @@ public class GamePlayState : IGameState
     
     private CreepSystem _creepSystem;
     private TowerSystem _towerSystem;
-    private TowerFactory _towerFactory;
+    private Tower.Factory _towerFactory;
     private GameplayResources _gameplayResources;
 
     public GamePlayState(
         CreepSystem creepSystem, 
         TowerSystem towerSystem, 
-        TowerFactory towerFactory, 
+        Tower.Factory towerFactory, 
         GameplayResources gameplayResources)
     {
         _creepSystem = creepSystem;

@@ -11,13 +11,13 @@ public class PlayerController : MonoBehaviour
     private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
     private CreepSystem _creepSystem;
     private TowerSystem _towerSystem;
-    private TowerFactory _towerFactory;
+    private Tower.Factory _towerFactory;
     private GameplayResources _gameplayResources;
     
     public void Initialize(
         CreepSystem creepSystem, 
         TowerSystem towerSystem, 
-        TowerFactory towerFactory,
+        Tower.Factory towerFactory,
         GameplayResources gameplayResources)
     {
         _creepSystem = creepSystem;

@@ -17,6 +17,8 @@ public class Singleton : IInitializable, ITickable, ILateDisposable
 
     public EventDispatcher      notificationDispatcher { get; private set;}
 
+    public DiContainer          diContainer { get; private set; }
+    
     private GameObject _singleGameObject;
 
     private static object _lock = new object();
@@ -25,8 +27,9 @@ public class Singleton : IInitializable, ITickable, ILateDisposable
     private static Singleton _instance = null;
     
 
-    public Singleton(GameStateMachine<YellowSignState> gsMachine)
+    public Singleton(DiContainer container, GameStateMachine<YellowSignState> gsMachine)
     {
+        diContainer = container;
         gameStateMachine = gsMachine;
         
         _initialize();

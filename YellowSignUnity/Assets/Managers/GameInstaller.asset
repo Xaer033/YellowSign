@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69637b06a0d3eb841a55549a3181baaf, type: 3}
   m_Name: GameInstaller
   m_EditorClassIdentifier: 
-  towerFactory: {fileID: 11400000, guid: 821842834dc7a7c4582025ec8954a463, type: 2}
+  towerDictionary: {fileID: 11400000, guid: c904165bf7e1ae1478b461ee9e020152, type: 2}
   gameplayResources: {fileID: 11400000, guid: bc9f8a424856ab14c804c7460c9637f4, type: 2}
