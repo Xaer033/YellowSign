@@ -6,9 +6,9 @@ using DG.Tweening;
 public class IntroState : IGameState
 {
     private bool _gotoMainMenu = false;
-    private GameStateMachine<YellowSignState> gStateMachine;
+    private GameStateMachine<YellowSignStateType> gStateMachine;
 
-    public IntroState(GameStateMachine<YellowSignState> gameStateMachine)
+    public IntroState(GameStateMachine<YellowSignStateType> gameStateMachine)
     {
         gStateMachine = gameStateMachine;
     }
@@ -29,7 +29,7 @@ public class IntroState : IGameState
 	{
 		if (_gotoMainMenu) 
 		{
-            gStateMachine.ChangeState(YellowSignState.MULTIPLAYER_GAMEPLAY);
+            gStateMachine.ChangeState(YellowSignStateType.MULTIPLAYER_GAMEPLAY);
             _gotoMainMenu = false;
 		}
     }

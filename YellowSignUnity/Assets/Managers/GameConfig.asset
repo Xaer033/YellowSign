@@ -11,6 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a765cd52069d35849970373ea73ee4b4, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  initalState: 1
-  guiManager: {fileID: 11400000, guid: f6e71bd9b795dea4bb7b8df425c2514b, type: 2}
+  initialState: 1
   gameplayResources: {fileID: 11400000, guid: bc9f8a424856ab14c804c7460c9637f4, type: 2}

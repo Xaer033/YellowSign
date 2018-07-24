@@ -48,7 +48,7 @@ public class Commander : TrueSyncBehaviour
         TSRandom.instance.Initialize(42);
         if(Singleton.instance != null)
         {
-            Singleton.instance.notificationDispatcher.DispatchEvent("GameStart");
+            Singleton.instance.notificationDispatcher.DispatchEvent(GameplayEventType.GAME_START);
         }
 
         if(_onStart != null)

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
 using GhostGen;
+using Zenject;
 
-[CreateAssetMenu(menuName = "GhostGen/Gui Manager")]
-public class GuiManager : ScriptableObject, IPostInit
+public class GuiManager : IInitializable, ITickable
 {
     public Canvas       mainCanvas      { get; private set; }
     public Camera       guiCamera       { get; private set; }
@@ -13,7 +13,7 @@ public class GuiManager : ScriptableObject, IPostInit
 
     private GameObject _guiObject;
     
-    public void PostInit()
+    public void Initialize()
     {
         _guiObject = _getOrCreateGuiObject();
         mainCanvas = _guiObject.GetComponentInChildren<Canvas>();
@@ -25,9 +25,9 @@ public class GuiManager : ScriptableObject, IPostInit
         Assert.IsNotNull(mainCanvas);
     }
 
-    public void Step(float deltaTime)
+    public void Tick()
     {
-        viewFactory.Step();
+        viewFactory.Step(Time.deltaTime);
     }
 
     private ScreenFader _createScreenFader(Canvas canvas)
@@ -48,7 +48,7 @@ public class GuiManager : ScriptableObject, IPostInit
         GameObject prefab = Resources.Load<GameObject>("GUI/GuiPrefab");
         Assert.IsNotNull(prefab);
         obj = GameObject.Instantiate<GameObject>(prefab, null, false);
-        DontDestroyOnLoad(obj);
+        GameObject.DontDestroyOnLoad(obj);
 
         return obj;
     }

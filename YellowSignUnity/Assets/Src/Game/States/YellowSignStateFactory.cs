@@ -2,7 +2,7 @@
 using GhostGen;
 using Zenject;
 
-public enum YellowSignState
+public enum YellowSignStateType
 {
     NO_STATE = -1,
 
@@ -16,7 +16,7 @@ public enum YellowSignState
 }
 
 
-public class YellowSignStateFactory : ScriptableObjectInstaller, IStateFactory<YellowSignState>
+public class YellowSignStateFactory : ScriptableObjectInstaller, IStateFactory<YellowSignStateType>
 {
     public override void InstallBindings()
     {
@@ -25,17 +25,17 @@ public class YellowSignStateFactory : ScriptableObjectInstaller, IStateFactory<Y
         Container.Bind<GamePlayState>().AsTransient();
     }
 
-    public IGameState CreateState(YellowSignState stateId)
+    public IGameState CreateState(YellowSignStateType stateId)
     {
         switch (stateId)
         {
-            case YellowSignState.INTRO:                     return Container.Instantiate<IntroState>();
-            case YellowSignState.MAIN_MENU:                 return Container.Instantiate<MainMenuState>();
-            case YellowSignState.MULTIPLAYER_GAME_SETUP:    break;//return new GameplayState();
-            case YellowSignState.MULTIPLAYER_GAMEPLAY:      return Container.Instantiate<GamePlayState>();//eturn new PlayerSetupState();
-            case YellowSignState.SINGLEPLAYER_GAME_SETUP:   break;//return new MultiplayerSetupState();
-            case YellowSignState.SINGLEPLAYER_GAMEPLAY:     break;//return new MultiplayerSetupState();
-            case YellowSignState.CREDITS:                   break;
+            case YellowSignStateType.INTRO:                     return Container.Instantiate<IntroState>();
+            case YellowSignStateType.MAIN_MENU:                 return Container.Instantiate<MainMenuState>();
+            case YellowSignStateType.MULTIPLAYER_GAME_SETUP:    break;//return new GameplayState();
+            case YellowSignStateType.MULTIPLAYER_GAMEPLAY:      return Container.Instantiate<GamePlayState>();//eturn new PlayerSetupState();
+            case YellowSignStateType.SINGLEPLAYER_GAME_SETUP:   break;//return new MultiplayerSetupState();
+            case YellowSignStateType.SINGLEPLAYER_GAMEPLAY:     break;//return new MultiplayerSetupState();
+            case YellowSignStateType.CREDITS:                   break;
         }
 
         Debug.LogError("Error: state ID: " + stateId + " does not exist!");

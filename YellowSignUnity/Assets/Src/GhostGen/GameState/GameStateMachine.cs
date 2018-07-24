@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Zenject;
+using UnityEngine;
 
 namespace GhostGen
 {
-	public class GameStateMachine<T>
+	public class GameStateMachine<T> : ITickable
 	{
 		public GameStateMachine( IStateFactory<T> p_stateFactory )
 		{
@@ -12,10 +14,10 @@ namespace GhostGen
 			_stateFactory 	= p_stateFactory;
 		}
 
-		public void Step( float p_deltaTime )
+		public void Tick()
 		{
 			if( _currentState != null )
-				_currentState.Step( p_deltaTime );
+				_currentState.Step( Time.deltaTime );
 		}
 
 		public void ChangeState( T stateId, Hashtable changeStateInfo = null )

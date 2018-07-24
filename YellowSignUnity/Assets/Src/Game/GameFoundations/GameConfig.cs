@@ -7,7 +7,7 @@ using GhostGen;
 [CreateAssetMenu(menuName = "GhostGen/Game Config")]
 public class GameConfig : ScriptableObject, IPostInit
 {
-    public YellowSignState initalState;
+    public YellowSignStateType initialState;
 
     public GuiManager guiManager;
     public GameplayResources gameplayResources;

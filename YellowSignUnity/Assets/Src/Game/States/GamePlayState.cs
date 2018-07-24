@@ -9,7 +9,8 @@ using Zenject;
 public class GamePlayState : IGameState
 {
     private PlayerController[] _playerList;
-    private EventDispatcher _notificationDispatcher;
+
+    private IEventDispatcher _notificationDispatcher;
     
     private CreepSystem _creepSystem;
     private TowerSystem _towerSystem;
@@ -17,11 +18,14 @@ public class GamePlayState : IGameState
     private GameplayResources _gameplayResources;
 
     public GamePlayState(
+        [Inject(Id = GameInstaller.GLOBAL_DISPATCHER)]
+        IEventDispatcher notificationDispatcher,
         CreepSystem creepSystem, 
         TowerSystem towerSystem, 
         Tower.Factory towerFactory, 
         GameplayResources gameplayResources)
     {
+        _notificationDispatcher = notificationDispatcher;
         _creepSystem = creepSystem;
         _towerSystem = towerSystem;
         _towerFactory = towerFactory;
@@ -30,24 +34,10 @@ public class GamePlayState : IGameState
 
     public void Init(Hashtable changeStateData)
     {
-        //_creepSystem = new CreepSystem();
-        //_towerSystem = new TowerSystem();
-
-        //TrueSyncManager.RunSimulation();
-        _notificationDispatcher = Singleton.instance.notificationDispatcher;
-        _notificationDispatcher.AddListener("GameStart", OnGameStart);
+        //_notificationDispatcher = Singleton.instance.notificationDispatcher;
+        _notificationDispatcher.AddListener(GameplayEventType.GAME_START, OnGameStart);
 
         PhotonNetwork.LoadLevel("GameScene");
-        
-
-        //if (PhotonNetwork.isMasterClient)
-        //{
-        //    PhotonNetwork.networkingPeer.SetLevelInPropsIfSynced("GameScene");
-
-        //    PhotonNetwork.isMessageQueueRunning = false;
-        //    PhotonNetwork.networkingPeer.loadingLevelAndPausedNetwork = true;
-        //    SceneManager.LoadScene("GameScene", LoadSceneMode.Additive);
-        //}
     }
     
 
@@ -70,7 +60,7 @@ public class GamePlayState : IGameState
 
     private void OnGameStart(GhostGen.GeneralEvent e)
     {
-        _notificationDispatcher.RemoveListener("GameStart", OnGameStart);
+        _notificationDispatcher.RemoveListener(GameplayEventType.GAME_START, OnGameStart);
         _playerList = GameObject.FindObjectsOfType<PlayerController>();
 
         for(int i = 0; i < _playerList.Length; ++i)

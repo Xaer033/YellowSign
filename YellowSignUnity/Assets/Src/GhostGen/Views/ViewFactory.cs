@@ -40,7 +40,7 @@ namespace GhostGen
         }   
 
    
-        public void Step()
+        public void Step(float deltaTime)
         {
             int asyncLength = _asyncList.Count;
             for(int i = 0; i < asyncLength; ++i)

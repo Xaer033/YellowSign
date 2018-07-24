@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GhostGen;
+using Zenject;
 
-
-public class NetworkManager : Photon.PunBehaviour, IPostInit
+public class NetworkManager : Photon.PunBehaviour, IInitializable, IDisposable
 {
     public const string kGameVersion = "0.1.0";
     public const int kMaxPlayers = 4;
@@ -21,12 +21,12 @@ public class NetworkManager : Photon.PunBehaviour, IPostInit
     public event Action<PhotonPlayer> onPlayerConnected;
     public event Action<PhotonPlayer> onPlayerDisconnected;
 
-    public void PostInit()
+    public void Initialize()
     {
         PhotonNetwork.OnEventCall += onCustomEventCallback;
     }
 
-    public void CleanUp()
+    public void Dispose()
     {
         PhotonNetwork.OnEventCall -= onCustomEventCallback;
 
