@@ -573,7 +573,7 @@ PlayerSettings:
   platformArchitecture: {}
   scriptingBackend:
     Android: 1
-    Standalone: 1
+    Standalone: 0
   il2cppCompilerConfiguration:
     Standalone: 0
   incrementalIl2cppBuild: {}

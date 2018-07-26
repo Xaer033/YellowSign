@@ -25,7 +25,7 @@ public class Tower
 
         public override Tower Create(string towerId, TSVector position, TSQuaternion rotation)
         {
-            TowerDef def = _towerDefs.GetDef(towerId);
+            TowerDef def = _towerDefs.GetDef(towerId) as TowerDef;
             GameObject towerGameObject = TrueSyncManager.SyncedInstantiate(def.view.gameObject, position, rotation);
             ITowerView towerView = towerGameObject.GetComponent<ITowerView>();
 
@@ -35,8 +35,8 @@ public class Tower
 
         public override void Validate()
         {
-            TowerDef def = _towerDefs.GetDef("basic_tower");
-             _container.Instantiate<Tower>(new object[] { null, null, null });            
+            //TowerDef def = _towerDefs.GetDef("basic_tower");
+            _container.Instantiate<Tower>(new object[] { null, null, null });            
         }
     }
 

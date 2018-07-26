@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
                         TSVector pos = spawnPoint.position.ToTSVector();
                         GameObject creepObj = TrueSyncManager.SyncedInstantiate(_gameplayResources.basicCreep, pos, TSQuaternion.identity);
                         Creep creep = new Creep(ownerId, creepObj.GetComponent<TSTransform>());
-                        creep.Start((byte)(ownerId == 0 ? 1 : 0), _grid.target.transform.position);
+                        creep.Start((byte)ownerId, _grid.target.transform.position);
                         _creepSystem.AddCreep(ownerId, creep);
                     }
                     break;

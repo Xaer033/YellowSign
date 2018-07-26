@@ -36,8 +36,6 @@ public class GameInstaller : ScriptableObjectInstaller
         Container.BindInterfacesAndSelfTo<GameStateMachine<YellowSignStateType>>().AsSingle().WithArguments(gameStateInstaller);
         Container.BindInterfacesAndSelfTo<NetworkManager>().FromNewComponentOnNewGameObject().AsSingle();
         Container.BindInterfacesAndSelfTo<Singleton>().AsSingle();
-
-        Debug.Log("Poop");
      }
     
 }

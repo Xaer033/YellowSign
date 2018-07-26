@@ -6,21 +6,29 @@ using DG.Tweening;
 public class IntroState : IGameState
 {
     private bool _gotoMainMenu = false;
-    private GameStateMachine<YellowSignStateType> gStateMachine;
+    private GameStateMachine<YellowSignStateType> _gameStateMachine;
+    private NetworkManager _networkManager;
+    private GuiManager _gui;
 
-    public IntroState(GameStateMachine<YellowSignStateType> gameStateMachine)
+    public IntroState(
+        NetworkManager networkManager,
+        GuiManager gui,
+        GameStateMachine<YellowSignStateType> gameStateMachine)
     {
-        gStateMachine = gameStateMachine;
+        _gameStateMachine = gameStateMachine;
+        _networkManager = networkManager;
+        _gui = gui;
     }
 
     public void Init(Hashtable changeStateData)
 	{
 		Debug.Log ("Entering In Intro State");
         DOTween.Init(true, true, LogBehaviour.ErrorsOnly);
-        Singleton.instance.networkManager.Connect();
-        Singleton.instance.networkManager.onJoinedLobby += OnJoinedLobby;
-        Singleton.instance.networkManager.onJoinedRoom += OnJoinedRoom;
-        Singleton.instance.networkManager.onCustomEvent += OnCustomEvent;
+
+        _networkManager.Connect();
+        _networkManager.onJoinedLobby += OnJoinedLobby;
+        _networkManager.onJoinedRoom += OnJoinedRoom;
+        _networkManager.onCustomEvent += OnCustomEvent;
     
         PhotonNetwork.automaticallySyncScene = true;
     }
@@ -29,7 +37,7 @@ public class IntroState : IGameState
 	{
 		if (_gotoMainMenu) 
 		{
-            gStateMachine.ChangeState(YellowSignStateType.MULTIPLAYER_GAMEPLAY);
+            _gameStateMachine.ChangeState(YellowSignStateType.MULTIPLAYER_GAMEPLAY);
             _gotoMainMenu = false;
 		}
     }
@@ -38,9 +46,9 @@ public class IntroState : IGameState
 	{
 		Debug.Log ("Exiting In Intro State");
 
-        Singleton.instance.networkManager.onJoinedLobby -= OnJoinedLobby;
-        Singleton.instance.networkManager.onJoinedRoom -= OnJoinedRoom;
-        Singleton.instance.networkManager.onCustomEvent -= OnCustomEvent;
+        _networkManager.onJoinedLobby -= OnJoinedLobby;
+        _networkManager.onJoinedRoom -= OnJoinedRoom;
+        _networkManager.onCustomEvent -= OnCustomEvent;
     }
 
     void OnJoinedLobby()
@@ -65,9 +73,8 @@ public class IntroState : IGameState
     {
         if(eventCode == 1)
         {
-
             Debug.Log("Fade Out Started");
-            Singleton.instance.gui.screenFader.FadeOut(0.50f, ()=>
+            _gui.screenFader.FadeOut(0.50f, ()=>
             {
                 _gotoMainMenu = true;
                 Debug.Log("Fade Out Complete");
