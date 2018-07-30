@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TrueSync;
 using UnityEngine;
-using TrueSync;
 
 [System.Serializable]
 public struct GridPosition

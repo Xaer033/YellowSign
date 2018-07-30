@@ -15,11 +15,13 @@ public class CameraMovement : MonoBehaviour
     private Vector3 _acceleration;
     // Use this for initialization
     private Vector3 _currentPos;
-        
+    private Transform _movementTransform;
+
 	void Awake ()
     {
+        _movementTransform = transform.parent;
         _acceleration = new Vector3();
-        _currentPos = transform.position;
+        _currentPos = _movementTransform.localPosition;
     }
 
     public void Update()
@@ -29,12 +31,13 @@ public class CameraMovement : MonoBehaviour
         {
             Cursor.lockState = (Cursor.lockState == CursorLockMode.None) ? CursorLockMode.Confined : CursorLockMode.None;
         }
-        transform.position = Vector3.Lerp(transform.position, _currentPos, Time.deltaTime);
+        _movementTransform.localPosition = Vector3.Lerp(_movementTransform.localPosition, _currentPos, Time.deltaTime);
     }
     // Not getting input from TrueSyncInput. Don't need to sync camera movement
     public void FixedUpdate()
     {
         Vector3 camPos = transform.position;
+        
         int mouseX = (int)Input.mousePosition.x;
         int mouseY = (int)Input.mousePosition.y;
         if (mouseX < edgeLimit && camPos.x > worldLimit.x )
@@ -57,7 +60,7 @@ public class CameraMovement : MonoBehaviour
 
         float deltaTime = Time.fixedDeltaTime;
         _acceleration = _acceleration.normalized * speed;
-        _currentPos = transform.position + _velocity * deltaTime;
+        _currentPos = _movementTransform.localPosition + _velocity * deltaTime;
 
         float dragForce = (1.0f - drag * deltaTime);
         _velocity = (_velocity + _acceleration * deltaTime) * dragForce;

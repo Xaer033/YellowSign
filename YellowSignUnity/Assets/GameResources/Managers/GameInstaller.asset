@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Name: GameInstaller
   m_EditorClassIdentifier: 
   towerDictionary: {fileID: 11400000, guid: c904165bf7e1ae1478b461ee9e020152, type: 2}
+  creepDictionary: {fileID: 11400000, guid: bc7cdd950e5cd8a4aa1989d51e4429cc, type: 2}
   gameplayResources: {fileID: 11400000, guid: bc9f8a424856ab14c804c7460c9637f4, type: 2}
   gameConfig: {fileID: 11400000, guid: 151ed1b06f355bf41a62287394eee526, type: 2}

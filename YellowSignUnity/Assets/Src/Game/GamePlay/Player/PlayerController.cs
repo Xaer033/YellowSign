@@ -13,19 +13,31 @@ public class PlayerController : MonoBehaviour
     private TowerSystem _towerSystem;
     private Tower.Factory _towerFactory;
     private GameplayResources _gameplayResources;
+    private PlayerSpawn _playerSpawn;
+
+    private Camera _camera;
     
     public void Initialize(
+        PlayerSpawn playerSpawn,
         CreepSystem creepSystem, 
         TowerSystem towerSystem, 
         Tower.Factory towerFactory,
         GameplayResources gameplayResources)
     {
+        _playerSpawn = playerSpawn;
         _creepSystem = creepSystem;
         _towerSystem = towerSystem;
         _towerFactory = towerFactory;
         _gameplayResources = gameplayResources;
         _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
 
+        if(TrueSyncManager.LocalPlayer.Id == owner.Id)
+        {
+            GameObject cameraObj = GameObject.Instantiate<GameObject>(
+                _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
+
+            _camera = cameraObj.GetComponent<Camera>();
+        }
     }
 
     public void Start()
@@ -51,7 +63,7 @@ public class PlayerController : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 1.0f;
 
-        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+        Ray ray = (_camera != null) ? _camera.ScreenPointToRay(mousePos) : default(Ray);
         GridPosition pos;
         bool canBuildTower = _grid.CanBuildTower(ray, out pos);
 
@@ -92,6 +104,11 @@ public class PlayerController : MonoBehaviour
         {
             _towerSystem.Step(Time.deltaTime);
         }
+    }
+
+    public TSPlayerInfo owner
+    {
+        get { return _commander.owner; }
     }
     
     private void OnCommandExecute(byte ownerId, CommandType type, ICommand command)

@@ -83,13 +83,13 @@ public class Commander : TrueSyncBehaviour
         byte ownerId = TrueSyncInput.GetByte(iterKey++);
         int commandCount = TrueSyncInput.GetInt(ownerId, iterKey++);
 
-        for (int i = 0; i < commandCount; ++i)
+        for (int i = 0; i < commandCount; ++i) 
         {
             CommandType type = (CommandType)TrueSyncInput.GetByte(ownerId, iterKey++);
             byte[] byteCommand = TrueSyncInput.GetByteArray(ownerId, iterKey++);
             ICommand command = CommandFactory.CreateFromByteArray(type, byteCommand);
 
-            Debug.LogErrorFormat("Owner: {0}, Type: {0}", ownerId, command.commandType);
+            Debug.LogWarningFormat("Owner: {0}, Type: {1}", ownerId, command.commandType);
 
             if(_onCommandExecute != null && type > 0 && command != null)
             {
