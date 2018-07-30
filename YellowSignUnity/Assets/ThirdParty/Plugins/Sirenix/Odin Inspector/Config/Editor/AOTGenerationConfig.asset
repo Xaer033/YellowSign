@@ -12,8 +12,29 @@ MonoBehaviour:
   m_Name: AOTGenerationConfig
   m_EditorClassIdentifier: 
   excludeAssemblyDefinitionsWithEditorReference: 0
-  automateBeforeBuilds: 0
+  automateBeforeBuilds: 1
   deleteDllAfterBuilds: 1
-  automateForPlatforms: 0900000014000000
-  lastScan: 0
-  supportSerializedTypes: []
+  automateForPlatforms: 090000001400000013000000
+  lastScan: 636685080663038821
+  supportSerializedTypes:
+  - TypeName: CreepDef, Assembly-CSharp
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[CreepDef,
+      Assembly-CSharp]], mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[TowerDef,
+      Assembly-CSharp]], mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+      mscorlib]], mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: System.String, mscorlib
+    IsCustom: 0
+    Emit: 1
+  - TypeName: TowerDef, Assembly-CSharp
+    IsCustom: 0
+    Emit: 1
