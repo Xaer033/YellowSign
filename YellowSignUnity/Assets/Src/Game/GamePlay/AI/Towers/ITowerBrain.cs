@@ -5,5 +5,5 @@ using TrueSync;
 
 public interface ITowerBrain
 { 
-    void FixedStep(Tower tower, FP fixedDeltaTime, CreepSystem creepSystem);
+    void FixedStep(Tower tower, FP fixedDeltaTime);
 }

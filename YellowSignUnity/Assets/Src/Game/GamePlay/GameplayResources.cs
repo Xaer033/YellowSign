@@ -9,6 +9,7 @@ public class GameplayResources : ScriptableObject
     //public Commander commander;
     //public GameObject basicTower;
     public GameObject basicCreep;
+    public CreepStats basicCreepStats;
     //public TowerFactory towerFactory;
 
     public GameObject highlighterPrefab;

@@ -5,13 +5,8 @@ using TrueSync;
 using Zenject;
 
 
-public class Tower
-{
-    //public class Factory : PlaceholderFactory<string, TSVector, TSQuaternion, Tower>
-    //{
-
-    //}
-
+public class Tower : IAttacker, IAttackTarget
+{ 
     public class Factory : PlaceholderFactory<string, TSVector, TSQuaternion, Tower>, IValidatable
     {
         private DiContainer _container;
@@ -29,8 +24,7 @@ public class Tower
             GameObject towerGameObject = TrueSyncManager.SyncedInstantiate(def.view.gameObject, position, rotation);
             ITowerView towerView = towerGameObject.GetComponent<ITowerView>();
 
-            Tower tower = _container.Instantiate<Tower>(new object[] { def.stats, towerView, def.brain });
-            return tower;
+            return _container.Instantiate<Tower>(new object[] { def.stats, towerView, def.brain });            
         }
 
         public override void Validate()
@@ -50,30 +44,57 @@ public class Tower
         RECOVERING
     }
 
-    public TowerStats stats { get; private set; }
-    public TowerState state { get; private set; }
-    public ITowerView view  { get; private set; }
+    public TowerStats       stats           { get; private set; }
+    public ITowerView       view            { get; private set; }
+    public FP               spawnTime       { get; private set; }
 
-    public BehaviorState behaviorState { get; set; }
+    public BehaviorState    behaviorState   { get; set; }
+    public Creep            targetCreep     { get; set; }
+    public TowerState       state           { get; set; }
 
-    private FP _spawnTime;
-    private CreepSystem _creepSystem;
+
     private ITowerBrain _towerBrain;
 
-	public Tower(ITowerBrain brain, TowerStats pStat, ITowerView pView, CreepSystem creepSystem)
+
+	public Tower(
+        ITowerBrain brain, 
+        TowerStats pStat, 
+        ITowerView pView)
     {
+        _towerBrain = brain;
+
+        spawnTime = TrueSyncManager.Time;
+
         view = pView;
         stats = pStat;
-        state = TowerState.CreateFromStats(stats);
+        state = TowerState.CreateFromStats(pStat);
 
-        behaviorState = BehaviorState.SPAWNING;
-
-        _towerBrain = brain;
-        _creepSystem = creepSystem;
-
-        _spawnTime = TrueSyncManager.Time;
+        behaviorState = BehaviorState.SPAWNING;        
+        view.tower = this;
 	}
 	
+    public int health
+    {
+        get { return state.health; }
+    }
+
+    public bool isDead
+    {
+        get { return state.health <= 0; }
+    }
+
+    public AttackData CreateAttackData()
+    {
+        return new AttackData(
+            stats.damageType, 
+            state.attackDamage);
+    }
+
+    public AttackResult TakeDamage(AttackData attackData)
+    {
+        return default(AttackResult);
+    }
+
     public void Step(float deltaTime)
     {
 
@@ -83,7 +104,7 @@ public class Tower
     {
         if(_towerBrain != null)
         {
-            _towerBrain.FixedStep(this, fixedDeltaTime, _creepSystem);
+            _towerBrain.FixedStep(this, fixedDeltaTime);
         }
     }
 }

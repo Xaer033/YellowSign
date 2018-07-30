@@ -15,7 +15,7 @@ public enum CreepType
 public class CreepStats : ScriptableObject
 {
     public CreepType creepType;
-    public FP baseSpeed;
+    public float baseSpeed;
     public int maxHealth;
     public int baseArmor;
 }

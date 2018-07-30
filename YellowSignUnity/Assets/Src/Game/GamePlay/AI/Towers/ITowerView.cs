@@ -11,4 +11,8 @@ public interface ITowerView
     TSQuaternion rotation { get; }
     GameObject gameObject { get; }
 
+    Tower tower { get; set; }
+
+    FP VisualAttack(ICreepView target);
+    
 }

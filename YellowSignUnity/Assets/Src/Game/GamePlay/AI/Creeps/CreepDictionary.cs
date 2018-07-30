@@ -6,7 +6,7 @@ using UnityEngine;
 public class CreepDef
 {
     public CreepStats stats;
-    public GameObject view;
+    public ICreepView view;
 }
 
 [System.Serializable]

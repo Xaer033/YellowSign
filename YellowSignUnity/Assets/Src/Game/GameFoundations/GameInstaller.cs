@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using GhostGen;
+﻿using GhostGen;
 using TrueSync;
+using UnityEngine;
 using Zenject;
 
 
@@ -12,6 +10,7 @@ public class GameInstaller : ScriptableObjectInstaller
     public const string GLOBAL_DISPATCHER = "global_dispatcher";
 
     public TowerDictionary towerDictionary;
+    public CreepDictionary creepDictionary;
     public GameplayResources gameplayResources;
     public GameConfig gameConfig;
 
@@ -28,6 +27,7 @@ public class GameInstaller : ScriptableObjectInstaller
         Container.Bind<SessionFlags>().AsSingle();
         Container.Bind<GameConfig>().FromInstance(gameConfig).AsSingle();
         Container.Bind<TowerDictionary>().FromInstance(towerDictionary).AsSingle();
+        Container.Bind<CreepDictionary>().FromInstance(creepDictionary).AsSingle();
         Container.Bind<GameplayResources>().FromInstance(gameplayResources).AsSingle();
 
         Container.BindFactory<string, TSVector, TSQuaternion, Tower, Tower.Factory>();
@@ -37,5 +37,4 @@ public class GameInstaller : ScriptableObjectInstaller
         Container.BindInterfacesAndSelfTo<NetworkManager>().FromNewComponentOnNewGameObject().AsSingle();
         Container.BindInterfacesAndSelfTo<Singleton>().AsSingle();
      }
-    
 }

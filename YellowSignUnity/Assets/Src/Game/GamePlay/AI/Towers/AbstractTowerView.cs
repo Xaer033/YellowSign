@@ -18,4 +18,8 @@ public class AbstractTowerView : ITowerView
     public TSQuaternion rotation { get; }
 
     public GameObject gameObject { get; }
+
+    public Tower tower { get; set; }
+
+    public FP VisualAttack(ICreepView target) { return 0; }
 }

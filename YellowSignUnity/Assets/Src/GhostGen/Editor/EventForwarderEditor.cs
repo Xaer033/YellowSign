@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine.Events;
 
 namespace GhostGen
 {

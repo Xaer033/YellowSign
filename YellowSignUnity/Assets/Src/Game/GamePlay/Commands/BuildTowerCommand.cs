@@ -5,7 +5,7 @@ public struct BuildTowerCommand : ICommand
     public GridPosition position;
     public string type;
 
-    public BuildTowerCommand(GridPosition pos,  string towerType)
+    public BuildTowerCommand(string towerType, GridPosition pos)
     {
         position = pos;
         type = towerType;

@@ -4,7 +4,7 @@ using UnityEngine;
 using TrueSync;
 using Pathfinding;
 
-public class Creep
+public class Creep : IAttacker, IAttackTarget
 {
     public FP REPATH_RATE = 0.75f;
 
@@ -12,6 +12,7 @@ public class Creep
     public CreepStats stats { get; set; }
 
     public TSTransform transform { get { return _transform; } }
+    public ICreepView view { get; private set; }
 
     public bool flagForRemoval { get;  set; }
     public bool reachedTarget { get; set; }
@@ -31,22 +32,24 @@ public class Creep
     private FP _drag = 5f;
     private Vector3 _target;
     private Path _path = null;
-    private TSRigidBody _rigidBody;
     private FP _speed;
 
-    public Creep(byte p_ownerId, TSTransform transform)
+    public Creep(byte p_ownerId, CreepStats pStats, ICreepView creepView)
     {
         ownerId = p_ownerId;
-        _transform = transform;
-        _seeker = transform.GetComponent<Seeker>();
-        //_rigidBody = transform.GetComponent<TSRigidBody>();
+        view = creepView;
+        stats = pStats;
+        state = CreepState.CreateFromStats(pStats);
 
-        //_seeker.
+        _transform = creepView.transformTS;
+        _seeker = creepView.seeker;
+
         _nextRepath = 0;
         _waypointIndex = 0;
         _vectorPath = new List<TSVector>();
 
-        _speed = 5 + TrueSync.TSRandom.Range(-2.0f, 2.0f);
+        _speed = pStats.baseSpeed;
+        creepView.creep = this;
     }
 
     public void Start(byte p_targetOwnerId, Vector3 target)
@@ -59,9 +62,44 @@ public class Creep
 
         RecalculatePath();
     }
-    
+
+    public int health
+    {
+        get { return state.health; }
+    }
+
+    public bool isDead
+    {
+        get { return state.health <= 0 || reachedTarget; }
+    }
+
+    public AttackData CreateAttackData()
+    {
+        return default(AttackData);
+    }
+
+    public AttackResult TakeDamage(AttackData attackData)
+    {
+        int totalDamage = attackData.potentialDamage;
+        int newTargetHealth = state.health - totalDamage;
+
+        //Debug.Log("TotalDamage: " + totalDamage);
+        //Debug.Log("Health Left: " + newTargetHealth);
+
+        state.health = newTargetHealth;
+        
+        AttackResult result = new AttackResult(this, totalDamage, newTargetHealth, state.isDead);
+        return result;
+    }
+
     public void FixedStep(FP fixedDeltaTime)
     {
+        if(state.isDead)
+        {
+            flagForRemoval = true;
+            return;
+        }
+
         if(TrueSyncManager.Time >= _nextRepath && _canSearchAgain)
         {
             RecalculatePath();
@@ -71,11 +109,11 @@ public class Creep
         TSVector force;
         if (/*_canSearchAgain &&*/ _vectorPath != null && _vectorPath.Count != 0)
         {
-            while ((_waypointIndex < _vectorPath.Count - 1 && (pos - _vectorPath[_waypointIndex]).sqrMagnitude < _distanceToNextWaypoint * _distanceToNextWaypoint) || _waypointIndex == 0)
+            FP distanceSquared = _distanceToNextWaypoint * _distanceToNextWaypoint;
+            while ((_waypointIndex < _vectorPath.Count - 1 && (pos - _vectorPath[_waypointIndex]).sqrMagnitude < distanceSquared) || _waypointIndex == 0)
             {
                 _waypointIndex++;
             }
-
            
             var p1 = pos;
             var p2 = _vectorPath[_waypointIndex];
@@ -85,14 +123,6 @@ public class Creep
             force = force * (1 - fixedDeltaTime * _drag);
 
             _transform.rotation = TSQuaternion.LookRotation(dirNormalized, _transform.up);
-            //RaycastHit hit;
-            //if(Physics.Raycast(transform.position.ToVector(), dirNormalized.ToVector(), out hit, 1.0f, ~LayerMask.NameToLayer("creep"), QueryTriggerInteraction.Collide))
-            //{
-            //    FP dist = hit.distance;
-            //    force += (transform.forward * 4 * dist);
-
-            //}
-
             
             if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2)
             {
@@ -107,22 +137,7 @@ public class Creep
             force = TSVector.zero;
         }
 
-        // Rotate the character if the velocity is not extremely small
-        //if (Time.deltaTime > 0 && movementDelta.magnitude / Time.deltaTime > 0.01f)
-        //{
-        //    var rot = transform.rotation;
-        //    var targetRot = Quaternion.LookRotation(movementDelta, controller.To3D(Vector2.zero, 1));
-        //    const float RotationSpeed = 5;
-        //    if (controller.movementPlane == MovementPlane.XY)
-        //    {
-        //        targetRot = targetRot * Quaternion.Euler(-90, 180, 0);
-        //    }
-        //    transform.rotation = Quaternion.Slerp(rot, targetRot, Time.deltaTime * RotationSpeed);
-        //}
-
-        //_rigidBody.AddForce(force * fixedDeltaTime, ForceMode.Force);
-        _transform.position += force * fixedDeltaTime;
-        
+        _transform.position += force * fixedDeltaTime;        
     }
 
     public Path RecalculatePath()
@@ -137,7 +152,11 @@ public class Creep
 
         _canSearchAgain = true;
 
-        if (_path != null) _path.Release(this);
+        if(_path != null)
+        {
+            _path.Release(this);
+        }
+
         _path = p;
         p.Claim(this);
 
@@ -147,7 +166,6 @@ public class Creep
             _vectorPath = null;
             return;
         }
-
 
         TSVector p1 = p.originalStartPoint.ToTSVector();
         TSVector p2 = _transform.position;
@@ -160,23 +178,5 @@ public class Creep
         {
             _vectorPath.Add(p.vectorPath[i].ToTSVector());
         }
-        //TSVector waypoint;
-
-        //if (_distanceToNextWaypoint > 0)
-        //{
-        //    FP dist = _distanceToNextWaypoint;
-        //    for (FP t = 0; t <= d; t += dist )
-        //    {
-        //        _waypointIndex--;
-        //        TSVector pos = p1 + (p2 - p1) * t;
-
-        //        do
-        //        {
-        //            _waypointIndex++;
-        //            waypoint = _vectorPath[_waypointIndex];
-        //        } while ((pos - waypoint).sqrMagnitude < _distanceToNextWaypoint * _distanceToNextWaypoint && _waypointIndex != _vectorPath.Count - 1);
-        //    }
-        //}
     }
-
 }

@@ -8,6 +8,6 @@ public enum DamageType
     NORMAL,
     FIRE,
     ICE,
-    POISON,
+    VENOM,
     CHAOS
 }

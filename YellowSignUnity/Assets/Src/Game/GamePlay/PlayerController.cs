@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
         {
             if(canBuildTower && !_towerBlocker.Contains(pos))
             {
-                ICommand command = CommandFactory.CreateCommand(CommandType.BUILD_TOWER, new object[] { pos, "basic_tower" });
+                ICommand command = CommandFactory.CreateCommand(CommandType.BUILD_TOWER, new object[] { "basic_tower", pos });
                 _commander.AddCommand(command);
                 _towerBlocker.Add(pos); // Prevents trying to add multiple towers to the same spot before next sync Update
             }
@@ -86,6 +86,11 @@ public class PlayerController : MonoBehaviour
         if(_creepSystem != null)
         {
             _creepSystem.Step(Time.deltaTime);
+        }
+
+        if(_towerSystem != null)
+        {
+            _towerSystem.Step(Time.deltaTime);
         }
     }
     
@@ -101,8 +106,11 @@ public class PlayerController : MonoBehaviour
                         Transform spawnPoint = _grid.spawnPoints[TSRandom.Range(0, _grid.spawnPoints.Length)];
                         TSVector pos = spawnPoint.position.ToTSVector();
                         GameObject creepObj = TrueSyncManager.SyncedInstantiate(_gameplayResources.basicCreep, pos, TSQuaternion.identity);
-                        Creep creep = new Creep(ownerId, creepObj.GetComponent<TSTransform>());
-                        creep.Start((byte)ownerId, _grid.target.transform.position);
+                        ICreepView creepView = creepObj.GetComponent<ICreepView>();
+                        
+                        Creep creep = new Creep(ownerId, _gameplayResources.basicCreepStats, creepView);         
+                        creep.Start(ownerId, _grid.target.transform.position);
+                       
                         _creepSystem.AddCreep(ownerId, creep);
                     }
                     break;
@@ -114,7 +122,7 @@ public class PlayerController : MonoBehaviour
                     if(_grid.CanBuildTowerAtPos(btc.position))
                     {
                         TSVector pos = btc.position.ToTSVector();
-                        Tower tower = _towerFactory.Create(btc.type, btc.position.ToTSVector(), TSQuaternion.identity);
+                        Tower tower = _towerFactory.Create(btc.type, pos, TSQuaternion.identity);
                         _towerSystem.AddTower(tower);
 
                         _grid.UpdateGridPosition(tower.view.bounds);

@@ -10,7 +10,7 @@ public class TowerDef
 
     public TowerStats   stats;
     
-    public GameObject   view;
+    public ITowerView   view;
 }
 
 //[ShowOdinSerializedPropertiesInInspector]

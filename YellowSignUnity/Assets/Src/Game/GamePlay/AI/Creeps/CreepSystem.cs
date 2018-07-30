@@ -80,8 +80,8 @@ public class CreepSystem : GhostGen.EventDispatcher
 
                 if (c.flagForRemoval)
                 {
-                    //TrueSyncManager.SyncedDestroy(c.transform.gameObject);
-                    GameObject.Destroy(c.transform.gameObject);
+                    GameObject.Destroy(c.view.gameObject);
+                    _creeps[o][i] = null;
                     _creeps[o].RemoveAt(i);
                     continue;
                 }

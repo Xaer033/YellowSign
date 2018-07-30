@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8860d1ea8ac06734f971b326886ba76b, type: 3}
-  m_Name: TowerDictionary
+  m_Name: DefaultTowerDictionary
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -17,7 +17,7 @@ MonoBehaviour:
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 3f81046e8de9f2845b03b69f8c2e6206, type: 2}
     - {fileID: 11400000, guid: c04e5e02788b3d640b37b32ed4a06cc9, type: 2}
-    - {fileID: 1219185578201958, guid: 79af4031cb68b4346adf3d0b54065725, type: 2}
+    - {fileID: 114006405693211276, guid: 79af4031cb68b4346adf3d0b54065725, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []

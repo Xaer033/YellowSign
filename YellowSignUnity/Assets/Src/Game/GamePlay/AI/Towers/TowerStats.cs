@@ -1,19 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum TowerType
-{
-
-}
+﻿using UnityEngine;
+using TrueSync;
 
 [CreateAssetMenu(menuName = "YellowSign/TowerStats")]
 public class TowerStats : ScriptableObject
 {
-    public int maxHealth;
-    public int baseDamage;
-    public int baseRange;
-    public DamageType damageType;
-    public AttackType attackType;
-    public CreepType targetableCreepTypes;
+    public DamageType   damageType;
+    public AttackType   attackType;
+    public CreepType    targetableCreepTypes;
+
+    public int  maxHealth;
+    public int  baseDamage;
+    public int  baseRange;
+    public float   reloadTime;
+    public float   idleTime;
 }

@@ -19,7 +19,7 @@ public class IntroState : IGameState
         _networkManager = networkManager;
         _gui = gui;
     }
-
+    
     public void Init(Hashtable changeStateData)
 	{
 		Debug.Log ("Entering In Intro State");
