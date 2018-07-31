@@ -32,8 +32,6 @@ MonoBehaviour:
       EditorTypeName: 
     - DrawnTypeName: PickupItemSyncer, Assembly-CSharp
       EditorTypeName: 
-    - DrawnTypeName: PlayerController, Assembly-CSharp
-      EditorTypeName: 
     - DrawnTypeName: PunTurnManager, Assembly-CSharp
       EditorTypeName: 
     - DrawnTypeName: QuitOnEscapeOrBack, Assembly-CSharp

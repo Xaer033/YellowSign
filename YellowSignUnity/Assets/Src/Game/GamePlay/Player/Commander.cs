@@ -8,16 +8,23 @@ public class Commander : TrueSyncBehaviour
 {
     private Queue<ICommand> _commandQueue = new Queue<ICommand>();
 
-    private event Action _onStart;
+    private event Action _onSyncStart;
+    private event Action _onSyncStartLocalPlayer;
     private event Action<byte, CommandType, ICommand> _onCommandExecute;
     private event Action<FP> _onSyncedStep;
     private event Action<float> _onFrameUpdate;
 
 
-    public event Action onStart
+    public event Action onSyncStart
     {
-        add { _onStart += value; }
-        remove { _onStart -= value; }
+        add { _onSyncStart += value; }
+        remove { _onSyncStart -= value; }
+    }
+
+    public event Action onSyncStartLocalPlayer
+    {
+        add { _onSyncStartLocalPlayer += value; }
+        remove { _onSyncStartLocalPlayer -= value; }
     }
 
     public event Action<byte, CommandType, ICommand> onCommandExecute
@@ -45,15 +52,23 @@ public class Commander : TrueSyncBehaviour
 
     public override void OnSyncedStart()
     {
-        TSRandom.instance.Initialize(42);
+        Debug.Log("Commander Start");
         if(Singleton.instance != null)
         {
             Singleton.instance.notificationDispatcher.DispatchEvent(GameplayEventType.GAME_START);
         }
 
-        if(_onStart != null)
+        if(_onSyncStart != null)
         {
-            _onStart();
+            _onSyncStart();
+        }
+    }
+
+    public override void OnSyncedStartLocalPlayer()
+    {
+        if(_onSyncStartLocalPlayer != null)
+        {
+            _onSyncStartLocalPlayer();
         }
     }
     /**
@@ -63,6 +78,8 @@ public class Commander : TrueSyncBehaviour
      */
     public override void OnSyncedInput()
     {
+
+        Debug.Log("Commander Input");
         byte iterKey = 0;
         int commandCount = _commandQueue.Count;
         TrueSyncInput.SetByte(iterKey++, localOwner.Id);

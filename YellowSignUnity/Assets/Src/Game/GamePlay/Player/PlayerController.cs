@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
 
     private Camera _camera;
     
+    public PlayerNumber playerNumber { get; set; }
+
     public void Initialize(
         PlayerSpawn playerSpawn,
         CreepSystem creepSystem, 
@@ -31,13 +33,7 @@ public class PlayerController : MonoBehaviour
         _gameplayResources = gameplayResources;
         _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
 
-        if(TrueSyncManager.LocalPlayer.Id == owner.Id)
-        {
-            GameObject cameraObj = GameObject.Instantiate<GameObject>(
-                _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
-
-            _camera = cameraObj.GetComponent<Camera>();
-        }
+        playerNumber = playerSpawn.playerNumber;
     }
 
     public void Start()
@@ -48,6 +44,8 @@ public class PlayerController : MonoBehaviour
         _commander = GetComponent<Commander>();
         _commander.onCommandExecute += OnCommandExecute;
         _commander.onSyncedStep += OnSyncStep;
+        _commander.onSyncStartLocalPlayer += OnSyncStartLocalPlayer;
+
 
         Debug.Log("Owner: " + _commander.localOwner.Id);
     }
@@ -95,15 +93,7 @@ public class PlayerController : MonoBehaviour
            _commander.AddCommand(new SpawnCreepCommand("poop_creep"));
         }
 
-        if(_creepSystem != null)
-        {
-            _creepSystem.Step(Time.deltaTime);
-        }
-
-        if(_towerSystem != null)
-        {
-            _towerSystem.Step(Time.deltaTime);
-        }
+       
     }
 
     public TSPlayerInfo owner
@@ -162,14 +152,22 @@ public class PlayerController : MonoBehaviour
 
     private void OnSyncStep(FP fixedDeltaTime)
     {
-        if(_creepSystem != null)
-        {
-            _creepSystem.FixedStep(fixedDeltaTime);
-        }
+        //if(_creepSystem != null)
+        //{
+        //    _creepSystem.FixedStep(fixedDeltaTime);
+        //}
 
-        if(_towerSystem != null)
-        {
-            _towerSystem.FixedStep(fixedDeltaTime);
-        }   
+        //if(_towerSystem != null)
+        //{
+        //    _towerSystem.FixedStep(fixedDeltaTime);
+        //}   
+    }
+
+    private void OnSyncStartLocalPlayer()
+    {
+        GameObject cameraObj = GameObject.Instantiate<GameObject>(
+                _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
+
+        _camera = cameraObj.GetComponent<Camera>();
     }
 }

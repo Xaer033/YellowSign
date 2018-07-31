@@ -13,10 +13,12 @@ public class GameInstaller : ScriptableObjectInstaller
     public CreepDictionary creepDictionary;
     public GameplayResources gameplayResources;
     public GameConfig gameConfig;
+    public GameObject syncCommanderPrefab;
 
     public override void InstallBindings()
     {
         towerDictionary.Initialize();
+        creepDictionary.Initialize();    
         
         YellowSignStateFactory gameStateInstaller = Container.Instantiate<YellowSignStateFactory>();
         gameStateInstaller.InstallBindings();
@@ -29,8 +31,9 @@ public class GameInstaller : ScriptableObjectInstaller
         Container.Bind<TowerDictionary>().FromInstance(towerDictionary).AsSingle();
         Container.Bind<CreepDictionary>().FromInstance(creepDictionary).AsSingle();
         Container.Bind<GameplayResources>().FromInstance(gameplayResources).AsSingle();
-
+  
         Container.BindFactory<string, TSVector, TSQuaternion, Tower, Tower.Factory>();
+        Container.BindFactory<SyncCommander, SyncCommander.Factory>().WithFactoryArguments<GameObject>(syncCommanderPrefab);
 
         Container.BindInterfacesAndSelfTo<GuiManager>().AsSingle();
         Container.BindInterfacesAndSelfTo<GameStateMachine<YellowSignStateType>>().AsSingle().WithArguments(gameStateInstaller);

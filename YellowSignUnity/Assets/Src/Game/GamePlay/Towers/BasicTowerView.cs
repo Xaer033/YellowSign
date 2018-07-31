@@ -45,7 +45,7 @@ public class BasicTowerView : MonoBehaviour, ITowerView
 
     public FP VisualAttack(ICreepView target)
     {
-        const float kDuration = 0.09f;
+        const float kDuration = 0.125f;
         //tower.stats.attackType.
         if(_fxTween != null)
         {

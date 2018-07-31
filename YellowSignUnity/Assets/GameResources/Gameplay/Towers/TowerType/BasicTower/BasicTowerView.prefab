@@ -192,7 +192,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1219185578201958}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.3676645, y: 0.99757767, z: -36.499016}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4797597289839692}
@@ -238,7 +238,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1496548689556612}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2.93, z: -0.39}
+  m_LocalPosition: {x: 0, y: 0.3, z: -0.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4466321355867322}
@@ -494,11 +494,11 @@ MonoBehaviour:
   _interplateMode: 0
   _position:
     x:
-      _serializedValue: 0
+      _serializedValue: 5874074112
     y:
-      _serializedValue: 0
+      _serializedValue: 4284563456
     z:
-      _serializedValue: 0
+      _serializedValue: -156762079232
   _rotation:
     x:
       _serializedValue: 0
@@ -609,7 +609,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.38
+      scalar: 1.47
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -662,7 +662,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5.03
+      scalar: 2.1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -778,7 +778,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 4.08
+      scalar: 1.18
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -1184,7 +1184,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0.12
     randomPositionAmount: 0
     radius:
-      value: 0.6329689
+      value: 0.47
       mode: 0
       spread: 0
       speed:
@@ -1303,7 +1303,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 7
+      scalar: 13.89
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -5105,8 +5105,8 @@ ParticleSystemRenderer:
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
-  m_VelocityScale: 2.1
-  m_LengthScale: 1.31
+  m_VelocityScale: 1.13
+  m_LengthScale: 0.66
   m_SortingFudge: 0
   m_NormalDirection: 1
   m_RenderAlignment: 0

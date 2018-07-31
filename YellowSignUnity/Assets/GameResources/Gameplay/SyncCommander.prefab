@@ -9,47 +9,46 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1715948360407970}
+  m_RootGameObject: {fileID: 1620854385027656}
   m_IsPrefabAsset: 1
---- !u!1 &1715948360407970
+--- !u!1 &1620854385027656
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4800949359539258}
-  - component: {fileID: 114438072306011958}
-  - component: {fileID: 114812162772622962}
+  - component: {fileID: 4823553882416500}
+  - component: {fileID: 114662449788286690}
   m_Layer: 0
-  m_Name: Commander
-  m_TagString: commander
+  m_Name: SyncCommander
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4800949359539258
+--- !u!4 &4823553882416500
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1715948360407970}
+  m_GameObject: {fileID: 1620854385027656}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114438072306011958
+--- !u!114 &114662449788286690
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1715948360407970}
+  m_GameObject: {fileID: 1620854385027656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c01dceee9716de4588e82e90bf6de1a, type: 3}
+  m_Script: {fileID: 11500000, guid: 95373e95561f191459a557df01104cb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfPlayers: 0
@@ -60,24 +59,3 @@ MonoBehaviour:
   localOwner:
     id: 0
     name: 
---- !u!114 &114812162772622962
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1715948360407970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f86803c47ee358746ad01836facac5c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numberOfPlayers: 0
-  ownerIndex: -1
-  owner:
-    id: 0
-    name: 
-  localOwner:
-    id: 0
-    name: 
-  highlighterPrefab: {fileID: 1934427208475836, guid: 08665d0db2402184689dac09b061c16c,
-    type: 2}

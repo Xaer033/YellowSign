@@ -17,6 +17,9 @@ public class GamePlayState : IGameState
     private Tower.Factory _towerFactory;
     private GameplayResources _gameplayResources;
     private GuiManager _guiManager;
+    private SyncCommander _commander;
+    private SyncCommander.Factory _syncFactory;
+
 
     public GamePlayState(
         [Inject(Id = GameInstaller.GLOBAL_DISPATCHER)]
@@ -25,14 +28,16 @@ public class GamePlayState : IGameState
         TowerSystem towerSystem, 
         Tower.Factory towerFactory, 
         GameplayResources gameplayResources,
-        GuiManager guiManager)
+        GuiManager guiManager,
+        SyncCommander.Factory syncFactory)
     {
         _notificationDispatcher = notificationDispatcher;
-        _creepSystem = creepSystem;
-        _towerSystem = towerSystem;
-        _towerFactory = towerFactory;
-        _gameplayResources = gameplayResources;
-        _guiManager = guiManager;
+        _gameplayResources      = gameplayResources;
+        _creepSystem    = creepSystem;
+        _towerSystem    = towerSystem;
+        _towerFactory   = towerFactory;
+        _guiManager     = guiManager;
+        _syncFactory    = syncFactory;
     }
 
     public void Init(Hashtable changeStateData)
@@ -50,6 +55,8 @@ public class GamePlayState : IGameState
 
     public void Exit()
     {
+        _commander.onSyncedStep -= onFixedStep;
+
         for(int i = 0; i < _playerList.Length; ++i)
         {
             _playerList[i].CleanUp();
@@ -64,6 +71,10 @@ public class GamePlayState : IGameState
     private void OnGameStart(GhostGen.GeneralEvent e)
     {
         _notificationDispatcher.RemoveListener(GameplayEventType.GAME_START, OnGameStart);
+
+        _commander = _syncFactory.Create();
+        _commander.onSyncedStep += onFixedStep;
+
         _playerList = GameObject.FindObjectsOfType<PlayerController>();
         PlayerSpawn[] spawnList = GameObject.FindObjectsOfType<PlayerSpawn>();
         List<PlayerSpawn> sp = new List<PlayerSpawn>(spawnList);
@@ -83,5 +94,18 @@ public class GamePlayState : IGameState
         }
         
         _guiManager.screenFader.FadeIn(1.5f);
+    }
+
+    private void onFixedStep(FP fixedDeltaTime)
+    {
+        if(_creepSystem != null)
+        {
+            _creepSystem.FixedStep(fixedDeltaTime);
+        }
+
+        if(_towerSystem != null)
+        {
+            _towerSystem.FixedStep(fixedDeltaTime);
+        }
     }
 }
