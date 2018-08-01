@@ -31,9 +31,19 @@ public class PlayerController : MonoBehaviour
         _towerSystem = towerSystem;
         _towerFactory = towerFactory;
         _gameplayResources = gameplayResources;
-        _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
 
+        _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
         playerNumber = playerSpawn.playerNumber;
+
+        if(TrueSyncManager.LocalPlayer.Id == owner.Id)
+        {
+            GameObject cameraObj = GameObject.Instantiate<GameObject>(
+                    _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
+
+            CameraMovement camMovement = cameraObj.GetComponent<CameraMovement>();
+            camMovement.playerNumber = playerNumber;
+            _camera = camMovement.camera;
+        }
     }
 
     public void Start()
@@ -165,9 +175,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnSyncStartLocalPlayer()
     {
-        GameObject cameraObj = GameObject.Instantiate<GameObject>(
-                _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
+        //GameObject cameraObj = GameObject.Instantiate<GameObject>(
+        //        _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
 
-        _camera = cameraObj.GetComponent<Camera>();
+        //_camera = cameraObj.GetComponent<Camera>();
     }
 }

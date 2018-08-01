@@ -29,6 +29,10 @@ namespace TrueSync {
          * @param goB Second GameObject
          **/
         public static bool CollisionEnabled(GameObject goA, GameObject goB) {
+            if(!goA || !goB)
+            {
+                return false;
+            }
             return CollisionEnabled(goA.layer, goB.layer);
         }
 

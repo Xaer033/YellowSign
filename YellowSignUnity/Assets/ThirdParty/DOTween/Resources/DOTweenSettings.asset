@@ -14,6 +14,8 @@ MonoBehaviour:
   useSafeMode: 0
   timeScale: 1
   useSmoothDeltaTime: 0
+  maxSmoothUnscaledTime: 0.15
+  rewindCallbackMode: 0
   showUnityEditorReport: 0
   logBehaviour: 2
   drawGizmos: 1
@@ -26,4 +28,6 @@ MonoBehaviour:
   defaultEasePeriod: 0
   defaultAutoKill: 1
   defaultLoopType: 0
-  storeSettingsLocation: 0
+  storeSettingsLocation: 1
+  showPlayingTweens: 0
+  showPausedTweens: 0

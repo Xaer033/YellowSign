@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TrueSync;
+using Sirenix.OdinInspector;
 
 public class CameraMovement : MonoBehaviour
 {
-    public Rect worldLimit;
+    public Rect[] worldLimits;
 
     public float speed;
     public float drag;
@@ -16,12 +17,23 @@ public class CameraMovement : MonoBehaviour
     // Use this for initialization
     private Vector3 _currentPos;
     private Transform _movementTransform;
+    //private Rect worldLimit;
+    private Camera _camera;
+
+    public PlayerNumber playerNumber { get; set; }
+
+    public Camera camera
+    {
+        get { return _camera; }
+    }
 
 	void Awake ()
     {
         _movementTransform = transform.parent;
-        _acceleration = new Vector3();
+        _acceleration = Vector3.zero;
         _currentPos = _movementTransform.localPosition;
+
+        _camera = GetComponent<Camera>();
     }
 
     public void Update()
@@ -40,6 +52,8 @@ public class CameraMovement : MonoBehaviour
         
         int mouseX = (int)Input.mousePosition.x;
         int mouseY = (int)Input.mousePosition.y;
+        Rect worldLimit = worldLimits[(byte)playerNumber - 1];
+
         if (mouseX < edgeLimit && camPos.x > worldLimit.x )
         {
             _acceleration.x = -1.0f;

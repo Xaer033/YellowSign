@@ -45,7 +45,7 @@ public class BasicTowerView : MonoBehaviour, ITowerView
 
     public FP VisualAttack(ICreepView target)
     {
-        const float kDuration = 0.125f;
+        const float kDuration = 0.115f;
         //tower.stats.attackType.
         if(_fxTween != null)
         {
@@ -56,11 +56,13 @@ public class BasicTowerView : MonoBehaviour, ITowerView
         _fxInstance.gameObject.SetActive(true);
         _fxInstance.transform.position = cannonHook.position;
 
+        Vector3 forwardVec = target.transformTS.forward.ToVector() * target.creep.stats.baseSpeed * kDuration;
+        Vector3 tPos = target.targetPosition + forwardVec;
         _fxTween = DOTween.Sequence();
-        Tween moveTween = _fxInstance.transform.DOMove(target.targetPosition, kDuration);
+        Tween moveTween = _fxInstance.transform.DOMove(tPos, kDuration);
 
         _fxTween.Insert(0.0f, moveTween);
-        _fxTween.InsertCallback(kDuration + 0.15f, onTrailComplete);
+        _fxTween.InsertCallback(kDuration + 0.25f, onTrailComplete);
 
         return (FP)kDuration;
     }

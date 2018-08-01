@@ -100,10 +100,10 @@ public class Creep : IAttacker, IAttackTarget
             return;
         }
 
-        if(TrueSyncManager.Time >= _nextRepath && _canSearchAgain)
-        {
-            RecalculatePath();
-        }
+        //if(TrueSyncManager.Time >= _nextRepath && _canSearchAgain)
+        //{
+        //    RecalculatePath();
+        //}
 
         TSVector pos = _transform.position;
         TSVector force;

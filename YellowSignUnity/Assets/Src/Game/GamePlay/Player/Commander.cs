@@ -79,7 +79,7 @@ public class Commander : TrueSyncBehaviour
     public override void OnSyncedInput()
     {
 
-        Debug.Log("Commander Input");
+        //Debug.Log("Commander Input");
         byte iterKey = 0;
         int commandCount = _commandQueue.Count;
         TrueSyncInput.SetByte(iterKey++, localOwner.Id);
