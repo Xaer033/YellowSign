@@ -2,14 +2,6 @@
 
 public struct CreepSpawnInfo
 {
-    //public CreepSpawnInfo()
-    //{
-    //    ownerId = 0;
-    //    targetOwnerId = 0;
-    //    position = TSVector.zero;
-    //    rotation = TSQuaternion.identity;
-    //    targetPosition = TSVector.zero;
-    //}
 
     public static CreepSpawnInfo Create(
         byte ownerId, 

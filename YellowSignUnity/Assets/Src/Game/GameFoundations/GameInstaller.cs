@@ -33,7 +33,7 @@ public class GameInstaller : ScriptableObjectInstaller
         Container.Bind<TowerDictionary>().FromInstance(towerDictionary).AsSingle();
         Container.Bind<CreepDictionary>().FromInstance(creepDictionary).AsSingle();
         Container.Bind<GameplayResources>().FromInstance(gameplayResources).AsSingle();
-        Container.BindFactory<string, TSVector, TSQuaternion, Tower, Tower.Factory>();
+        Container.BindFactory<string, TowerSpawnInfo, Tower, Tower.Factory>();
         Container.BindFactory<string, CreepSpawnInfo, Creep, Creep.Factory>();
         Container.BindFactory<SyncStepper, SyncStepper.Factory>().WithFactoryArguments<GameObject>(syncCommanderPrefab);
         Container.BindInterfacesAndSelfTo<GuiManager>().AsSingle();

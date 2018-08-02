@@ -123,11 +123,12 @@ public class PlayerController : MonoBehaviour
                         TSVector targetPos = _grid.target.transform.position.ToTSVector();
 
                         byte targetOwnerId = ownerId == (byte)1 ? (byte)2 : (byte)1;
+                        TSQuaternion rotation = ownerId == (byte)1 ? TSQuaternion.identity : TSQuaternion.Euler(0, 180, 0);
 
                         CreepSpawnInfo spawnInfo = CreepSpawnInfo.Create(
                             ownerId,
                             startingPos, 
-                            TSQuaternion.identity,
+                            rotation,
                             targetOwnerId,
                             targetPos);
                         
@@ -142,7 +143,10 @@ public class PlayerController : MonoBehaviour
                     if(_grid.CanBuildTowerAtPos(btc.position))
                     {
                         TSVector pos = btc.position.ToTSVector();
-                        Tower tower = _towerFactory.Create(btc.type, pos, TSQuaternion.identity);
+                        TSQuaternion rotation = ownerId == (byte)1 ? TSQuaternion.identity : TSQuaternion.Euler(0, 180, 0);
+
+                        TowerSpawnInfo spawnInfo = TowerSpawnInfo.Create(ownerId, pos, rotation);
+                        Tower tower = _towerFactory.Create(btc.type, spawnInfo);
 
                         _grid.UpdateGridPosition(tower.view.bounds);
                         _towerBlocker.Remove(btc.position);

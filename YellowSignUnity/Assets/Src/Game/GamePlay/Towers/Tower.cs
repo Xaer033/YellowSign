@@ -7,7 +7,7 @@ using Zenject;
 
 public class Tower : IAttacker, IAttackTarget
 { 
-    public class Factory : PlaceholderFactory<string, TSVector, TSQuaternion, Tower>, IValidatable
+    public class Factory : PlaceholderFactory<string, TowerSpawnInfo, Tower>, IValidatable
     {
         private DiContainer _container;
         private TowerDictionary _towerDefs;
@@ -23,13 +23,10 @@ public class Tower : IAttacker, IAttackTarget
             _towerSystem = towerSystem;
         }
 
-        public override Tower Create(string towerId, TSVector position, TSQuaternion rotation)
+        public override Tower Create(string towerId, TowerSpawnInfo spawnInfo)
         {
             TowerDef def = _towerDefs.GetDef(towerId) as TowerDef;
-            GameObject towerGameObject = TrueSyncManager.SyncedInstantiate(def.view.gameObject, position, rotation);
-            ITowerView towerView = towerGameObject.GetComponent<ITowerView>();
-
-            Tower tower = _container.Instantiate<Tower>(new object[] { def.stats, towerView, def.brain });
+            Tower tower = _container.Instantiate<Tower>(new object[] { def, spawnInfo });
             _towerSystem.AddTower(tower);
 
             return tower;
@@ -38,7 +35,7 @@ public class Tower : IAttacker, IAttackTarget
         public override void Validate()
         {
             //TowerDef def = _towerDefs.GetDef("basic_tower");
-            _container.Instantiate<Tower>(new object[] { null, null, null });            
+            _container.Instantiate<Tower>(new object[] { null, null });            
         }
     }
 
@@ -52,6 +49,7 @@ public class Tower : IAttacker, IAttackTarget
         RECOVERING
     }
 
+    public byte             ownerId         { get; private set; }
     public TowerStats       stats           { get; private set; }
     public ITowerView       view            { get; private set; }
     public FP               spawnTime       { get; private set; }
@@ -64,21 +62,25 @@ public class Tower : IAttacker, IAttackTarget
     private ITowerBrain _towerBrain;
 
 
-	public Tower(
-        ITowerBrain brain, 
-        TowerStats pStat, 
-        ITowerView pView)
+	public Tower(TowerDef def, TowerSpawnInfo spawnInfo)
     {
-        _towerBrain = brain;
-
+        ownerId = spawnInfo.ownerId;
         spawnTime = TrueSyncManager.Time;
 
-        view = pView;
-        stats = pStat;
-        state = TowerState.CreateFromStats(pStat);
+        _towerBrain = def.brain;
+        
+        stats = def.stats;
+        state = TowerState.CreateFromStats(stats);
+
+        GameObject towerGameObject = TrueSyncManager.SyncedInstantiate(
+            def.view.gameObject, 
+            spawnInfo.position, 
+            spawnInfo.rotation);
+
+        view = towerGameObject.GetComponent<ITowerView>();
+        view.tower = this;
 
         behaviorState = BehaviorState.SPAWNING;        
-        view.tower = this;
 	}
 	
     public int health
