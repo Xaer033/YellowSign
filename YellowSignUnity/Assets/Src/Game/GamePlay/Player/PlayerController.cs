@@ -5,12 +5,12 @@ using Zenject;
 
 public class PlayerController : MonoBehaviour
 {
+    private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
+
     private Commander _commander;
     private Grid _grid;
     private GameObject _highlighter;
-    private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
-    private CreepSystem _creepSystem;
-    private TowerSystem _towerSystem;
+    private Creep.Factory _creepFactory;
     private Tower.Factory _towerFactory;
     private GameplayResources _gameplayResources;
     private PlayerSpawn _playerSpawn;
@@ -21,14 +21,12 @@ public class PlayerController : MonoBehaviour
 
     public void Initialize(
         PlayerSpawn playerSpawn,
-        CreepSystem creepSystem, 
-        TowerSystem towerSystem, 
+        Creep.Factory creepFactory, 
         Tower.Factory towerFactory,
         GameplayResources gameplayResources)
     {
         _playerSpawn = playerSpawn;
-        _creepSystem = creepSystem;
-        _towerSystem = towerSystem;
+        _creepFactory = creepFactory;
         _towerFactory = towerFactory;
         _gameplayResources = gameplayResources;
 
@@ -100,7 +98,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-           _commander.AddCommand(new SpawnCreepCommand("poop_creep"));
+           _commander.AddCommand(new SpawnCreepCommand("basic_creep"));
         }
 
        
@@ -121,14 +119,19 @@ public class PlayerController : MonoBehaviour
                     for (int s = 0; s < 5; ++s)
                     {
                         Transform spawnPoint = _grid.spawnPoints[TSRandom.Range(0, _grid.spawnPoints.Length)];
-                        TSVector pos = spawnPoint.position.ToTSVector();
-                        GameObject creepObj = TrueSyncManager.SyncedInstantiate(_gameplayResources.basicCreep, pos, TSQuaternion.identity);
-                        ICreepView creepView = creepObj.GetComponent<ICreepView>();
+                        TSVector startingPos = spawnPoint.position.ToTSVector();
+                        TSVector targetPos = _grid.target.transform.position.ToTSVector();
+
+                        byte targetOwnerId = ownerId == (byte)1 ? (byte)2 : (byte)1;
+
+                        CreepSpawnInfo spawnInfo = CreepSpawnInfo.Create(
+                            ownerId,
+                            startingPos, 
+                            TSQuaternion.identity,
+                            targetOwnerId,
+                            targetPos);
                         
-                        Creep creep = new Creep(ownerId, _gameplayResources.basicCreepStats, creepView);         
-                        creep.Start(ownerId, _grid.target.transform.position);
-                       
-                        _creepSystem.AddCreep(ownerId, creep);
+                        Creep creep = _creepFactory.Create(scc.type, spawnInfo);
                     }
                     break;
                 }
@@ -140,7 +143,6 @@ public class PlayerController : MonoBehaviour
                     {
                         TSVector pos = btc.position.ToTSVector();
                         Tower tower = _towerFactory.Create(btc.type, pos, TSQuaternion.identity);
-                        _towerSystem.AddTower(tower);
 
                         _grid.UpdateGridPosition(tower.view.bounds);
                         _towerBlocker.Remove(btc.position);
@@ -152,7 +154,7 @@ public class PlayerController : MonoBehaviour
                         Debug.Log("Tower Denied");
                     }
 
-                    _creepSystem.recalculatePaths = true;
+                    //_creepSystem.recalculatePaths = true;
 
                     break;
                 }

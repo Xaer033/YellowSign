@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using TrueSync;
-using GhostGen;
+using UnityEngine;
 
 public class CreepSystem : GhostGen.EventDispatcher
 {
@@ -13,7 +11,6 @@ public class CreepSystem : GhostGen.EventDispatcher
 
 
     public bool recalculatePaths { set; get; }
-
     
     public CreepSystem()
     {
@@ -28,20 +25,21 @@ public class CreepSystem : GhostGen.EventDispatcher
         _generatingPath = new List<Pathfinding.Path>(10);
     }
 
-    public void AddCreep(int owner, Creep creep)
+    public void AddCreep(byte ownerId, Creep creep)
     {
-        List<Creep> creepList = GetCreepList(owner);
+        List<Creep> creepList = GetCreepList(ownerId);
         creepList.Add(creep);
+        DispatchEvent(GameplayEventType.CREEP_SPAWNED, false, creep);
     }
 
-    public List<Creep> GetCreepList(int owner)
+    public List<Creep> GetCreepList(byte ownerId)
     {
-        if(owner < 0 || owner >= NetworkManager.kMaxPlayers)
+        if(ownerId < 0 || ownerId >= NetworkManager.kMaxPlayers)
         {
             Debug.LogError("Owner is out of range!");
             return null;
         }
-        return _creeps[owner];
+        return _creeps[ownerId];
     }
 
     public void Step(float deltaTime)
@@ -75,7 +73,7 @@ public class CreepSystem : GhostGen.EventDispatcher
 
                 if(c.reachedTarget)
                 {
-                    DispatchEvent(CreepEventType.REACHED_GOAL, false, c);
+                    DispatchEvent(GameplayEventType.CREEP_REACHED_GOAL, false, c);
                 }
 
                 if (c.flagForRemoval)

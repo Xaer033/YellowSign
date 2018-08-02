@@ -3,9 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using TrueSync;
 using Pathfinding;
+using Zenject;
 
 public class Creep : IAttacker, IAttackTarget
 {
+    public class Factory : PlaceholderFactory<string, CreepSpawnInfo, Creep>, IValidatable
+    {
+        private DiContainer _container;
+        private CreepDictionary _creepDefs;
+        private CreepSystem _creepSystem;
+
+        public Factory(
+            CreepDictionary creepDefs, 
+            CreepSystem creepSystem, 
+            DiContainer container)
+        {
+            _container = container;
+            _creepDefs = creepDefs;
+            _creepSystem = creepSystem;
+        }
+
+        public override Creep Create(string creepId, CreepSpawnInfo spawnInfo)
+        {
+            CreepDef def = _creepDefs.GetDef(creepId);
+            Creep creep = _container.Instantiate<Creep>(new object[] { def, spawnInfo });
+            _creepSystem.AddCreep(spawnInfo.ownerId, creep);
+            
+            return creep;
+        }
+
+        public override void Validate()
+        {
+            //TowerDef def = _towerDefs.GetDef("basic_tower");
+            _container.Instantiate<Creep>(new object[] { null, null });
+        }
+    }
+
     public FP REPATH_RATE = 0.75f;
 
     public CreepState state { get; set; }
@@ -17,8 +50,8 @@ public class Creep : IAttacker, IAttackTarget
     public bool flagForRemoval { get;  set; }
     public bool reachedTarget { get; set; }
 
-    public byte ownerId { get; set; }
-    public byte targetOwnerId { get; set; }
+    public byte ownerId         { get; private set; }
+    public byte targetOwnerId   { get; private set; }
 
     private Seeker _seeker;
     private bool _canSearchAgain;
@@ -30,36 +63,40 @@ public class Creep : IAttacker, IAttackTarget
     private FP _distanceToNextWaypoint = 0.35f;
 
     private FP _drag = 5f;
-    private Vector3 _target;
+    private TSVector _targetPosition;
     private Path _path = null;
     private FP _speed;
 
-    public Creep(byte p_ownerId, CreepStats pStats, ICreepView creepView)
+    public Creep(CreepDef def, CreepSpawnInfo spawnInfo)
     {
-        ownerId = p_ownerId;
-        view = creepView;
-        stats = pStats;
-        state = CreepState.CreateFromStats(pStats);
-
-        _transform = creepView.transformTS;
-        _seeker = creepView.seeker;
-
         _nextRepath = 0;
         _waypointIndex = 0;
-        _vectorPath = new List<TSVector>();
-
-        _speed = pStats.baseSpeed;
-        creepView.creep = this;
-    }
-
-    public void Start(byte p_targetOwnerId, Vector3 target)
-    {
-        targetOwnerId = p_targetOwnerId;
-        _target = target;
-
         _canSearchAgain = true;
         reachedTarget = false;
+        _vectorPath = new List<TSVector>();
 
+        ownerId = spawnInfo.ownerId;
+
+        // Move outside creep state
+        GameObject creepObj = TrueSyncManager.SyncedInstantiate(
+            def.view.gameObject, 
+            spawnInfo.position, 
+            spawnInfo.rotation);
+        
+        view = creepObj.GetComponent<ICreepView>();
+        view.creep = this;
+        
+        stats = def.stats;
+        state = CreepState.CreateFromStats(stats);
+
+        _transform = view.transformTS;
+        _seeker = view.seeker;
+
+        _speed = stats.baseSpeed;
+        _targetPosition = spawnInfo.targetPosition;
+        targetOwnerId = spawnInfo.targetOwnerId;
+
+        
         RecalculatePath();
     }
 
@@ -88,7 +125,12 @@ public class Creep : IAttacker, IAttackTarget
 
         state.health = newTargetHealth;
         
-        AttackResult result = new AttackResult(this, totalDamage, newTargetHealth, state.isDead);
+        AttackResult result = new AttackResult(
+            this,
+            totalDamage, 
+            newTargetHealth, 
+            state.isDead);
+
         return result;
     }
 
@@ -143,7 +185,13 @@ public class Creep : IAttacker, IAttackTarget
     public Path RecalculatePath()
     {
         _canSearchAgain = false;
-        return _seeker.StartPath(_transform.position.ToVector(), _target, onPathComplete);
+
+        Path result = _seeker.StartPath(
+                        _transform.position.ToVector(), 
+                        _targetPosition.ToVector(), 
+                        onPathComplete);
+
+        return result;
     }
 
     private void onPathComplete(Path _p)
@@ -169,8 +217,10 @@ public class Creep : IAttacker, IAttackTarget
 
         TSVector p1 = p.originalStartPoint.ToTSVector();
         TSVector p2 = _transform.position;
+
         p1.y = p2.y;
-        FP d = (p2 - p1).magnitude;
+
+        //FP d = (p2 - p1).magnitude;
         _waypointIndex = 0;
 
         _vectorPath.Clear();

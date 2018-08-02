@@ -36,12 +36,12 @@ public class DefinitionDictionary<T> : SerializedScriptableObject
     }
 
 
-    public T GetDef(string towerId)
+    public T GetDef(string id)
     {
         T def = default(T);
-        if(!_defMap.TryGetValue(towerId, out def))
+        if(!_defMap.TryGetValue(id, out def))
         {
-            Debug.LogError("Could not find tower definition for towerId: " + towerId);
+            Debug.LogError("Could not find definition for id: " + id);
         }
         return def;        
     }

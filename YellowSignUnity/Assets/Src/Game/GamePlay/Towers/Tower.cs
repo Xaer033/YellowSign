@@ -11,11 +11,16 @@ public class Tower : IAttacker, IAttackTarget
     {
         private DiContainer _container;
         private TowerDictionary _towerDefs;
+        private TowerSystem _towerSystem;
 
-        public Factory(TowerDictionary towerDefs, DiContainer container)
+        public Factory(
+            TowerDictionary towerDefs, 
+            TowerSystem towerSystem, 
+            DiContainer container)
         {
             _container = container;
             _towerDefs = towerDefs;
+            _towerSystem = towerSystem;
         }
 
         public override Tower Create(string towerId, TSVector position, TSQuaternion rotation)
@@ -24,7 +29,10 @@ public class Tower : IAttacker, IAttackTarget
             GameObject towerGameObject = TrueSyncManager.SyncedInstantiate(def.view.gameObject, position, rotation);
             ITowerView towerView = towerGameObject.GetComponent<ITowerView>();
 
-            return _container.Instantiate<Tower>(new object[] { def.stats, towerView, def.brain });            
+            Tower tower = _container.Instantiate<Tower>(new object[] { def.stats, towerView, def.brain });
+            _towerSystem.AddTower(tower);
+
+            return tower;
         }
 
         public override void Validate()

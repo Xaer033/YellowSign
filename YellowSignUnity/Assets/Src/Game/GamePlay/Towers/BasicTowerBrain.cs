@@ -85,7 +85,7 @@ public class BasicTowerBrain : AbstractTowerBrain
 
         FP visualAttackDuration = tower.view.VisualAttack(tower.targetCreep.view);
 
-        notificationDispatcher.DispatchEvent(GameplayEventType.PAWN_DAMAGED, false, attackResult);
+        notificationDispatcher.DispatchEvent(GameplayEventType.CREEP_DAMAGED, false, attackResult);
 
         //Debug.Log("Killed Target: " + attackResult.hasKilledTarget);
         tower.behaviorState = Tower.BehaviorState.RECOVERING;

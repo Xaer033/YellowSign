@@ -5,7 +5,7 @@ using UnityEngine;
 using GhostGen;
 using Zenject;
 
-public class NetworkManager : Photon.PunBehaviour, IInitializable, IDisposable
+public class NetworkManager : Photon.PunBehaviour, IInitializable, ILateDisposable
 {
     public const string kGameVersion = "0.1.0";
     public const int kMaxPlayers = 4;
@@ -26,7 +26,7 @@ public class NetworkManager : Photon.PunBehaviour, IInitializable, IDisposable
         PhotonNetwork.OnEventCall += onCustomEventCallback;
     }
 
-    public void Dispose()
+    public void LateDispose()
     {
         PhotonNetwork.OnEventCall -= onCustomEventCallback;
 

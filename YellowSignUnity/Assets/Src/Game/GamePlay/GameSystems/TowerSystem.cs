@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TrueSync;
 using Zenject;
+using GhostGen;
 
-public class TowerSystem
+public class TowerSystem : EventDispatcher
 {
     private List<Tower> _towerList;
 
@@ -16,6 +17,7 @@ public class TowerSystem
     public void AddTower(Tower tower)
     {
         _towerList.Add(tower);
+        DispatchEvent(GameplayEventType.TOWER_BUILT, false, tower);
     }
 
     public void Step(float deltaTime)
