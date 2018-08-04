@@ -16,11 +16,29 @@ public class CameraMovement : MonoBehaviour
     private Vector3 _acceleration;
     // Use this for initialization
     private Vector3 _currentPos;
-    private Transform _movementTransform;
-    //private Rect worldLimit;
+    //private Transform _movementTransform;
+    private Rect _worldLimit;
     private Camera _camera;
 
     public PlayerNumber playerNumber { get; set; }
+
+    public void Setup(PlayerSpawn spawn)
+    {
+        if(spawn != null)
+        {
+            playerNumber = spawn.playerNumber;
+            _worldLimit = worldLimits[(byte)playerNumber - 1];
+
+            float pitch = transform.localEulerAngles.x;
+
+            Vector3 angle = spawn.cameraHook.eulerAngles;
+            angle.x = pitch;
+            Quaternion rot = Quaternion.Euler(angle);
+
+            transform.SetPositionAndRotation(spawn.cameraHook.position, rot);
+            _currentPos = transform.localPosition;
+        }
+    }
 
     public Camera camera
     {
@@ -29,9 +47,7 @@ public class CameraMovement : MonoBehaviour
 
 	void Awake ()
     {
-        _movementTransform = transform.parent;
         _acceleration = Vector3.zero;
-        _currentPos = _movementTransform.localPosition;
 
         _camera = GetComponent<Camera>();
     }
@@ -43,42 +59,52 @@ public class CameraMovement : MonoBehaviour
         {
             Cursor.lockState = (Cursor.lockState == CursorLockMode.None) ? CursorLockMode.Confined : CursorLockMode.None;
         }
-        _movementTransform.localPosition = Vector3.Lerp(_movementTransform.localPosition, _currentPos, Time.deltaTime);
+
+        if(transform != null)
+        {
+            transform.localPosition = Vector3.Lerp(transform.localPosition, _currentPos, Time.deltaTime);
+        }
     }
     // Not getting input from TrueSyncInput. Don't need to sync camera movement
     public void FixedUpdate()
     {
+        if(transform == null)
+        {
+            return;
+        }
+
         Vector3 camPos = transform.position;
         
         int mouseX = (int)Input.mousePosition.x;
         int mouseY = (int)Input.mousePosition.y;
-        Rect worldLimit = worldLimits[(byte)playerNumber - 1];
 
-        if (mouseX < edgeLimit && camPos.x > worldLimit.x )
+
+        if (mouseX < edgeLimit && camPos.x > _worldLimit.xMin )
         {
             _acceleration.x = -1.0f;
         }
-        else if(mouseX > Screen.width - edgeLimit && camPos.x < worldLimit.width)
+        else if(mouseX > Screen.width - edgeLimit && camPos.x < _worldLimit.xMax)
         {
             _acceleration.x = 1.0f;
         }
 
-        if (mouseY < edgeLimit && camPos.z > worldLimit.y)
+        if (mouseY < edgeLimit && camPos.z > _worldLimit.yMin)
         {
             _acceleration.z = -1.0f;
         }
-        else if (mouseY > Screen.height - edgeLimit && camPos.z < worldLimit.height)
+        else if (mouseY > Screen.height - edgeLimit && camPos.z < _worldLimit.yMax)
         {
             _acceleration.z = 1.0f;
         }
 
         float deltaTime = Time.fixedDeltaTime;
         _acceleration = _acceleration.normalized * speed;
-        _currentPos = _movementTransform.localPosition + _velocity * deltaTime;
+        _currentPos = transform.localPosition + _velocity * deltaTime;
 
         float dragForce = (1.0f - drag * deltaTime);
         _velocity = (_velocity + _acceleration * deltaTime) * dragForce;
-
+        _velocity.y = 0;
+        
         _acceleration = Vector3.zero;
     }
 }

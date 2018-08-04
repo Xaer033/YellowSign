@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
 
     private Camera _camera;
     
-    public PlayerNumber playerNumber { get; set; }
+    public PlayerNumber playerNumber { get { return _playerSpawn.playerNumber; } }
 
     public void Initialize(
         PlayerSpawn playerSpawn,
@@ -31,16 +31,9 @@ public class PlayerController : MonoBehaviour
         _gameplayResources = gameplayResources;
 
         _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
-        playerNumber = playerSpawn.playerNumber;
-
         if(TrueSyncManager.LocalPlayer.Id == owner.Id)
         {
-            GameObject cameraObj = GameObject.Instantiate<GameObject>(
-                    _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
-
-            CameraMovement camMovement = cameraObj.GetComponent<CameraMovement>();
-            camMovement.playerNumber = playerNumber;
-            _camera = camMovement.camera;
+            
         }
     }
 
@@ -181,6 +174,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnSyncStartLocalPlayer()
     {
+        Debug.Log("Sync Start");
+        GameObject camObj = GameObject.FindWithTag("MainCamera");
+        CameraMovement camMovement = camObj.GetComponent<CameraMovement>();
+        camMovement.Setup(_playerSpawn);
+        _camera = camMovement.camera;
+
         //GameObject cameraObj = GameObject.Instantiate<GameObject>(
         //        _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
 

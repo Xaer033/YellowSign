@@ -88,23 +88,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0c17006d167114f879a925ea0af4c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldLimit:
-    serializedVersion: 2
-    x: -4.72
-    y: -59
-    width: 7.46
-    height: 26.3
   worldLimits:
   - serializedVersion: 2
     x: -4.72
-    y: -59
+    y: -57.4
     width: 7.46
-    height: 26.3
+    height: 33.1
   - serializedVersion: 2
     x: 8.1
     y: 25.6
     width: -6.6
-    height: 56.7
+    height: -57.4
   speed: 25000
   drag: 15
   edgeLimit: 10
@@ -126,10 +120,10 @@ MonoBehaviour:
   stopNaNPropagation: 1
   antialiasingMode: 3
   temporalAntialiasing:
-    jitterSpread: 0.578
-    sharpness: 0.51
-    stationaryBlending: 0.932
-    motionBlending: 0.831
+    jitterSpread: 0.705
+    sharpness: 0.2
+    stationaryBlending: 0.897
+    motionBlending: 0.223
   subpixelMorphologicalAntialiasing:
     quality: 2
   fastApproximateAntialiasing:
@@ -173,7 +167,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1233162908182086}
   m_LocalRotation: {x: 0.4352703, y: 0, z: 0, w: 0.9002998}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -57.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -181,6 +175,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 51.605003, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.8, y: 19.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

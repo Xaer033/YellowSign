@@ -17,5 +17,5 @@ MonoBehaviour:
   maxHealth: 100
   baseDamage: 5
   baseRange: 8
-  reloadTime: 0.18
+  reloadTime: 0.5
   idleTime: 0.5

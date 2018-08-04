@@ -49,7 +49,7 @@ public class BasicTowerBrain : AbstractTowerBrain
     private void _doTargeting(Tower tower, FP fixedDeltaTime)
     {
         // Target enemy based off of some criteria (lowest health/closest range, etc.)
-        var colliderList = Physics.OverlapSphere(tower.view.position.ToVector(), tower.state.range.AsFloat(), ~creepLayer, QueryTriggerInteraction.Collide);
+        var colliderList = Physics.OverlapSphere(tower.view.position.ToVector(), tower.state.range.AsFloat(), creepLayer, QueryTriggerInteraction.Collide);
         if(colliderList != null && colliderList.Length > 0)
         {
             ICreepView cView = null;
@@ -133,9 +133,9 @@ public class BasicTowerBrain : AbstractTowerBrain
     {
         get
         {
-            if(_creepLayer == -666)
+            //if(_creepLayer < 0)
             {
-                _creepLayer = LayerMask.NameToLayer(CREEP_LAYER_NAME);
+                _creepLayer = LayerMask.GetMask(CREEP_LAYER_NAME);
             }
             return _creepLayer;
         }

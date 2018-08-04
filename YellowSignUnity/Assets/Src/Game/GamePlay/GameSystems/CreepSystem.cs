@@ -76,6 +76,11 @@ public class CreepSystem : GhostGen.EventDispatcher
                     DispatchEvent(GameplayEventType.CREEP_REACHED_GOAL, false, c);
                 }
 
+                if(c.isDead) // TODO: merge this check & flagForRemoval check
+                {
+                    DispatchEvent(GameplayEventType.CREEP_DAMAGED, false, c);
+                }
+
                 if (c.flagForRemoval)
                 {
                     GameObject.Destroy(c.view.gameObject);
