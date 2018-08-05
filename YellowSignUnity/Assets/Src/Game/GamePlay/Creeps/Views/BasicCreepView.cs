@@ -7,6 +7,7 @@ using Pathfinding;
 public class BasicCreepView : MonoBehaviour, ICreepView
 {
     public Transform targetTransform;
+    public Transform healthTransform;
 
     private TSTransform _transform;
     private Collider _collider;
@@ -48,6 +49,14 @@ public class BasicCreepView : MonoBehaviour, ICreepView
 
     public Vector3 targetPosition
     {
-        get { return targetTransform.position; }
+        get
+        {
+            return targetTransform != null ? targetTransform.position : Vector3.zero;
+        }
+    }
+
+    public Vector3 healthPosition
+    {
+        get { return healthTransform.position; }
     }
 }

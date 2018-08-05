@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using TrueSync;
+using GhostGen;
 using UnityEngine;
 
-public class CreepSystem : GhostGen.EventDispatcher
+public class CreepSystem : EventDispatcher
 {
     private const int kMaxCreeps = 200;
 
@@ -27,11 +29,17 @@ public class CreepSystem : GhostGen.EventDispatcher
 
     public void AddCreep(byte ownerId, Creep creep)
     {
-        List<Creep> creepList = GetCreepList(ownerId);
-        creepList.Add(creep);
-        DispatchEvent(GameplayEventType.CREEP_SPAWNED, false, creep);
+        if(creep != null)
+        {
+            List<Creep> creepList = GetCreepList(ownerId);
+            creepList.Add(creep);
+            DispatchEvent(GameplayEventType.CREEP_SPAWNED, false, creep);
+
+            creep.AddListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
+        }
     }
 
+    //public void RemoveCreep
     public List<Creep> GetCreepList(byte ownerId)
     {
         if(ownerId < 0 || ownerId >= NetworkManager.kMaxPlayers)
@@ -70,19 +78,18 @@ public class CreepSystem : GhostGen.EventDispatcher
             for (int i = count - 1; i >= 0; --i)
             {
                 Creep c = _creeps[o][i];
+                c.FixedStep(fixedDeltaTime);
 
                 if(c.reachedTarget)
                 {
                     DispatchEvent(GameplayEventType.CREEP_REACHED_GOAL, false, c);
                 }
-
-                if(c.isDead) // TODO: merge this check & flagForRemoval check
-                {
-                    DispatchEvent(GameplayEventType.CREEP_DAMAGED, false, c);
-                }
-
+                
                 if (c.flagForRemoval)
                 {
+                    DispatchEvent(GameplayEventType.CREEP_KILLED, false, c);
+
+                    c.RemoveListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
                     GameObject.Destroy(c.view.gameObject);
                     _creeps[o][i] = null;
                     _creeps[o].RemoveAt(i);
@@ -93,7 +100,6 @@ public class CreepSystem : GhostGen.EventDispatcher
                 {
                     _generatingPath.Add(c.RecalculatePath());
                 }
-                c.FixedStep(fixedDeltaTime);
             }
         }
 
@@ -103,5 +109,10 @@ public class CreepSystem : GhostGen.EventDispatcher
         }
 
         recalculatePaths = false;
+    }
+
+    private void onCreepDamaged(GhostGen.GeneralEvent e)
+    {
+        DispatchEvent(e); // Redispatch
     }
 }

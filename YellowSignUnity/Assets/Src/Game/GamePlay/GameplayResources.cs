@@ -10,5 +10,6 @@ public class GameplayResources : ScriptableObject
     public CreepStats basicCreepStats;
     public GameObject gameplayCamera;
 
+    public CreepHealthView CreepHealthUIPrefab;
     public GameObject highlighterPrefab;
 }

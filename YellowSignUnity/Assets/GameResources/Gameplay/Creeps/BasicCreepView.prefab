@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4493282904990136}
   m_Layer: 10
-  m_Name: targetPosition
+  m_Name: healthPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,6 +36,21 @@ GameObject:
   - component: {fileID: 4353817081765244}
   m_Layer: 10
   m_Name: Model
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1253109500533414
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4819259778405798}
+  m_Layer: 10
+  m_Name: targetPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,12 +144,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1119844783632064}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.02, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.421, z: -0.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4548851548478206}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4548851548478206
 Transform:
@@ -147,6 +162,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4353817081765244}
+  - {fileID: 4819259778405798}
   - {fileID: 4493282904990136}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -164,6 +180,19 @@ Transform:
   m_Father: {fileID: 4353817081765244}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!4 &4819259778405798
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1253109500533414}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.02, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4548851548478206}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23462418546761344
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -285,7 +314,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35eb3922258e42b41be6f27a762fa808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetTransform: {fileID: 4493282904990136}
+  targetTransform: {fileID: 4819259778405798}
+  healthTransform: {fileID: 4493282904990136}
 --- !u!114 &114185550140802318
 MonoBehaviour:
   m_ObjectHideFlags: 1

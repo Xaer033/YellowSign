@@ -1,6 +1,7 @@
 ﻿using TrueSync;
 using UnityEngine;
 using GhostGen;
+using Zenject;
 
 [CreateAssetMenu(menuName = "YellowSign/TowerBrain")]
 public class BasicTowerBrain : AbstractTowerBrain
@@ -10,7 +11,9 @@ public class BasicTowerBrain : AbstractTowerBrain
     private int _creepLayer = -666;
     private Collider[] _hitList;
     private IEventDispatcher _notificationDispatcher;
-    
+
+    [Inject]
+    private CreepSystem _creepSystem;
 
     public override void FixedStep(Tower tower, FP fixedDeltaTime)
     {
@@ -77,17 +80,23 @@ public class BasicTowerBrain : AbstractTowerBrain
 
     private void _doAttacking(Tower tower, FP fixedDeltaTime)
     {
+        if(tower.targetCreep != null && !tower.targetCreep.isValid)
+        {
+            tower.behaviorState = Tower.BehaviorState.IDLE;
+            return;
+        }
+
         // attack target creep    
         IAttackTarget victim = tower.targetCreep;
         
         AttackData attackData = tower.CreateAttackData();
         AttackResult attackResult = victim.TakeDamage(attackData);
 
+
         FP visualAttackDuration = tower.view.VisualAttack(tower.targetCreep.view);
 
         notificationDispatcher.DispatchEvent(GameplayEventType.CREEP_DAMAGED, false, attackResult);
-
-        //Debug.Log("Killed Target: " + attackResult.hasKilledTarget);
+        
         tower.behaviorState = Tower.BehaviorState.RECOVERING;
     }
 
@@ -101,7 +110,7 @@ public class BasicTowerBrain : AbstractTowerBrain
         if(cooldownTimer < 0)
         {
             cooldownTimer = stats.reloadTime;
-            if(tower.targetCreep.isDead)
+            if(tower.targetCreep.isValid)
             {
                 tower.behaviorState = Tower.BehaviorState.TARGETING;
             }

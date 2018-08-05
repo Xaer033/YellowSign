@@ -15,5 +15,7 @@ MonoBehaviour:
   basicCreepStats: {fileID: 11400000, guid: 546f6f4f623987d48a357f705d6f0810, type: 2}
   gameplayCamera: {fileID: 1233162908182086, guid: e61e7243322a37b428e92da265080831,
     type: 2}
+  CreepHealthUIPrefab: {fileID: 114593122990014430, guid: a1559d4617b0bbe4197dead18dc12b6c,
+    type: 2}
   highlighterPrefab: {fileID: 1934427208475836, guid: 08665d0db2402184689dac09b061c16c,
     type: 2}

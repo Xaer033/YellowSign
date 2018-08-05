@@ -8,6 +8,7 @@ public interface ICreepView
 
     TSVector        position    { get; }
     Vector3         targetPosition { get; }
+    Vector3         healthPosition { get;}
     TSQuaternion    rotation    { get; }
     TSTransform     transformTS { get; }
     GameObject      gameObject  { get; }

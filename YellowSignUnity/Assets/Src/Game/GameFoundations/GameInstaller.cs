@@ -27,6 +27,7 @@ public class GameInstaller : ScriptableObjectInstaller
 
         Container.Bind<CreepSystem>().AsSingle();
         Container.Bind<TowerSystem>().AsSingle();
+        Container.Bind<CreepHealthUISystem>().FromNewComponentOnNewGameObject().AsSingle();
         Container.Bind<GameSystemManager>().AsSingle();
         Container.Bind<SessionFlags>().AsSingle();
         Container.Bind<GameConfig>().FromInstance(gameConfig).AsSingle();

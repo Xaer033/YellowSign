@@ -13,4 +13,14 @@ public class TowerStats : ScriptableObject
     public int  baseRange;
     public float   reloadTime;
     public float   idleTime;
+
+    public static TowerStats FromJson(string json)
+    {
+        return JsonUtility.FromJson<TowerStats>(json);
+    }
+
+    public static string ToJson(TowerStats stats)
+    {
+        return JsonUtility.ToJson(stats);
+    }
 }

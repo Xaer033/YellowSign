@@ -31,10 +31,6 @@ public class PlayerController : MonoBehaviour
         _gameplayResources = gameplayResources;
 
         _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
-        if(TrueSyncManager.LocalPlayer.Id == owner.Id)
-        {
-            
-        }
     }
 
     public void Start()
@@ -91,7 +87,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-           _commander.AddCommand(new SpawnCreepCommand("basic_creep"));
+           _commander.AddCommand(new SpawnCreepCommand("basic_creep", 20));
         }
 
        
@@ -109,7 +105,7 @@ public class PlayerController : MonoBehaviour
             case CommandType.SPAWN_CREEP:
                 {
                     SpawnCreepCommand scc = (SpawnCreepCommand)command;
-                    for (int s = 0; s < 5; ++s)
+                    for (int s = 0; s < scc.count; ++s)
                     {
                         Transform spawnPoint = _grid.spawnPoints[TSRandom.Range(0, _grid.spawnPoints.Length)];
                         TSVector startingPos = spawnPoint.position.ToTSVector();

@@ -18,4 +18,17 @@ public class CreepStats : ScriptableObject
     public float baseSpeed;
     public int maxHealth;
     public int baseArmor;
+
+    public int cost;
+    public int income;
+
+    public static CreepStats FromJson(string json)
+    {
+        return JsonUtility.FromJson<CreepStats>(json);
+    }
+
+    public static string ToJson(CreepStats stats)
+    {
+        return CreepStats.ToJson(stats);
+    }
 }

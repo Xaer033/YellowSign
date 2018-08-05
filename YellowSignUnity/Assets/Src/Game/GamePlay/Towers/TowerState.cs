@@ -5,6 +5,7 @@ public class TowerState
 {
     public int  health;
     public int  attackDamage;
+
     public FP   reloadTimer;
     public FP   idleTimer;
     public FP   attackTimer;

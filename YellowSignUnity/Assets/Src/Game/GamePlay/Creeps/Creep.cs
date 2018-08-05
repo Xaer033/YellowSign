@@ -4,8 +4,10 @@ using UnityEngine;
 using TrueSync;
 using Pathfinding;
 using Zenject;
+using GhostGen;
 
-public class Creep : IAttacker, IAttackTarget
+
+public class Creep : EventDispatcher, IAttacker, IAttackTarget
 {
     public class Factory : PlaceholderFactory<string, CreepSpawnInfo, Creep>, IValidatable
     {
@@ -100,6 +102,14 @@ public class Creep : IAttacker, IAttackTarget
         RecalculatePath();
     }
 
+    public bool isValid
+    {
+        get
+        {
+            return (view != null && !isDead);
+        }
+    }
+
     public int health
     {
         get { return state.health; }
@@ -107,7 +117,7 @@ public class Creep : IAttacker, IAttackTarget
 
     public bool isDead
     {
-        get { return state.health <= 0 || reachedTarget; }
+        get { return state.health <= 0; }
     }
 
     public AttackData CreateAttackData()
@@ -130,6 +140,8 @@ public class Creep : IAttacker, IAttackTarget
             totalDamage, 
             newTargetHealth, 
             state.isDead);
+
+        DispatchEvent(GameplayEventType.CREEP_DAMAGED, true, result);
 
         return result;
     }
