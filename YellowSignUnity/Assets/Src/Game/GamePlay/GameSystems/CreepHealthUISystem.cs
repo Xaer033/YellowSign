@@ -72,10 +72,8 @@ public class CreepHealthUISystem : MonoBehaviour
             Creep c = pair.Key;
             CreepHealthView view = pair.Value;
 
-            view.healthFill = (float)c.state.health / (float)c.stats.maxHealth;
-
             Vector3 worldHealthPos = c.view.healthPosition;
-            Vector3 anchorPos = GetAnchoredPositionFromWorldPosition(worldHealthPos, cam, canvas);
+            Vector3 anchorPos = getScreenPositionFromWorldPosition(worldHealthPos, cam, canvas);
             view.rectTransform.anchoredPosition = anchorPos;
 
 
@@ -84,16 +82,14 @@ public class CreepHealthUISystem : MonoBehaviour
         }
     }
 
-    public Vector2 GetAnchoredPositionFromWorldPosition(Vector3 _worldPostion, Camera _camera, Canvas _canvas)
+    private Vector2 getScreenPositionFromWorldPosition(Vector3 _worldPostion, Camera _camera, Canvas _canvas)
     {
-        //Vector2 myPositionOnScreen = _camera.WorldToScreenPoint(_worldPostion); // for transform.position?
-        Vector2 viewportPosition = _camera.WorldToViewportPoint(_worldPostion); //for RectTransform.AnchoredPosition?
+        Vector2 viewportPosition = _camera.WorldToViewportPoint(_worldPostion);
         Vector2 screenPos = new Vector2(
              ((viewportPosition.x * _canvasRectTransform.sizeDelta.x) - (_canvasRectTransform.sizeDelta.x * 0.5f)),
              ((viewportPosition.y * _canvasRectTransform.sizeDelta.y) - (_canvasRectTransform.sizeDelta.y * 0.5f)));
-
-        float scaleFactor = 1.0f; //_canvas.scaleFactor;
-        return new Vector2(screenPos.x / scaleFactor, screenPos.y / scaleFactor);
+        
+        return new Vector2(screenPos.x, screenPos.y);
     }
 
     public void CleanUp()
@@ -126,6 +122,15 @@ public class CreepHealthUISystem : MonoBehaviour
         }
     }
 
+    public void RefreshCreep(Creep c)
+    {
+        CreepHealthView view;
+        if(_inUseMap.TryGetValue(c, out view))
+        {
+            view.healthFill = (float)c.state.health / (float)c.stats.maxHealth;
+        }
+    }
+
     public void RemoveCreep(Creep c)
     {
         CreepHealthView view;
@@ -133,7 +138,8 @@ public class CreepHealthUISystem : MonoBehaviour
         {
             _inUseMap.Remove(c);
             _viewPool.Push(view);
-        
+
+            //view.KillTween();
             view.gameObject.SetActive(false);
 
         }

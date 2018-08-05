@@ -160,7 +160,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         //}
 
         TSVector pos = _transform.position;
-        TSVector force;
+        TSVector force = TSVector.zero;
         if (/*_canSearchAgain &&*/ _vectorPath != null && _vectorPath.Count != 0)
         {
             FP distanceSquared = _distanceToNextWaypoint * _distanceToNextWaypoint;
@@ -168,20 +168,23 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
             {
                 _waypointIndex++;
             }
-           
-            var p1 = pos;
-            var p2 = _vectorPath[_waypointIndex];
-            
-            TSVector dirNormalized = (p2 - p1).normalized;
-            force = dirNormalized * _speed;
-            force = force * (1 - fixedDeltaTime * _drag);
 
-            _transform.rotation = TSQuaternion.LookRotation(dirNormalized, _transform.up);
-            
-            if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2)
+            if(_waypointIndex < _vectorPath.Count)
             {
-                flagForRemoval = true;
-                reachedTarget = true;
+                var p1 = pos;
+                var p2 = _vectorPath[_waypointIndex];
+
+                TSVector dirNormalized = (p2 - p1).normalized;
+                force = dirNormalized * _speed;
+                force = force * (1 - fixedDeltaTime * _drag);
+
+                _transform.rotation = TSQuaternion.LookRotation(dirNormalized, _transform.up);
+
+                if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2)
+                {
+                    flagForRemoval = true;
+                    reachedTarget = true;
+                }
             }
         }
         else

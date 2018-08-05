@@ -37,6 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224197418159790604}
   - component: {fileID: 114593122990014430}
+  - component: {fileID: 225357746716098146}
   m_Layer: 5
   m_Name: CreepHealthUI
   m_TagString: Untagged
@@ -170,7 +171,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a58f9f46d22dc7342a0b0366a3baf376, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 0}
+  fadeOutDuration: 0.5
+  fadeDelay: 2
+  _canvasGroup: {fileID: 225357746716098146}
+  rectTransform: {fileID: 224197418159790604}
   _healthBar: {fileID: 114445343175710984}
 --- !u!222 &222095023792657358
 CanvasRenderer:
@@ -268,3 +272,14 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -8, y: -8}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &225357746716098146
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1172375834539620}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
