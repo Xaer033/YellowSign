@@ -108,10 +108,34 @@ public class CreepHealthUISystem : MonoBehaviour
 
     public void AddCreep(Creep c)
     {
+        //popView(c);
+    }
+
+    public void ShowHealthOnCreep(Creep c)
+    {
+        CreepHealthView view = getView(c);
+
+        if(view != null)
+        {
+            float health = (float)c.state.health / (float)c.stats.maxHealth;
+            view.SetHealthFill(health, ()=> recycleView(c));
+        }
+
+    }
+
+    public void RemoveCreep(Creep c)
+    {
+
+        recycleView(c);
+        //Debug.Log("Creep Remove");
+    }
+
+    private CreepHealthView popView(Creep c)
+    {
+        CreepHealthView view = null;
         if(_viewPool.Count > 0)
         {
-            CreepHealthView view = _viewPool.Pop();
-            _inUseMap.Add(c, view);
+            view = _viewPool.Pop();
             //Debug.Log("Creep Added");
 
             view.gameObject.SetActive(true);
@@ -120,18 +144,10 @@ public class CreepHealthUISystem : MonoBehaviour
         {
             Debug.LogError("No More CreepHealthView!");
         }
+        return view;
     }
 
-    public void RefreshCreep(Creep c)
-    {
-        CreepHealthView view;
-        if(_inUseMap.TryGetValue(c, out view))
-        {
-            view.healthFill = (float)c.state.health / (float)c.stats.maxHealth;
-        }
-    }
-
-    public void RemoveCreep(Creep c)
+    private void recycleView(Creep c)
     {
         CreepHealthView view;
         if(_inUseMap.TryGetValue(c, out view))
@@ -141,9 +157,20 @@ public class CreepHealthUISystem : MonoBehaviour
 
             //view.KillTween();
             view.gameObject.SetActive(false);
-
         }
-        
-        //Debug.Log("Creep Remove");
+    }
+
+    private CreepHealthView getView(Creep c)
+    {
+        CreepHealthView view;
+        if(!_inUseMap.TryGetValue(c, out view))
+        {
+            view = popView(c);
+            if(view != null)
+            {
+                _inUseMap.Add(c, view);
+            }
+        }
+        return view;
     }
 }

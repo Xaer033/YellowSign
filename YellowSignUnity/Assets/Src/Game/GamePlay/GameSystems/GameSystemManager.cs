@@ -99,7 +99,7 @@ public class GameSystemManager : EventDispatcher
     {
 
         AttackResult ar = (AttackResult)e.data;
-        _creepHealthUISystem.RefreshCreep(ar.target as Creep);
+        _creepHealthUISystem.ShowHealthOnCreep(ar.target as Creep);
         //Debug.LogFormat("Creep took '{0}' and has '{1}' remaining health!", ar.totalDamageDelt, ar.targetHealthRemaining);
     }
 }

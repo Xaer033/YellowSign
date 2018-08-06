@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,45 +24,48 @@ public class CreepHealthView : MonoBehaviour
         _canvasGroup.alpha = 0;
     }
 
-    public float healthFill
+    public void SetHealthFill(float value, Action onComplete)
     {
-        set
+        if(_healthBar != null && _healthFill != value)
         {
-            if(_healthBar != null && _healthFill != value)
-            {
-                _healthFill = value;
-                _healthBar.fillAmount = value;
+            _healthFill = value;
+            _healthBar.fillAmount = value;
 
-                restartFadeTween();
-            }
-        }
+            restartFadeTween(onComplete);
+        }        
     }
 
     public void OnDisable()
     {
         _canvasGroup.alpha = 0;
-        killTween();
+        killTween(true);
     }
 
-    private void killTween()
+    private void killTween(bool finishTween)
     {
         if(_fadeTween != null)
         {
-            _fadeTween.Kill();
+            _fadeTween.Kill(finishTween);
             _fadeTween = null;
         }
     }
 
-    private void restartFadeTween()
+    private void restartFadeTween(Action onComplete)
     {
-        killTween();
+        killTween(false);
 
         _canvasGroup.alpha = 1;
 
         _fadeTween = _canvasGroup.DOFade(0.0f, fadeOutDuration);
         _fadeTween.SetDelay(fadeDelay);
-        _fadeTween.OnComplete(() => _fadeTween = null);
-
+        _fadeTween.OnComplete(() =>
+        {
+            _fadeTween = null;
+            if(onComplete != null)
+            {
+                onComplete();
+            }
+        });
     }
     
 }
