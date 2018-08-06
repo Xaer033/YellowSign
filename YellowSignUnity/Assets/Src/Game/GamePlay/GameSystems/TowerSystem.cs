@@ -5,16 +5,23 @@ using TrueSync;
 public class TowerSystem : EventDispatcher
 {
     private List<Tower> _towerList;
+    private Tower.Factory _towerFactory;
 
-    public TowerSystem()
+    public TowerSystem(Tower.Factory towerFactory)
     {
+        _towerFactory = towerFactory;
         _towerList = new List<Tower>(200);
     }
 
-    public void AddTower(Tower tower)
+    public Tower AddTower(string towerId, TowerSpawnInfo spawnInfo)
     {
-        _towerList.Add(tower);
-        DispatchEvent(GameplayEventType.TOWER_BUILT, false, tower);
+        Tower tower = _towerFactory.Create(towerId, spawnInfo);
+        if(tower != null)
+        {
+            _towerList.Add(tower);
+            DispatchEvent(GameplayEventType.TOWER_BUILT, false, tower);
+        }
+        return tower;
     }
 
     public void Step(float deltaTime)
@@ -40,6 +47,5 @@ public class TowerSystem : EventDispatcher
             Tower t = _towerList[i];
             t.FixedStep(fixedDeltaTime);
         }
-        
     }
 }

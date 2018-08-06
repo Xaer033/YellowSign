@@ -13,23 +13,21 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
     {
         private DiContainer _container;
         private CreepDictionary _creepDefs;
-        private CreepSystem _creepSystem;
 
         public Factory(
             CreepDictionary creepDefs, 
-            CreepSystem creepSystem, 
             DiContainer container)
         {
             _container = container;
             _creepDefs = creepDefs;
-            _creepSystem = creepSystem;
+            //_creepSystem = creepSystem;
         }
 
         public override Creep Create(string creepId, CreepSpawnInfo spawnInfo)
         {
             CreepDef def = _creepDefs.GetDef(creepId);
             Creep creep = _container.Instantiate<Creep>(new object[] { def, spawnInfo });
-            _creepSystem.AddCreep(spawnInfo.ownerId, creep);
+            //_creepSystem.AddCreep(spawnInfo.ownerId, creep);
             
             return creep;
         }
@@ -68,9 +66,12 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
     private TSVector _targetPosition;
     private Path _path = null;
     private FP _speed;
+    private CreepDef _def;
 
     public Creep(CreepDef def, CreepSpawnInfo spawnInfo)
     {
+        _def = def;
+
         _nextRepath = 0;
         _waypointIndex = 0;
         _canSearchAgain = true;
@@ -120,6 +121,11 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         get { return state.health <= 0; }
     }
 
+    public void Reset(CreepDef def, CreepSpawnInfo spawnInfo)
+    {
+
+    }
+
     public AttackData CreateAttackData()
     {
         return default(AttackData);
@@ -142,6 +148,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
             state.isDead);
 
         DispatchEvent(GameplayEventType.CREEP_DAMAGED, true, result);
+        //notificationDispatcher.DispatchEvent(GameplayEventType.CREEP_DAMAGED, false, result);
 
         return result;
     }
@@ -185,6 +192,10 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
                     flagForRemoval = true;
                     reachedTarget = true;
                 }
+            }
+            else
+            {
+                Debug.Log("Seems to be in a bad way...Explode to damage nearby towers");
             }
         }
         else

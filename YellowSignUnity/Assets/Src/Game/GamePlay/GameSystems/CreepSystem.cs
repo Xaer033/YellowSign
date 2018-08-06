@@ -10,33 +10,39 @@ public class CreepSystem : EventDispatcher
 
     private List<List<Creep>> _creeps;
     private List<Pathfinding.Path> _generatingPath;
-
+    private Creep.Factory _creepFactory;
 
     public bool recalculatePaths { set; get; }
     
-    public CreepSystem()
+    public CreepSystem(Creep.Factory creepFactory)
     {
+        _creepFactory = creepFactory;
+
         int maxPlayers = NetworkManager.kMaxPlayers;
         _creeps = new List<List<Creep>>(maxPlayers);
 
         for(int i = 0; i < maxPlayers; ++i)
         {
-            _creeps.Add(new List<Creep>(200));
+            _creeps.Add(new List<Creep>(kMaxCreeps));
         }
 
-        _generatingPath = new List<Pathfinding.Path>(10);
+        _generatingPath = new List<Pathfinding.Path>(kMaxCreeps);
     }
 
-    public void AddCreep(byte ownerId, Creep creep)
+    public Creep AddCreep(string creepId, CreepSpawnInfo spawnInfo)
     {
+        Creep creep = _creepFactory.Create(creepId, spawnInfo);
         if(creep != null)
         {
-            List<Creep> creepList = GetCreepList(ownerId);
-            creepList.Add(creep);
-            DispatchEvent(GameplayEventType.CREEP_SPAWNED, false, creep);
+            List<Creep> creepList = GetCreepList(spawnInfo.ownerId);
 
+            creepList.Add(creep);
             creep.AddListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
+
+            DispatchEvent(GameplayEventType.CREEP_SPAWNED, false, creep);
         }
+
+        return creep;
     }
 
     //public void RemoveCreep

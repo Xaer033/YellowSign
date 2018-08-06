@@ -14,8 +14,6 @@ public class GamePlayState : IGameState
     
     private CreepSystem _creepSystem;
     private TowerSystem _towerSystem;
-    private Creep.Factory _creepFactory;
-    private Tower.Factory _towerFactory;
     private GameplayResources _gameplayResources;
     private GuiManager _guiManager;
     private SyncStepper _commander;
@@ -27,18 +25,16 @@ public class GamePlayState : IGameState
         [Inject(Id = GameInstaller.GLOBAL_DISPATCHER)]
         IEventDispatcher notificationDispatcher,
         GameSystemManager gameSystems,
-        Creep.Factory creepFactory,
-        Tower.Factory towerFactory, 
+        CreepSystem creepSystem,
+        TowerSystem towerSystem, 
         GameplayResources gameplayResources,
         GuiManager guiManager,
         SyncStepper.Factory syncFactory)
     {
         _notificationDispatcher = notificationDispatcher;
         _gameplayResources      = gameplayResources;
-        //_creepSystem    = creepSystem;
-        //_towerSystem    = towerSystem;
-        _creepFactory   = creepFactory;
-        _towerFactory   = towerFactory;
+        _creepSystem    = creepSystem;
+        _towerSystem    = towerSystem;        
         _guiManager     = guiManager;
         _gameSystems    = gameSystems;
     }
@@ -67,8 +63,8 @@ public class GamePlayState : IGameState
 
             _playerList[i].Initialize(
                 spawnPoint,
-                _creepFactory,
-                _towerFactory,
+                _creepSystem,
+                _towerSystem,
                 _gameplayResources);
         }
 

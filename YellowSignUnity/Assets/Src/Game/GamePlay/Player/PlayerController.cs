@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviour
     private Commander _commander;
     private Grid _grid;
     private GameObject _highlighter;
-    private Creep.Factory _creepFactory;
-    private Tower.Factory _towerFactory;
+    private CreepSystem _creepSystem;
+    private TowerSystem _towerSystem;
     private GameplayResources _gameplayResources;
     private PlayerSpawn _playerSpawn;
 
@@ -21,13 +21,13 @@ public class PlayerController : MonoBehaviour
 
     public void Initialize(
         PlayerSpawn playerSpawn,
-        Creep.Factory creepFactory, 
-        Tower.Factory towerFactory,
+        CreepSystem creepSystem, 
+        TowerSystem towerSystem,
         GameplayResources gameplayResources)
     {
         _playerSpawn = playerSpawn;
-        _creepFactory = creepFactory;
-        _towerFactory = towerFactory;
+        _creepSystem = creepSystem;
+        _towerSystem = towerSystem;
         _gameplayResources = gameplayResources;
 
         _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
@@ -107,12 +107,12 @@ public class PlayerController : MonoBehaviour
                     SpawnCreepCommand scc = (SpawnCreepCommand)command;
                     for (int s = 0; s < scc.count; ++s)
                     {
-                        Transform spawnPoint = _grid.spawnPoints[TSRandom.Range(0, _grid.spawnPoints.Length)];
+                        Transform spawnPoint = _grid.spawnPoints[s % _grid.spawnPoints.Length];
                         TSVector startingPos = spawnPoint.position.ToTSVector();
                         TSVector targetPos = _grid.target.transform.position.ToTSVector();
 
                         byte targetOwnerId = ownerId == (byte)1 ? (byte)2 : (byte)1;
-                        TSQuaternion rotation = ownerId == (byte)1 ? TSQuaternion.identity : TSQuaternion.Euler(0, 180, 0);
+                        TSQuaternion rotation = ownerId == (byte)1 ? TSQuaternion.Euler(0, 180, 0) : TSQuaternion.identity;
 
                         CreepSpawnInfo spawnInfo = CreepSpawnInfo.Create(
                             ownerId,
@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
                             targetOwnerId,
                             targetPos);
                         
-                        Creep creep = _creepFactory.Create(scc.type, spawnInfo);
+                        _creepSystem.AddCreep(scc.type, spawnInfo);
                     }
                     break;
                 }
@@ -135,19 +135,15 @@ public class PlayerController : MonoBehaviour
                         TSQuaternion rotation = ownerId == (byte)1 ? TSQuaternion.identity : TSQuaternion.Euler(0, 180, 0);
 
                         TowerSpawnInfo spawnInfo = TowerSpawnInfo.Create(ownerId, pos, rotation);
-                        Tower tower = _towerFactory.Create(btc.type, spawnInfo);
+                        Tower tower = _towerSystem.AddTower(btc.type, spawnInfo);
 
                         _grid.UpdateGridPosition(tower.view.bounds);
                         _towerBlocker.Remove(btc.position);
-
-                        Debug.Log("Tower BUilt");
                     }
                     else
                     {
                         Debug.Log("Tower Denied");
                     }
-
-                    //_creepSystem.recalculatePaths = true;
 
                     break;
                 }

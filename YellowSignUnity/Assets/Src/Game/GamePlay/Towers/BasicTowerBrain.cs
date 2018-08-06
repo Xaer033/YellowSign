@@ -19,11 +19,12 @@ public class BasicTowerBrain : AbstractTowerBrain
     {
         switch(tower.behaviorState)
         {
-            case Tower.BehaviorState.SPAWNING:    _doSpawning(tower, fixedDeltaTime);      break;
-            case Tower.BehaviorState.IDLE:        _doIdling(tower, fixedDeltaTime);        break;
-            case Tower.BehaviorState.TARGETING:   _doTargeting(tower, fixedDeltaTime);     break;
-            case Tower.BehaviorState.ATTACKING:   _doAttacking(tower, fixedDeltaTime);     break;
-            case Tower.BehaviorState.RECOVERING:  _doRecovering(tower, fixedDeltaTime);    break;
+            case Tower.BehaviorState.SPAWNING:      _doSpawning(tower, fixedDeltaTime);     break;
+            case Tower.BehaviorState.IDLE:          _doIdling(tower, fixedDeltaTime);       break;
+            case Tower.BehaviorState.TARGETING:     _doTargeting(tower, fixedDeltaTime);    break;
+            case Tower.BehaviorState.VISUAL_ATTACK: _doVisualAttack(tower, fixedDeltaTime); break;
+            case Tower.BehaviorState.ATTACK:        _doAttack(tower, fixedDeltaTime);       break;
+            case Tower.BehaviorState.RECOVERING:    _doRecovering(tower, fixedDeltaTime);   break;
         }
     }
 
@@ -62,7 +63,7 @@ public class BasicTowerBrain : AbstractTowerBrain
                 if(cView != null && !cView.creep.isDead)
                 {
                     tower.targetCreep = cView.creep;
-                    tower.behaviorState = Tower.BehaviorState.ATTACKING;
+                    tower.behaviorState = Tower.BehaviorState.VISUAL_ATTACK;
                     break;
                 }
             }
@@ -78,7 +79,7 @@ public class BasicTowerBrain : AbstractTowerBrain
         }
     }
 
-    private void _doAttacking(Tower tower, FP fixedDeltaTime)
+    private void _doVisualAttack(Tower tower, FP fixedDeltaTime)
     {
         if(tower.targetCreep != null && !tower.targetCreep.isValid)
         {
@@ -87,17 +88,27 @@ public class BasicTowerBrain : AbstractTowerBrain
         }
 
         // attack target creep    
-        IAttackTarget victim = tower.targetCreep;
+        tower.state.attackTimer = tower.view.VisualAttack(tower.targetCreep.view);
+        tower.behaviorState = Tower.BehaviorState.ATTACK;
         
-        AttackData attackData = tower.CreateAttackData();
-        AttackResult attackResult = victim.TakeDamage(attackData);
+    }
 
+    private void _doAttack(Tower tower, FP fixedDeltaTime)
+    {
+        FP attackTimer = tower.state.attackTimer;
+        //if(attackTimer > 0.0f)
+        //{
+        //    tower.state.attackTimer = attackTimer - fixedDeltaTime;
+        //}
+        //else
+        {
+            IAttackTarget victim = tower.targetCreep;
 
-        FP visualAttackDuration = tower.view.VisualAttack(tower.targetCreep.view);
-
-        notificationDispatcher.DispatchEvent(GameplayEventType.CREEP_DAMAGED, false, attackResult);
-        
-        tower.behaviorState = Tower.BehaviorState.RECOVERING;
+            AttackData attackData = tower.CreateAttackData();
+            AttackResult attackResult = victim.TakeDamage(attackData);
+            
+            tower.behaviorState = Tower.BehaviorState.RECOVERING;
+        }
     }
 
     private void _doRecovering(Tower tower, FP fixedDeltaTime)
@@ -110,13 +121,13 @@ public class BasicTowerBrain : AbstractTowerBrain
         if(cooldownTimer < 0)
         {
             cooldownTimer = stats.reloadTime;
-            if(tower.targetCreep.isValid)
+            if(!tower.targetCreep.isValid)
             {
                 tower.behaviorState = Tower.BehaviorState.TARGETING;
             }
             else if(TSVector.Distance(tower.view.position, tower.targetCreep.view.position) <= tower.state.range)
             {
-                tower.behaviorState = Tower.BehaviorState.ATTACKING;
+                tower.behaviorState = Tower.BehaviorState.VISUAL_ATTACK;
             }
             else
             {
