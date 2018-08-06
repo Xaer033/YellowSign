@@ -22,6 +22,12 @@ public class Tower : IAttacker, IAttackTarget
         {
             TowerDef def = _towerDefs.GetDef(towerId) as TowerDef;
             Tower tower = _container.Instantiate<Tower>(new object[] { def, spawnInfo });
+
+            var cs_1 = _container.Instantiate<CreepSystem>();
+            var cs_2 = _container.Instantiate<CreepSystem>();
+            Debug.Log("CS1: " + cs_1.GetHashCode());        
+            Debug.Log("CS1 copy: " + cs_1.GetHashCode());
+            Debug.Log("CS3: " + cs_2.GetHashCode());
             return tower;
         }
 

@@ -56,6 +56,8 @@ public class GamePlayState : IGameState
         List<PlayerSpawn> sp = new List<PlayerSpawn>(spawnList);
         sp.Sort((a, b) => a.playerNumber.CompareTo(b.playerNumber));
 
+        Debug.Log("CreepSystem: " + _creepSystem.GetHashCode());
+
         for(int i = 0; i < _playerList.Length; ++i)
         {
             int spawnIndex = i < sp.Count ? i : sp.Count - 1;

@@ -1,4 +1,5 @@
-﻿using TrueSync;
+﻿using System.Collections.Generic;
+using TrueSync;
 using UnityEngine;
 using GhostGen;
 using Zenject;
@@ -11,9 +12,9 @@ public class BasicTowerBrain : AbstractTowerBrain
     private int _creepLayer = -666;
     private Collider[] _hitList;
     private IEventDispatcher _notificationDispatcher;
-
-    [Inject]
+    
     private CreepSystem _creepSystem;
+    
 
     public override void FixedStep(Tower tower, FP fixedDeltaTime)
     {
@@ -53,25 +54,26 @@ public class BasicTowerBrain : AbstractTowerBrain
     private void _doTargeting(Tower tower, FP fixedDeltaTime)
     {
         // Target enemy based off of some criteria (lowest health/closest range, etc.)
-        var colliderList = Physics.OverlapSphere(tower.view.position.ToVector(), tower.state.range.AsFloat(), creepLayer, QueryTriggerInteraction.Collide);
-        if(colliderList != null && colliderList.Length > 0)
+        //var colliderList = Physics.OverlapSphere(tower.view.position.ToVector(), tower.state.range.AsFloat(), creepLayer, QueryTriggerInteraction.Collide);
+        //if(colliderList != null && colliderList.Length > 0)
+        //{
+        //    ICreepView cView = null;
+        //    for(int i = 0; i < colliderList.Length; ++i)
+        //    {
+        //        cView = colliderList[i].gameObject.GetComponent<ICreepView>();
+        //        if(cView != null && !cView.creep.isDead)
+        //        {
+        //            tower.targetCreep = cView.creep;
+        //            tower.behaviorState = Tower.BehaviorState.VISUAL_ATTACK;
+        //            break;
+        //        }
+        //    }
+
+        Creep target = getClosestCreep(tower);
+        if(target != null && target.isValid)
         {
-            ICreepView cView = null;
-            for(int i = 0; i < colliderList.Length; ++i)
-            {
-                cView = colliderList[i].gameObject.GetComponent<ICreepView>();
-                if(cView != null && !cView.creep.isDead)
-                {
-                    tower.targetCreep = cView.creep;
-                    tower.behaviorState = Tower.BehaviorState.VISUAL_ATTACK;
-                    break;
-                }
-            }
-            
-            if(cView == null)
-            {
-                tower.behaviorState = Tower.BehaviorState.IDLE;
-            }
+            tower.targetCreep = target;
+            tower.behaviorState = Tower.BehaviorState.VISUAL_ATTACK;
         }
         else
         {
@@ -159,5 +161,47 @@ public class BasicTowerBrain : AbstractTowerBrain
             }
             return _creepLayer;
         }
+    }
+
+    private CreepSystem creepSystem
+    {
+        get
+        {
+            if(_creepSystem == null)
+            {
+                _creepSystem = Singleton.instance.diContainer.Resolve<CreepSystem>();
+            }
+            return _creepSystem;
+        }
+    }
+
+
+    private Creep getClosestCreep(Tower tower)
+    {
+        FP minDistance = 99999;
+        Creep target = null;
+        List<Creep> creepList = creepSystem.GetCreepList(1);
+
+        for(int i = 0; i < creepList.Count; ++i)
+        {
+            Creep c = creepList[i];
+            if(c != null && !c.isValid)
+            {
+                continue;
+            }
+
+            FP dist = TSVector.Distance(tower.view.position, c.view.position);
+            if(dist > tower.state.range)
+            {
+                continue;
+            }
+
+            if(dist < minDistance)
+            {
+                minDistance = dist;
+                target = c;
+            }
+        }
+        return target;
     }
 }

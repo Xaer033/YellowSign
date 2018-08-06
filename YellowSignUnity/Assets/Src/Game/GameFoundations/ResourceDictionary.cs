@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using Zenject;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
