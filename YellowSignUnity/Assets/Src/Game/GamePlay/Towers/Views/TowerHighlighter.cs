@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class TowerHighlighter : MonoBehaviour
 {
+    private ITowerView _view;
+    [SerializeField]
+    private MaterialPropertyBlock block;
+
     [SerializeField]
     private Transform _root;
+    //private Material _
 
 	// Use this for initialization
 	void Awake ()
@@ -18,4 +23,17 @@ public class TowerHighlighter : MonoBehaviour
         get { return _root; }
     }
 	
+    public void SetTower(ITowerView view)
+    {
+        _view = view;
+
+        _view.gameObject.transform.localPosition = Vector3.zero;
+        _view.gameObject.transform.rotation = Quaternion.identity;
+        _view.transformTS.enableTransform = false;
+        Renderer[] rendererList = _view.gameObject.GetComponentsInChildren<MeshRenderer>();
+        for(int i = 0; i < rendererList.Length; ++i)
+        {
+            rendererList[i].material = _view.highlighterMaterial;
+        }
+    }
 }

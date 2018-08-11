@@ -12,9 +12,14 @@ public class BasicTowerView : MonoBehaviour, ITowerView
     public GameObject fxPrefab;
     public Transform cannonHook;
 
-    private TSTransform _transform;
+    private TSTransform _transformTS;
     private Collider _collider;
 
+    [SerializeField]
+    private Material _material;
+    [SerializeField]
+    private Material _highlighterMaterial;
+    
     private TrailRenderer _fxInstance;
     private Sequence _fxTween;
     private Vector3[] _fxArcPositions = new Vector3[7];
@@ -24,11 +29,10 @@ public class BasicTowerView : MonoBehaviour, ITowerView
 
     void Awake()
     {
-        _transform = GetComponent<TSTransform>();
-        _collider = GetComponent<Collider>();
+        _transformTS = GetComponent<TSTransform>();
+        _collider = GetComponent<Collider>();        
 
         setupFXPool();
-
     }
 
     public Tower tower { get; set; }
@@ -40,19 +44,36 @@ public class BasicTowerView : MonoBehaviour, ITowerView
 
     public TSVector position
     {
-        get { return _transform.position; }
-        set { _transform.position = value; }
+        get { return transformTS.position; }
+        set { transformTS.position = value; }
     }
 
     public TSQuaternion rotation
     {
-        get { return _transform.rotation; }
-        set { _transform.rotation = value; }
+        get { return transformTS.rotation; }
+        set { transformTS.rotation = value; }
+    }
+
+    public Material material
+    {
+        get { return _material; }
+    }
+
+    public Material highlighterMaterial
+    {
+        get { return _highlighterMaterial; }
     }
 
     public TSTransform transformTS
     {
-        get { return _transform; }
+        get
+        {
+            if(_transformTS == null)
+            {
+                _transformTS = GetComponent<TSTransform>();
+            }
+            return _transformTS;
+        }
     }
 
     public FP VisualAttack(ICreepView target)

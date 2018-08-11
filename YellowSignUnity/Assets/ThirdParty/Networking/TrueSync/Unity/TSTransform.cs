@@ -18,6 +18,7 @@ namespace TrueSync {
         [AddTracking]
         private TSVector _position;
 
+        public bool enableTransform = true;
         /**
         *  @brief Property access to position. 
         *  
@@ -365,7 +366,13 @@ namespace TrueSync {
             }
         }
 
-        public void UpdatePlayMode() {
+        public void UpdatePlayMode()
+        {
+            if(!enableTransform)
+            {
+                return;
+            }
+
             if (_interplateMode == TSRigidBody.InterpolateMode.Interpolate)
             {
                  transform.position = Vector3.Lerp(transform.position, position.ToVector(), Time.deltaTime * DELTA_TIME_FACTOR);

@@ -11,6 +11,9 @@ public interface ITowerView
     TSQuaternion rotation { get; set; }
     TSTransform transformTS { get; }
 
+    Material material { get; }
+    Material highlighterMaterial { get; }
+
     //Transform transform { get; }
     GameObject gameObject { get; }
 

@@ -16,6 +16,8 @@ public class AbstractTowerView : ITowerView
     public TSVector position { get; set; }
     public TSQuaternion rotation { get; set; }
     public TSTransform transformTS { get; }
+    public Material material { get; }
+    public Material highlighterMaterial { get; }
 
     public GameObject gameObject { get; }
     //public Transform transform { get; }

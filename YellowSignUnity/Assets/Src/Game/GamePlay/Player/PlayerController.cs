@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
         _gameplayResources = gameplayResources;
         
         _highlighter = GameObject.Instantiate<TowerHighlighter>(_gameplayResources.highlighterPrefab);
-
+        _highlighter.gameObject.SetActive(false);
     }
 
     public void Start()
@@ -112,11 +112,9 @@ public class PlayerController : MonoBehaviour
 
             TowerDef def = _towerDictionary.GetDef(towerId);
             GameObject gView = GameObject.Instantiate(def.view.gameObject, _highlighter.root);
-            gView.transform.localPosition = Vector3.zero;
-            gView.transform.rotation = Quaternion.identity;
-            //GameObject.Destroy(towerView);
             ITowerView towerView = gView.GetComponent<ITowerView>();
-            GameObject.Destroy(towerView.transformTS);
+            _highlighter.SetTower(towerView);
+
         }
     }
 
