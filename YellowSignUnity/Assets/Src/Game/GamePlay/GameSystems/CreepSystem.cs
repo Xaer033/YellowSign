@@ -8,7 +8,7 @@ public class CreepSystem : EventDispatcher
 {
     private const int kMaxCreeps = 200;
 
-    private List<List<Creep>> _creeps;
+    private Dictionary<byte, List<Creep>> _creeps;
     private List<Pathfinding.Path> _generatingPath;
     private Creep.Factory _creepFactory;
 
@@ -19,11 +19,11 @@ public class CreepSystem : EventDispatcher
         _creepFactory = creepFactory;
 
         int maxPlayers = NetworkManager.kMaxPlayers;
-        _creeps = new List<List<Creep>>(maxPlayers);
+        _creeps = new Dictionary<byte, List<Creep>>(maxPlayers);
 
         for(int i = 0; i < maxPlayers; ++i)
         {
-            _creeps.Add(new List<Creep>(kMaxCreeps));
+            _creeps.Add((byte)(i + 1), new List<Creep>(kMaxCreeps));
         }
 
         _generatingPath = new List<Pathfinding.Path>(kMaxCreeps);
@@ -48,7 +48,7 @@ public class CreepSystem : EventDispatcher
     //public void RemoveCreep
     public List<Creep> GetCreepList(byte ownerId)
     {
-        if(ownerId < 0 || ownerId >= NetworkManager.kMaxPlayers)
+        if(ownerId < 0 || ownerId > NetworkManager.kMaxPlayers)
         {
             Debug.LogError("Owner is out of range!");
             return null;
@@ -60,7 +60,7 @@ public class CreepSystem : EventDispatcher
     {
         float lerpFactory = deltaTime * 10.0f;
 
-        for(int o = 0; o < _creeps.Count; ++o)
+        for(byte o = 1; o <= _creeps.Count; ++o)
         {
             int count = _creeps[o].Count;
             for (int i = 0; i < count; ++i)
@@ -78,7 +78,7 @@ public class CreepSystem : EventDispatcher
     {
         _generatingPath.Clear();
 
-        for (int o = 0; o < _creeps.Count; ++o)
+        for (byte o = 1; o <= _creeps.Count; ++o)
         {
             int count = _creeps[o].Count;
             for (int i = count - 1; i >= 0; --i)
@@ -96,7 +96,7 @@ public class CreepSystem : EventDispatcher
                     DispatchEvent(GameplayEventType.CREEP_KILLED, false, c);
 
                     c.RemoveListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
-                    GameObject.Destroy(c.view.gameObject);
+                    //GameObject.Destroy(c.view.gameObject);
                     _creeps[o][i] = null;
                     _creeps[o].RemoveAt(i);
                     continue;

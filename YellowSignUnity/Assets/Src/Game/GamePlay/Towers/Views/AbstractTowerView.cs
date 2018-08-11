@@ -13,11 +13,12 @@ public class AbstractTowerView : ITowerView
         }
     }
 
-    public TSVector position { get; }
-
-    public TSQuaternion rotation { get; }
+    public TSVector position { get; set; }
+    public TSQuaternion rotation { get; set; }
+    public TSTransform transformTS { get; }
 
     public GameObject gameObject { get; }
+    //public Transform transform { get; }
 
     public Tower tower { get; set; }
 

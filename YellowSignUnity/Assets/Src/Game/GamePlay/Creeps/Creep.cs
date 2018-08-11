@@ -9,6 +9,8 @@ using GhostGen;
 
 public class Creep : EventDispatcher, IAttacker, IAttackTarget
 {
+    public static int sCreepCount = 0;
+
     public class Factory : PlaceholderFactory<string, CreepSpawnInfo, Creep>, IValidatable
     {
         private DiContainer _container;
@@ -26,16 +28,17 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         public override Creep Create(string creepId, CreepSpawnInfo spawnInfo)
         {
             CreepDef def = _creepDefs.GetDef(creepId);
-            Creep creep = _container.Instantiate<Creep>(new object[] { def, spawnInfo });
+            Creep creep = _container.Instantiate<Creep>(new object[] { def, spawnInfo, sCreepCount });
+            sCreepCount++;
             //_creepSystem.AddCreep(spawnInfo.ownerId, creep);
-            
+
             return creep;
         }
 
         public override void Validate()
         {
             //TowerDef def = _towerDefs.GetDef("basic_tower");
-            _container.Instantiate<Creep>(new object[] { null, null });
+            _container.Instantiate<Creep>(new object[] { null, null, 0 });
         }
     }
 
@@ -52,6 +55,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
 
     public byte ownerId         { get; private set; }
     public byte targetOwnerId   { get; private set; }
+    public int  guid            { get; private set; }
 
     private Seeker _seeker;
     private bool _canSearchAgain;
@@ -68,15 +72,22 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
     private FP _speed;
     private CreepDef _def;
 
-    public Creep(CreepDef def, CreepSpawnInfo spawnInfo)
+    public Creep(CreepDef def, CreepSpawnInfo spawnInfo, int pGuid)
     {
+        guid = pGuid;
+
         _def = def;
 
-        _nextRepath = 0;
-        _waypointIndex = 0;
-        _canSearchAgain = true;
-        reachedTarget = false;
-        _vectorPath = new List<TSVector>();
+        stats = def.stats;
+        state = CreepState.CreateFromStats(stats);
+
+        state.position = spawnInfo.position;
+        state.rotation = spawnInfo.rotation;
+
+        _speed = stats.baseSpeed;
+        _targetPosition = spawnInfo.targetPosition;
+        targetOwnerId = spawnInfo.targetOwnerId;
+
 
         ownerId = spawnInfo.ownerId;
 
@@ -89,17 +100,17 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         view = creepObj.GetComponent<ICreepView>();
         view.creep = this;
         
-        stats = def.stats;
-        state = CreepState.CreateFromStats(stats);
 
         _transform = view.transformTS;
         _seeker = view.seeker;
-
-        _speed = stats.baseSpeed;
-        _targetPosition = spawnInfo.targetPosition;
-        targetOwnerId = spawnInfo.targetOwnerId;
-
         
+        _nextRepath = 0;
+        _waypointIndex = 0;
+        _canSearchAgain = true;
+        reachedTarget = false;
+        _vectorPath = new List<TSVector>();
+
+
         RecalculatePath();
     }
 
@@ -145,7 +156,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
             this,
             totalDamage, 
             newTargetHealth, 
-            state.isDead);
+            isDead);
 
         DispatchEvent(GameplayEventType.CREEP_DAMAGED, true, result);
         //notificationDispatcher.DispatchEvent(GameplayEventType.CREEP_DAMAGED, false, result);
@@ -155,7 +166,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
 
     public void FixedStep(FP fixedDeltaTime)
     {
-        if(state.isDead)
+        if(isDead)
         {
             flagForRemoval = true;
             return;
@@ -166,7 +177,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         //    RecalculatePath();
         //}
 
-        TSVector pos = _transform.position;
+        TSVector pos = state.position;
         TSVector force = TSVector.zero;
         if (/*_canSearchAgain &&*/ _vectorPath != null && _vectorPath.Count != 0)
         {
@@ -185,7 +196,8 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
                 force = dirNormalized * _speed;
                 force = force * (1 - fixedDeltaTime * _drag);
 
-                _transform.rotation = TSQuaternion.LookRotation(dirNormalized, _transform.up);
+                Quaternion rot = Quaternion.LookRotation(dirNormalized.ToVector(), Vector3.up);
+                state.rotation = new TSQuaternion(rot.x, rot.y, rot.z, rot.w);
 
                 if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2)
                 {
@@ -198,14 +210,8 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
                 Debug.Log("Seems to be in a bad way...Explode to damage nearby towers");
             }
         }
-        else
-        {
-            // Stand still
-            pos = _transform.position;
-            force = TSVector.zero;
-        }
 
-        _transform.position += force * fixedDeltaTime;        
+        state.position = pos + (force * fixedDeltaTime);        
     }
 
     public Path RecalculatePath()
@@ -213,7 +219,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         _canSearchAgain = false;
 
         Path result = _seeker.StartPath(
-                        _transform.position.ToVector(), 
+                        state.position.ToVector(), 
                         _targetPosition.ToVector(), 
                         onPathComplete);
 
@@ -242,7 +248,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         }
 
         TSVector p1 = p.originalStartPoint.ToTSVector();
-        TSVector p2 = _transform.position;
+        TSVector p2 = state.position;
 
         p1.y = p2.y;
 

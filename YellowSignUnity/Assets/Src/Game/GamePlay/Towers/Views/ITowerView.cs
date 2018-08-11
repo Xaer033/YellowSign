@@ -7,8 +7,11 @@ public interface ITowerView
 { 
     Bounds bounds { get; }
 
-    TSVector position { get; }
-    TSQuaternion rotation { get; }
+    TSVector position { get; set; }
+    TSQuaternion rotation { get; set; }
+    TSTransform transformTS { get; }
+
+    //Transform transform { get; }
     GameObject gameObject { get; }
 
     Tower tower { get; set; }

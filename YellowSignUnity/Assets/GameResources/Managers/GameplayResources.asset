@@ -11,11 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 075bb9c4aff63d6468d838082f9adeec, type: 3}
   m_Name: GameplayResources
   m_EditorClassIdentifier: 
-  basicCreep: {fileID: 1852374461560344, guid: 36cc2eb45c0f24f4199b4cbd2f9be8ad, type: 2}
-  basicCreepStats: {fileID: 11400000, guid: 546f6f4f623987d48a357f705d6f0810, type: 2}
   gameplayCamera: {fileID: 1233162908182086, guid: e61e7243322a37b428e92da265080831,
     type: 2}
-  CreepHealthUIPrefab: {fileID: 114593122990014430, guid: a1559d4617b0bbe4197dead18dc12b6c,
+  creepHealthUIPrefab: {fileID: 114593122990014430, guid: a1559d4617b0bbe4197dead18dc12b6c,
     type: 2}
-  highlighterPrefab: {fileID: 1934427208475836, guid: 08665d0db2402184689dac09b061c16c,
+  highlighterPrefab: {fileID: 114091479660951962, guid: 08665d0db2402184689dac09b061c16c,
     type: 2}

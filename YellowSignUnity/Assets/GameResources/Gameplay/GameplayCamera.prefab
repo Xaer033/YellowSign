@@ -90,10 +90,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldLimits:
   - serializedVersion: 2
-    x: -4.72
+    x: -6.6
     y: -57.4
-    width: 7.46
-    height: 33.1
+    width: 8.1
+    height: 56.4
   - serializedVersion: 2
     x: 8.1
     y: 25.6

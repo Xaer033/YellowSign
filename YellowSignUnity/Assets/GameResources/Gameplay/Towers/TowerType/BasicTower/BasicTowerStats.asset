@@ -15,7 +15,7 @@ MonoBehaviour:
   attackType: 1
   targetableCreepTypes: 3
   maxHealth: 100
-  baseDamage: 5
-  baseRange: 8
-  reloadTime: 0.5
+  baseDamage: 2
+  baseRange: 6
+  reloadTime: 0.4
   idleTime: 0.5

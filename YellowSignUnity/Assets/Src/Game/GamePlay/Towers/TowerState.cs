@@ -10,6 +10,9 @@ public class TowerState
     public FP   idleTimer;
     public FP   attackTimer;
 
+    public TSVector position;
+    public TSQuaternion rotation;
+
     public FP   range
     {
         get {  return stats.baseRange; }
@@ -26,6 +29,10 @@ public class TowerState
         reloadTimer = pStats.reloadTime;
         idleTimer = pStats.idleTime;
         attackTimer = 0;
+
+        position = TSVector.zero;
+        rotation = TSQuaternion.identity;
+        
     }
 
     public static TowerState CreateFromStats(TowerStats stats)

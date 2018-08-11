@@ -4549,6 +4549,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 2
+  cameraLimit:
+    serializedVersion: 2
+    x: 8.1
+    y: 25.6
+    width: -6.6
+    height: -57.4
   cameraHook: {fileID: 4361396045784410}
 --- !u!114 &114053310731683948
 MonoBehaviour:
@@ -5172,6 +5178,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 1
+  cameraLimit:
+    serializedVersion: 2
+    x: -6.6
+    y: -57.4
+    width: 8.1
+    height: 56.4
   cameraHook: {fileID: 4470558560352342}
 --- !u!114 &114464708656602864
 MonoBehaviour:

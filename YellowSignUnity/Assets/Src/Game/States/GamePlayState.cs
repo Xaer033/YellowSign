@@ -19,6 +19,7 @@ public class GamePlayState : IGameState
     private SyncStepper _commander;
     private GameSystemManager _gameSystems;
     //private SyncStepper.Factory _syncFactory;
+   
 
 
     public GamePlayState(
@@ -56,22 +57,17 @@ public class GamePlayState : IGameState
         List<PlayerSpawn> sp = new List<PlayerSpawn>(spawnList);
         sp.Sort((a, b) => a.playerNumber.CompareTo(b.playerNumber));
 
-        Debug.Log("CreepSystem: " + _creepSystem.GetHashCode());
-
         for(int i = 0; i < _playerList.Length; ++i)
         {
             int spawnIndex = i < sp.Count ? i : sp.Count - 1;
-            var spawnPoint = sp[spawnIndex];
+            var pController = _playerList[i];
+            pController.playerSpawn = sp[spawnIndex];
 
-            _playerList[i].Initialize(
-                spawnPoint,
-                _creepSystem,
-                _towerSystem,
-                _gameplayResources);
+            Singleton.instance.diContainer.InjectGameObject(pController.gameObject);
+            pController.SetCurrentTower("basic_tower");
         }
-
         _gameSystems.Initialize();
-        
+
         _guiManager.screenFader.FadeIn(1.5f);
     }
     

@@ -7,26 +7,17 @@ public class CreepHealthUISystem : MonoBehaviour
 {
     public const int kMaxUIView = 200;
 
-
-    public Camera cam
+    private GuiCameraTag _guiCameraTag;
+    
+    public Canvas canvas
     {
-        get
-        {
-            if(_camera == null)
-            {
-                GameObject camObj = GameObject.FindWithTag("MainCamera");
-                _camera = camObj.GetComponent<Camera>();
-            }
-            return _camera;
-        }
+        get { return _guiCameraTag.canvas; }
     }
-
-    public Canvas canvas { get; set; }
 
     public float scaleConst = 12.0f;
 
-    private Stack<CreepHealthView> _viewPool = new Stack<CreepHealthView>(kMaxUIView);
-    private Dictionary<Creep, CreepHealthView> _inUseMap= new Dictionary<Creep, CreepHealthView>(kMaxUIView);
+    private Stack<CreepHealthUIView> _viewPool = new Stack<CreepHealthUIView>(kMaxUIView);
+    private Dictionary<Creep, CreepHealthUIView> _inUseMap= new Dictionary<Creep, CreepHealthUIView>(kMaxUIView);
     private RectTransform _canvasRectTransform;
     private Camera _camera;
     private GameplayResources _gameplayResources;
@@ -38,22 +29,25 @@ public class CreepHealthUISystem : MonoBehaviour
         _gameplayResources = gameplayResources;
     }
 
-	// Use this for initialization
-	void Start ()
+    private void Awake()
     {
-        canvas = Singleton.instance.gui.mainCanvas;
-
+        _guiCameraTag = GameObject.FindObjectOfType<GuiCameraTag>();
         _canvasRectTransform = canvas.transform as RectTransform;
+    }
 
-        _savedScale = _gameplayResources.CreepHealthUIPrefab.transform.localScale;
+    // Use this for initialization
+    void Start ()
+    {
+
+        _savedScale = _gameplayResources.creepHealthUIPrefab.transform.localScale;
 
         for(int i = 0; i < kMaxUIView; ++i)
         {
-            CreepHealthView view = GameObject.Instantiate<CreepHealthView>(
-                _gameplayResources.CreepHealthUIPrefab, 
+            CreepHealthUIView view = GameObject.Instantiate<CreepHealthUIView>(
+                _gameplayResources.creepHealthUIPrefab, 
                 canvas.transform, false);
 
-            view.gameObject.SetActive(false);
+            //view.gameObject.SetActive(false);
 
             _viewPool.Push(view);
         }
@@ -70,26 +64,41 @@ public class CreepHealthUISystem : MonoBehaviour
         foreach(var pair in _inUseMap)
         {
             Creep c = pair.Key;
-            CreepHealthView view = pair.Value;
+            CreepHealthUIView view = pair.Value;
 
             Vector3 worldHealthPos = c.view.healthPosition;
             Vector3 anchorPos = getScreenPositionFromWorldPosition(worldHealthPos, cam, canvas);
             view.rectTransform.anchoredPosition = anchorPos;
 
+            float dist = Vector3.Distance(cam.transform.position, worldHealthPos);
+            dist = dist < 0.001f ? 0.001f : dist;
 
-            float scaleMod = scaleConst * (1.0f / Vector3.Distance(cam.transform.position, worldHealthPos));
+            float scaleMod = scaleConst * (1.0f / dist);
             view.transform.localScale = _savedScale * scaleMod;
         }
     }
 
-    private Vector2 getScreenPositionFromWorldPosition(Vector3 _worldPostion, Camera _camera, Canvas _canvas)
+    private Vector2 getScreenPositionFromWorldPosition(Vector3 worldPostion, Camera camera, Canvas _canvas)
     {
-        Vector2 viewportPosition = _camera.WorldToViewportPoint(_worldPostion);
+        Vector2 viewportPosition = camera.WorldToViewportPoint(worldPostion);
         Vector2 screenPos = new Vector2(
              ((viewportPosition.x * _canvasRectTransform.sizeDelta.x) - (_canvasRectTransform.sizeDelta.x * 0.5f)),
              ((viewportPosition.y * _canvasRectTransform.sizeDelta.y) - (_canvasRectTransform.sizeDelta.y * 0.5f)));
         
         return new Vector2(screenPos.x, screenPos.y);
+    }
+
+    private Camera cam
+    {
+        get
+        {
+            if(_camera == null)
+            {
+                GameObject camObj = GameObject.FindGameObjectWithTag("MainCamera");
+                _camera = camObj.GetComponent<Camera>();
+            }
+            return _camera;
+        }
     }
 
     public void CleanUp()
@@ -99,7 +108,7 @@ public class CreepHealthUISystem : MonoBehaviour
             GameObject.Destroy(pair.Value.gameObject);        
         }
 
-        CreepHealthView v = null;
+        CreepHealthUIView v = null;
         while(v = _viewPool.Pop())
         {
             GameObject.Destroy(v.gameObject);
@@ -113,7 +122,7 @@ public class CreepHealthUISystem : MonoBehaviour
 
     public void ShowHealthOnCreep(Creep c)
     {
-        CreepHealthView view = getView(c);
+        CreepHealthUIView view = getView(c);
 
         if(view != null)
         {
@@ -130,15 +139,15 @@ public class CreepHealthUISystem : MonoBehaviour
         //Debug.Log("Creep Remove");
     }
 
-    private CreepHealthView popView(Creep c)
+    private CreepHealthUIView popView(Creep c)
     {
-        CreepHealthView view = null;
+        CreepHealthUIView view = null;
         if(_viewPool.Count > 0)
         {
             view = _viewPool.Pop();
             //Debug.Log("Creep Added");
 
-            view.gameObject.SetActive(true);
+            //view.gameObject.SetActive(true);
         }
         else
         {
@@ -149,20 +158,21 @@ public class CreepHealthUISystem : MonoBehaviour
 
     private void recycleView(Creep c)
     {
-        CreepHealthView view;
+        CreepHealthUIView view;
         if(_inUseMap.TryGetValue(c, out view))
         {
             _inUseMap.Remove(c);
             _viewPool.Push(view);
 
-            //view.KillTween();
-            view.gameObject.SetActive(false);
+            view.KillTween(false);
+            view._canvasGroup.alpha = 0;
+            //view.gameObject.SetActive(false);
         }
     }
 
-    private CreepHealthView getView(Creep c)
+    private CreepHealthUIView getView(Creep c)
     {
-        CreepHealthView view;
+        CreepHealthUIView view;
         if(!_inUseMap.TryGetValue(c, out view))
         {
             view = popView(c);

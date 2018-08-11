@@ -11,5 +11,6 @@ public enum PlayerNumber : byte
 public class PlayerSpawn : MonoBehaviour
 {
     public PlayerNumber playerNumber;
+    public Rect cameraLimit;
     public Transform cameraHook;
 }

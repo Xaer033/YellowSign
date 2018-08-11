@@ -9,32 +9,36 @@ public class PlayerController : MonoBehaviour
 
     private Commander _commander;
     private Grid _grid;
-    private GameObject _highlighter;
+    private TowerHighlighter _highlighter;
     private CreepSystem _creepSystem;
     private TowerSystem _towerSystem;
+    private TowerDictionary _towerDictionary;
     private GameplayResources _gameplayResources;
-    private PlayerSpawn _playerSpawn;
 
+    private string _currentTowerId;
     private Camera _camera;
     
-    public PlayerNumber playerNumber { get { return _playerSpawn.playerNumber; } }
+    public PlayerSpawn playerSpawn { get; set; }
 
-    public void Initialize(
-        PlayerSpawn playerSpawn,
-        CreepSystem creepSystem, 
+    [Inject]
+    public void Construct(
+        CreepSystem creepSystem,
         TowerSystem towerSystem,
+        TowerDictionary towerDictionary,
         GameplayResources gameplayResources)
     {
-        _playerSpawn = playerSpawn;
         _creepSystem = creepSystem;
         _towerSystem = towerSystem;
+        _towerDictionary = towerDictionary;
         _gameplayResources = gameplayResources;
+        
+        _highlighter = GameObject.Instantiate<TowerHighlighter>(_gameplayResources.highlighterPrefab);
 
-        _highlighter = GameObject.Instantiate<GameObject>(_gameplayResources.highlighterPrefab);
     }
 
     public void Start()
     {        
+
         GameObject gridObj = GameObject.FindGameObjectWithTag("grid_p1");
         _grid = gridObj.GetComponent<Grid>();
 
@@ -66,12 +70,12 @@ public class PlayerController : MonoBehaviour
         {
             if(canBuildTower)
             {
-                _highlighter.SetActive(true);
+                _highlighter.gameObject.SetActive(true);
                 _highlighter.transform.position = pos.ToVector3();
             }
             else
             {
-                _highlighter.SetActive(false);
+                _highlighter.gameObject.SetActive(false);
             }
         }
 
@@ -97,7 +101,33 @@ public class PlayerController : MonoBehaviour
     {
         get { return _commander.owner; }
     }
-    
+
+    public void SetCurrentTower(string towerId)
+    {
+        if(towerId != _currentTowerId)
+        {
+            _currentTowerId = towerId;
+
+            _destroyAllChildren(_highlighter.root);
+
+            TowerDef def = _towerDictionary.GetDef(towerId);
+            GameObject gView = GameObject.Instantiate(def.view.gameObject, _highlighter.root);
+            gView.transform.localPosition = Vector3.zero;
+            gView.transform.rotation = Quaternion.identity;
+            //GameObject.Destroy(towerView);
+            ITowerView towerView = gView.GetComponent<ITowerView>();
+            GameObject.Destroy(towerView.transformTS);
+        }
+    }
+
+    private void _destroyAllChildren(Transform root)
+    {
+        int count = root.childCount;
+        for(int i = count - 1; i >= 0; --i)
+        {
+            GameObject.Destroy(root.GetChild(i).gameObject);
+        }
+    }
     private void OnCommandExecute(byte ownerId, CommandType type, ICommand command)
     {
         switch(type)
@@ -169,7 +199,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Sync Start");
         GameObject camObj = GameObject.FindWithTag("MainCamera");
         CameraMovement camMovement = camObj.GetComponent<CameraMovement>();
-        camMovement.Setup(_playerSpawn);
+        camMovement.Setup(playerSpawn);
         _camera = camMovement.camera;
 
         //GameObject cameraObj = GameObject.Instantiate<GameObject>(

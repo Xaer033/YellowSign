@@ -7,7 +7,7 @@ using DG.Tweening;
 [RequireComponent(typeof(TSTransform), typeof(Collider))]
 public class BasicTowerView : MonoBehaviour, ITowerView
 {
-    private const int kFXPoolSize = 6;
+    private const int kFXPoolSize = 3;
 
     public GameObject fxPrefab;
     public Transform cannonHook;
@@ -41,16 +41,23 @@ public class BasicTowerView : MonoBehaviour, ITowerView
     public TSVector position
     {
         get { return _transform.position; }
+        set { _transform.position = value; }
     }
 
     public TSQuaternion rotation
     {
         get { return _transform.rotation; }
+        set { _transform.rotation = value; }
+    }
+
+    public TSTransform transformTS
+    {
+        get { return _transform; }
     }
 
     public FP VisualAttack(ICreepView target)
     {
-        const float kDuration = 0.3f;
+        const float kDuration = 0.25f;
         const float kPreFireDelay = 0.01f;
         const float kTimeToAttack = kDuration + kPreFireDelay;
 
@@ -66,14 +73,14 @@ public class BasicTowerView : MonoBehaviour, ITowerView
         TrailRenderer fx = getNextFX();
         fx.transform.position = startPos;
 
-        Vector3 forwardVec = target.transformTS.forward.ToVector() * target.creep.stats.baseSpeed * kDuration;
-        Vector3 endPos = target.targetPosition + forwardVec;
+        Vector3 forwardVec = target.transformTS.forward.ToVector() * target.creep.stats.baseSpeed * (kTimeToAttack);
+        Vector3 endPos = target.targetPosition + (forwardVec * TrueSyncManager.DeltaTime.AsFloat());
 
         recalculatePath(startPos, endPos);
 
         _fxTween = DOTween.Sequence();
 
-        Tween moveTween = fx.transform.DOPath(
+        Tweener moveTween = fx.transform.DOPath(
             _fxArcPositions, 
             kDuration, 
             PathType.Linear,
@@ -81,7 +88,6 @@ public class BasicTowerView : MonoBehaviour, ITowerView
 
         moveTween.OnStart(() =>
         {
-
             fx.gameObject.SetActive(true);
             fx.emitting = (true);
             if(!target.creep.isValid)

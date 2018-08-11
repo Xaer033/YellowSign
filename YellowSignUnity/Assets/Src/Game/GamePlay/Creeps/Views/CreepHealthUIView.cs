@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using GhostGen;
 using DG.Tweening;
 
-public class CreepHealthView : MonoBehaviour
+public class CreepHealthUIView : MonoBehaviour
 {
     public float fadeOutDuration;
     public float fadeDelay;
@@ -18,10 +18,23 @@ public class CreepHealthView : MonoBehaviour
     private float _healthFill;
     private Tween _fadeTween;
 
+
+    public float alpha
+    {
+        set
+        {
+            if(_canvasGroup != null && _canvasGroup.alpha != value)
+            {
+                _canvasGroup.alpha = value;
+            }
+        }
+    }
+
+
     public void Awake()
     {
         //rectTransform = GetComponent<RectTransform>();
-        _canvasGroup.alpha = 0;
+        alpha = 0;
     }
 
     public void SetHealthFill(float value, Action onComplete)
@@ -35,13 +48,7 @@ public class CreepHealthView : MonoBehaviour
         }        
     }
 
-    public void OnDisable()
-    {
-        _canvasGroup.alpha = 0;
-        killTween(true);
-    }
-
-    private void killTween(bool finishTween)
+    public void KillTween(bool finishTween)
     {
         if(_fadeTween != null)
         {
@@ -50,9 +57,16 @@ public class CreepHealthView : MonoBehaviour
         }
     }
 
+    public void OnDisable()
+    {
+        _canvasGroup.alpha = 0;
+        KillTween(true);
+    }
+
+
     private void restartFadeTween(Action onComplete)
     {
-        killTween(false);
+        KillTween(false);
 
         _canvasGroup.alpha = 1;
 

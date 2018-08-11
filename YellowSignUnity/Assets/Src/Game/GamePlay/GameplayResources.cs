@@ -6,10 +6,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName ="YellowSign/Gameplay Resources")]
 public class GameplayResources : ScriptableObject
 {
-    public GameObject basicCreep;
-    public CreepStats basicCreepStats;
     public GameObject gameplayCamera;
 
-    public CreepHealthView CreepHealthUIPrefab;
-    public GameObject highlighterPrefab;
+    public CreepHealthUIView creepHealthUIPrefab;
+    public TowerHighlighter highlighterPrefab;
 }

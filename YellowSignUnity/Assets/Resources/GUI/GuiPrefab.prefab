@@ -71,6 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4440354854320000}
+  - component: {fileID: 114797321501705266}
   m_Layer: 5
   m_Name: GuiPrefab
   m_TagString: GuiObject
@@ -211,6 +212,20 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 2
+--- !u!114 &114797321501705266
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1987084902344520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40f9563f1be50a7488f9651157e7b836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 20282306674493882}
+  _canvas: {fileID: 223930707856539494}
+  _eventSystem: {fileID: 114583798240227224}
 --- !u!114 &114863950665808744
 MonoBehaviour:
   m_ObjectHideFlags: 1

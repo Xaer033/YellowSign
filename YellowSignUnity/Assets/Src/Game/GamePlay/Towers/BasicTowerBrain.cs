@@ -98,6 +98,8 @@ public class BasicTowerBrain : AbstractTowerBrain
     private void _doAttack(Tower tower, FP fixedDeltaTime)
     {
         FP attackTimer = tower.state.attackTimer;
+        FP delta = tower.state.reloadTimer - attackTimer;
+        tower.state.reloadTimer = delta > 0 ? delta : 0;
         //if(attackTimer > 0.0f)
         //{
         //    tower.state.attackTimer = attackTimer - fixedDeltaTime;
