@@ -5,6 +5,14 @@ using Zenject;
 
 public class PlayerController : MonoBehaviour
 {
+    public enum PlayerControlState
+    {
+        NONE = 0,
+        TOWER_BUILDER,
+        STATS_LOOKUP
+
+    }
+
     private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
 
     private Commander _commander;
@@ -19,7 +27,14 @@ public class PlayerController : MonoBehaviour
     private Camera _camera;
     
     public PlayerSpawn playerSpawn { get; set; }
+    public PlayerControlState controlState { get; set; }
 
+
+
+    public TSPlayerInfo owner
+    {
+        get { return _commander.owner; }
+    }
     [Inject]
     public void Construct(
         CreepSystem creepSystem,
@@ -37,7 +52,8 @@ public class PlayerController : MonoBehaviour
     }
 
     public void Start()
-    {        
+    {
+        controlState = PlayerControlState.TOWER_BUILDER;
 
         GameObject gridObj = GameObject.FindGameObjectWithTag("grid_p1");
         _grid = gridObj.GetComponent<Grid>();
@@ -46,8 +62,7 @@ public class PlayerController : MonoBehaviour
         _commander.onCommandExecute += OnCommandExecute;
         _commander.onSyncedStep += OnSyncStep;
         _commander.onSyncStartLocalPlayer += OnSyncStartLocalPlayer;
-
-
+        
         Debug.Log("Owner: " + _commander.localOwner.Id);
     }
 
@@ -59,47 +74,11 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = 1.0f;
-
-        Ray ray = (_camera != null) ? _camera.ScreenPointToRay(mousePos) : default(Ray);
-        GridPosition pos;
-        bool canBuildTower = _grid.CanBuildTower(ray, out pos);
-
-        if(_highlighter)
+        switch(controlState)
         {
-            if(canBuildTower)
-            {
-                _highlighter.gameObject.SetActive(true);
-                _highlighter.transform.position = pos.ToVector3();
-            }
-            else
-            {
-                _highlighter.gameObject.SetActive(false);
-            }
+            case PlayerControlState.NONE:           _noneState();           break;
+            case PlayerControlState.TOWER_BUILDER:  _towerBuilderState();   break;
         }
-
-        if(Input.GetMouseButtonDown(0))
-        {
-            if(canBuildTower && !_towerBlocker.Contains(pos))
-            {
-                ICommand command = CommandFactory.CreateCommand(CommandType.BUILD_TOWER, new object[] { "basic_tower", pos });
-                _commander.AddCommand(command);
-                _towerBlocker.Add(pos); // Prevents trying to add multiple towers to the same spot before next sync Update
-            }
-        }
-
-        if (Input.GetMouseButtonDown(1))
-        {
-           _commander.AddCommand(new SpawnCreepCommand("basic_creep", 20));
-        }
-
-       
-    }
-
-    public TSPlayerInfo owner
-    {
-        get { return _commander.owner; }
     }
 
     public void SetCurrentTower(string towerId)
@@ -204,5 +183,51 @@ public class PlayerController : MonoBehaviour
         //        _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
 
         //_camera = cameraObj.GetComponent<Camera>();
+    }
+
+    private void _noneState()
+    {
+        if(_highlighter)
+        {
+            _highlighter.gameObject.SetActive(false);
+        }
+    }
+
+    private void _towerBuilderState()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 1.0f;
+
+        Ray ray = (_camera != null) ? _camera.ScreenPointToRay(mousePos) : default(Ray);
+        GridPosition pos;
+        bool canBuildTower = _grid.CanBuildTower(ray, out pos);
+
+        if(_highlighter)
+        {
+            if(canBuildTower)
+            {
+                _highlighter.gameObject.SetActive(true);
+                _highlighter.transform.position = pos.ToVector3();
+            }
+            else
+            {
+                _highlighter.gameObject.SetActive(false);
+            }
+        }
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            if(canBuildTower && !_towerBlocker.Contains(pos))
+            {
+                ICommand command = CommandFactory.CreateCommand(CommandType.BUILD_TOWER, new object[] { _currentTowerId, pos });
+                _commander.AddCommand(command);
+                _towerBlocker.Add(pos); // Prevents trying to add multiple towers to the same spot before next sync Update
+            }
+        }
+
+        if(Input.GetMouseButtonDown(1))
+        {
+            _commander.AddCommand(new SpawnCreepCommand("basic_creep", 20));
+        }
     }
 }

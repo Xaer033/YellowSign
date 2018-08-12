@@ -8,6 +8,7 @@ using Zenject;
 
 public class GamePlayState : IGameState
 {
+    private PlayerHudController _hudController;
     private PlayerController[] _playerList;
 
     private IEventDispatcher _notificationDispatcher;
@@ -57,6 +58,7 @@ public class GamePlayState : IGameState
         List<PlayerSpawn> sp = new List<PlayerSpawn>(spawnList);
         sp.Sort((a, b) => a.playerNumber.CompareTo(b.playerNumber));
 
+        PlayerController localPlayer = null;
         for(int i = 0; i < _playerList.Length; ++i)
         {
             int spawnIndex = i < sp.Count ? i : sp.Count - 1;
@@ -65,10 +67,20 @@ public class GamePlayState : IGameState
 
             Singleton.instance.diContainer.InjectGameObject(pController.gameObject);
             pController.SetCurrentTower("basic_tower");
+
+            if((byte)pController.playerSpawn.playerNumber == TrueSyncManager.LocalPlayer.Id)
+            {
+                localPlayer = pController;
+            }      
         }
+
         _gameSystems.Initialize();
 
-        _guiManager.screenFader.FadeIn(1.5f);
+        _hudController = new PlayerHudController(localPlayer);
+        _hudController.Start(() =>
+        {
+            _guiManager.screenFader.FadeIn(1.5f);
+        });
     }
     
     public void Step(float deltaTime)

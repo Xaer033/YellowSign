@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace GhostGen
 {
-    public class UIView : MonoBehaviour
+    public class UIView : EventDispatcherBehavior
     {
         protected event Action<BaseEventData> _onTriggered;
         private InvalidationFlag _invalidateFlag = InvalidationFlag.ALL; // Default to invalidating everything

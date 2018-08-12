@@ -16,6 +16,7 @@ public class CameraMovement : MonoBehaviour
     private Vector3 _acceleration;
     // Use this for initialization
     private Vector3 _currentPos;
+    private Vector3 _startPos;
     //private Transform _movementTransform;
     private Rect _worldLimit;
     private Camera _camera;
@@ -43,6 +44,7 @@ public class CameraMovement : MonoBehaviour
 
             transform.SetPositionAndRotation(spawn.cameraHook.position, rot);
             _currentPos = transform.localPosition;
+            _startPos = _currentPos;
         }
     }
 
@@ -56,15 +58,28 @@ public class CameraMovement : MonoBehaviour
         _acceleration = Vector3.zero;
 
         _camera = GetComponent<Camera>();
+        _currentPos = transform.localPosition;
     }
 
     public void Update()
     {
+        if(playerSpawn == null || playerSpawn.cameraHook == null)
+        {
+            return;
+        }
+
         //Debug
-        if (Input.GetButtonDown("Jump"))
+        if(Input.GetButtonDown("Jump"))
         {
             Cursor.lockState = (Cursor.lockState == CursorLockMode.None) ? CursorLockMode.Confined : CursorLockMode.None;
         }
+
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            transform.localPosition = _startPos;
+        }
+
+
 
         if(transform != null)
         {
@@ -74,12 +89,7 @@ public class CameraMovement : MonoBehaviour
     // Not getting input from TrueSyncInput. Don't need to sync camera movement
     public void FixedUpdate()
     {
-        if(playerSpawn == null || transform == null)
-        {
-            return;
-        }
-
-        if(playerSpawn.cameraHook == null)
+        if(playerSpawn == null || playerSpawn.cameraHook == null)
         {
             return;
         }
