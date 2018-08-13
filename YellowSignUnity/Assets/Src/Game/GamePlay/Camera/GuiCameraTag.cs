@@ -13,6 +13,9 @@ public class GuiCameraTag : MonoBehaviour
     private Canvas _canvas;
 
     [SerializeField]
+    private Canvas _dynamicCanvas;
+
+    [SerializeField]
     private EventSystem _eventSystem;
     
     public Camera camera
@@ -23,6 +26,11 @@ public class GuiCameraTag : MonoBehaviour
     public Canvas canvas
     {
         get { return _canvas; }
+    }
+
+    public Canvas dynamicCanvas
+    {
+        get { return _dynamicCanvas; }
     }
 
     public EventSystem eventSystem

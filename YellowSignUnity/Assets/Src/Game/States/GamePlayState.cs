@@ -43,16 +43,11 @@ public class GamePlayState : IGameState
 
     public void Init(Hashtable changeStateData)
     {
-        //_notificationDispatcher = Singleton.instance.notificationDispatcher;
-        _notificationDispatcher.AddListener(GameplayEventType.GAME_START, OnGameStart);
-
-        PhotonNetwork.LoadLevel("GameScene");
+        _initialize();
     }
 
-    private void OnGameStart(GhostGen.GeneralEvent e)
+    private void _initialize()
     {
-        _notificationDispatcher.RemoveListener(GameplayEventType.GAME_START, OnGameStart);
-        
         _playerList = GameObject.FindObjectsOfType<PlayerController>();
         PlayerSpawn[] spawnList = GameObject.FindObjectsOfType<PlayerSpawn>();
         List<PlayerSpawn> sp = new List<PlayerSpawn>(spawnList);
@@ -71,7 +66,8 @@ public class GamePlayState : IGameState
             if((byte)pController.playerSpawn.playerNumber == TrueSyncManager.LocalPlayer.Id)
             {
                 localPlayer = pController;
-            }      
+            }
+            Debug.LogWarningFormat("LocalPlayer: {0}, PlayerNumber: {1}", TrueSyncManager.LocalPlayer.Id, pController.playerSpawn.playerNumber);
         }
 
         _gameSystems.Initialize();

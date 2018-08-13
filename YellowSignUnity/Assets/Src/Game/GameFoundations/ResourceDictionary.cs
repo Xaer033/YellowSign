@@ -15,24 +15,14 @@ public class DefinitionDictionary<T> : SerializedScriptableObject
     }
 
     [SerializeField]
-    private Dictionary<string, T> _defMap;
+    protected Dictionary<string, T> _defMap;
 
     //[ShowInInspector]
     //[SerializeField]
     //private DefDisplay[] _defList;
 
-    public void Initialize()
+    public virtual void Initialize()
     {
-        //Debug.Log("Enabling");
-        //_defMap = new Dictionary<string, T>();
-
-        //if(_defList != null)
-        //{
-        //    for(int i = 0; i < _defList.Length; ++i)
-        //    {
-        //        _defMap[_defList[i].id] = _defList[i].def;
-        //    }
-        //}
     }
 
 
@@ -44,5 +34,25 @@ public class DefinitionDictionary<T> : SerializedScriptableObject
             Debug.LogError("Could not find definition for id: " + id);
         }
         return def;        
+    }
+
+    public List<string> GetKeys()
+    {
+        List<string> keys = new List<string>();
+        foreach(var pair in _defMap)
+        {
+            keys.Add(pair.Key);
+        }
+        return keys;
+    }
+
+    public List<T> GetValues()
+    {
+        List<T> values = new List<T>();
+        foreach(var pair in _defMap)
+        {
+            values.Add(pair.Value);
+        }
+        return values;
     }
 }

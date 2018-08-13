@@ -11,7 +11,7 @@ public class CreepHealthUISystem : MonoBehaviour
     
     public Canvas canvas
     {
-        get { return _guiCameraTag.canvas; }
+        get { return _guiCameraTag.dynamicCanvas; }
     }
 
     public float scaleConst = 12.0f;
@@ -32,7 +32,7 @@ public class CreepHealthUISystem : MonoBehaviour
     private void Awake()
     {
         _guiCameraTag = GameObject.FindObjectOfType<GuiCameraTag>();
-        _canvasRectTransform = canvas.transform as RectTransform;
+        _canvasRectTransform = _guiCameraTag.canvas.transform as RectTransform;
     }
 
     // Use this for initialization

@@ -37,7 +37,7 @@ public class IntroState : IGameState
 	{
 		if (_gotoMainMenu) 
 		{
-            _gameStateMachine.ChangeState(YellowSignStateType.MULTIPLAYER_GAMEPLAY);
+            _gameStateMachine.ChangeState(YellowSignStateType.LOAD_GAMEPLAY);
             _gotoMainMenu = false;
 		}
     }

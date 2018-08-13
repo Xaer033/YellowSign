@@ -28,13 +28,12 @@ public class PlayerController : MonoBehaviour
     
     public PlayerSpawn playerSpawn { get; set; }
     public PlayerControlState controlState { get; set; }
-
-
-
+    
     public TSPlayerInfo owner
     {
         get { return _commander.owner; }
     }
+
     [Inject]
     public void Construct(
         CreepSystem creepSystem,
@@ -51,7 +50,7 @@ public class PlayerController : MonoBehaviour
         _highlighter.gameObject.SetActive(false);
     }
 
-    public void Start()
+    public void Awake()
     {
         controlState = PlayerControlState.TOWER_BUILDER;
 
@@ -81,30 +80,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void AddCommand(ICommand command)
+    {
+        _commander.AddCommand(command);
+    }
+
     public void SetCurrentTower(string towerId)
     {
         if(towerId != _currentTowerId)
         {
             _currentTowerId = towerId;
 
-            _destroyAllChildren(_highlighter.root);
+            GameObjectUtilities.DestroyAllChildren(_highlighter.root);
 
             TowerDef def = _towerDictionary.GetDef(towerId);
             GameObject gView = GameObject.Instantiate(def.view.gameObject, _highlighter.root);
             ITowerView towerView = gView.GetComponent<ITowerView>();
             _highlighter.SetTower(towerView);
-
         }
     }
 
-    private void _destroyAllChildren(Transform root)
-    {
-        int count = root.childCount;
-        for(int i = count - 1; i >= 0; --i)
-        {
-            GameObject.Destroy(root.GetChild(i).gameObject);
-        }
-    }
     private void OnCommandExecute(byte ownerId, CommandType type, ICommand command)
     {
         switch(type)
@@ -184,6 +179,7 @@ public class PlayerController : MonoBehaviour
 
         //_camera = cameraObj.GetComponent<Camera>();
     }
+    
 
     private void _noneState()
     {

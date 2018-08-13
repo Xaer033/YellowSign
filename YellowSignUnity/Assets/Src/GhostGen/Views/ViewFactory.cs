@@ -32,13 +32,17 @@ namespace GhostGen
         public Canvas canvas { get; set; }
 
         private List<AsyncBlock> _asyncList = new List<AsyncBlock>();
-    
+        private Dictionary<string, UIView> _assetCache = new Dictionary<string, UIView>();
        
         public ViewFactory(Canvas guiCanvas)
         {
             canvas = guiCanvas;
         }   
 
+        public void ClearCache()
+        {
+            _assetCache.Clear();
+        }
    
         public void Step(float deltaTime)
         {
@@ -53,7 +57,9 @@ namespace GhostGen
 
                 Assert.IsNotNull(block.request.asset, "Asset: " + block.name + " couldn't be loaded!");
 
-                UIView view = _createView((UIView)block.request.asset, block.parent);
+                UIView prefab = (UIView)block.request.asset;
+                _assetCache.Add(block.name, prefab);
+                UIView view = _createView(prefab, block.parent);
                 Assert.IsNotNull(view);
             
                 if(block.callback != null)
@@ -78,9 +84,9 @@ namespace GhostGen
             return (T)(object)Resources.Load<UIView>(viewPath);
         }
 
-        public T Create<T>(string viewPath, Transform parent = null)
+        public T Create<T>(string viewPath, Transform parent = null) where T: UIView
         {
-            UIView viewBase = Resources.Load<UIView>(viewPath);
+            T viewBase = _getPrefab(viewPath) as T;
             Assert.IsNotNull(viewBase);
         
             return (T)(object)_createView(viewBase, parent);
@@ -94,11 +100,23 @@ namespace GhostGen
 
         public bool CreateAsync<T>(string viewPath, OnViewCreated callback, Transform parent = null)
         {
-            ResourceRequest request = Resources.LoadAsync<UIView>(viewPath);
+            UIView viewPrefab;
+            if(_assetCache.TryGetValue(viewPath, out viewPrefab))
+            {
+                UIView newView = _createView(viewPrefab, parent);
+                if(callback != null)
+                {
+                    callback(newView);
+                }
+            }
+            else
+            {
+                ResourceRequest request = Resources.LoadAsync<UIView>(viewPath);
 
-            if (request == null) { return false; }
-            AsyncBlock block = AsyncBlock.Create(viewPath, request, callback, parent);
-            _asyncList.Add(block);
+                if (request == null) { return false; }
+                AsyncBlock block = AsyncBlock.Create(viewPath, request, callback, parent);
+                _asyncList.Add(block);
+            }
 
             return true;
         }
@@ -136,7 +154,19 @@ namespace GhostGen
             UIView view = GameObject.Instantiate<UIView>(viewBase, viewParent, false);
             Singleton.instance.diContainer.InjectGameObjectForComponent<UIView>(view.gameObject);
             return view;
-
         }
+
+        public UIView _getPrefab(string viewPath)
+        {
+            UIView view;
+            if(!_assetCache.TryGetValue(viewPath, out view))
+            {
+                view = Resources.Load<UIView>(viewPath);
+                _assetCache.Add(viewPath, view);
+            }
+
+            return view;
+        }
+
     }
 }

@@ -18,9 +18,12 @@ public class PlayerHudView : UIView
 
     public void Start()
     {
+        _creepSystem.AddListener(GameplayEventType.CREEP_KILLED, onCreepKilled);
+        _creepButton.onClick.AddListener(onCreepButton);
+        _towerButton.onClick.AddListener(onTowerButton);
+
         creepsKilled = 0;
         livesLost = 0;
-        _creepSystem.AddListener(GameplayEventType.CREEP_KILLED, onCreepKilled);
 
         killText = "Creeps Killed: 0, Lives lost: 0";
     }
@@ -60,5 +63,15 @@ public class PlayerHudView : UIView
         }
 
         killText = string.Format("Creeps Killed: {0}, Lives lost: {1}", creepsKilled.ToString(), livesLost.ToString());
+    }
+
+    private void onCreepButton()
+    {
+        DispatchEvent(PlayerUIEventType.TOGGLE_CREEP_VIEW);
+    }
+
+    private void onTowerButton()
+    {
+        DispatchEvent(PlayerUIEventType.TOGGLE_TOWER_VIEW);
     }
 }

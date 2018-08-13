@@ -8,6 +8,7 @@ public enum YellowSignStateType
 
     INTRO = 1,
     MAIN_MENU,
+    LOAD_GAMEPLAY,
     MULTIPLAYER_GAMEPLAY,
     MULTIPLAYER_GAME_SETUP,
     SINGLEPLAYER_GAMEPLAY,
@@ -23,6 +24,7 @@ public class YellowSignStateFactory : ScriptableObjectInstaller, IStateFactory<Y
         Container.Bind<IntroState>().AsTransient();
         Container.Bind<MainMenuState>().AsTransient();
         Container.Bind<GamePlayState>().AsTransient();
+        Container.Bind<LoadGameplayState>().AsTransient();
     }
 
     public IGameState CreateState(YellowSignStateType stateId)
@@ -31,6 +33,7 @@ public class YellowSignStateFactory : ScriptableObjectInstaller, IStateFactory<Y
         {
             case YellowSignStateType.INTRO:                     return Container.Instantiate<IntroState>();
             case YellowSignStateType.MAIN_MENU:                 return Container.Instantiate<MainMenuState>();
+            case YellowSignStateType.LOAD_GAMEPLAY:             return Container.Instantiate<LoadGameplayState>();
             case YellowSignStateType.MULTIPLAYER_GAME_SETUP:    break;//return new GameplayState();
             case YellowSignStateType.MULTIPLAYER_GAMEPLAY:      return Container.Instantiate<GamePlayState>();//eturn new PlayerSetupState();
             case YellowSignStateType.SINGLEPLAYER_GAME_SETUP:   break;//return new MultiplayerSetupState();

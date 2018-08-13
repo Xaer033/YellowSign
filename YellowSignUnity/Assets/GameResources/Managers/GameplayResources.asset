@@ -15,5 +15,7 @@ MonoBehaviour:
     type: 2}
   creepHealthUIPrefab: {fileID: 114593122990014430, guid: a1559d4617b0bbe4197dead18dc12b6c,
     type: 2}
+  creepUIItemPrefab: {fileID: 114645916757709612, guid: aed64d195f4db924b8776f181fa65e62,
+    type: 2}
   highlighterPrefab: {fileID: 114091479660951962, guid: 08665d0db2402184689dac09b061c16c,
     type: 2}

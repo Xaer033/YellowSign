@@ -103,16 +103,16 @@ public class CameraMovement : MonoBehaviour
         //Debug.Log("CamPos: " + camPos);
         //Debug.Log("WorldLim: " + _worldLimit);
 
-        if (mouseX < edgeLimit)// && camPos.x > _worldLimit.x )
-        {
-            //Debug.Log("Left");
-            _acceleration.x = (-transform.right).x;
-        }
-        else if(mouseX > Screen.width - edgeLimit)// && camPos.x < _worldLimit.width)
-        {
-            //Debug.Log("Right");
-            _acceleration.x = (transform.right).x;
-        }
+        //if (mouseX < edgeLimit)// && camPos.x > _worldLimit.x )
+        //{
+        //    //Debug.Log("Left");
+        //    _acceleration.x = (-transform.right).x;
+        //}
+        //else if(mouseX > Screen.width - edgeLimit)// && camPos.x < _worldLimit.width)
+        //{
+        //    //Debug.Log("Right");
+        //    _acceleration.x = (transform.right).x;
+        //}
 
         if (mouseY < edgeLimit)// && camPos.z > _worldLimit.y)
         {

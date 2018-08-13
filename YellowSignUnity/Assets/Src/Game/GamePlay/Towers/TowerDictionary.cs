@@ -6,10 +6,11 @@ using Sirenix.Serialization;
 [System.Serializable]
 public class TowerDef
 {
-    public AbstractTowerBrain  brain;
+    [HideInInspector]
+    public string id;
 
+    public AbstractTowerBrain  brain;
     public TowerStats   stats;
-    
     public ITowerView   view;
 }
 
@@ -17,7 +18,14 @@ public class TowerDef
 [System.Serializable]
 [CreateAssetMenu(menuName = "YellowSign/Tower Dictionary")]
 public class TowerDictionary : DefinitionDictionary<TowerDef>
-{ 
+{
+    public override void Initialize()
+    {
+        foreach(var pair in _defMap)
+        {
+            pair.Value.id = pair.Key;
+        }
+    }
     //[Button]
     private void buildTowerIdClass()
     {
