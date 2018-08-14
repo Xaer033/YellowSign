@@ -118,7 +118,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
     {
         get
         {
-            return (view != null && !isDead);
+            return (view != null && !isDead && !reachedTarget);
         }
     }
 

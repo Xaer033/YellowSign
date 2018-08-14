@@ -6,12 +6,17 @@ using Zenject;
 public class PlayerHudView : UIView
 {
     public TMP_Text _killCount;
+
     public Button _towerButton;
+    public Image _towerPortrait;
+
     public Button _creepButton;
+    public Image _creepPortrait;
 
     private string _killText;
     private int creepsKilled;
     private int livesLost;
+    private CreepDef _currentCreepDef;
 
     [Inject]
     private CreepSystem _creepSystem;
@@ -39,6 +44,20 @@ public class PlayerHudView : UIView
             }
         }
     }
+
+
+    public CreepDef currentCreepDef
+    {
+        set
+        {
+            if(_currentCreepDef != value)
+            {
+                _currentCreepDef = value;
+                invalidateFlag |= InvalidationFlag.DYNAMIC_DATA;
+            }
+        }
+    }
+
     protected override void OnViewUpdate()
     {
         if(IsInvalid(InvalidationFlag.DYNAMIC_DATA))
@@ -46,6 +65,12 @@ public class PlayerHudView : UIView
             if(_killCount != null)
             {
                 _killCount.text = _killText;
+            }
+
+            if(_currentCreepDef != null && _creepPortrait != null)
+            {
+                _creepPortrait.overrideSprite = _currentCreepDef.icon;
+                _creepPortrait.color = UnityEngine.Color.white;
             }
         }
     }

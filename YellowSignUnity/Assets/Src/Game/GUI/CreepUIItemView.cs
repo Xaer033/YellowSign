@@ -22,7 +22,17 @@ public class CreepUIItemView : UIView
     {
         _toggle.onValueChanged.AddListener(onSelectToggled);
     }
-    
+
+    protected override void OnViewUpdate()
+    {
+        if(IsInvalid(InvalidationFlag.DYNAMIC_DATA))
+        {
+            if(_creepPortrait != null && _creepDef != null)
+            {
+                _creepPortrait.overrideSprite = _creepDef.icon;
+            }
+        }
+    }
 
     private void onSelectToggled(bool value)
     {

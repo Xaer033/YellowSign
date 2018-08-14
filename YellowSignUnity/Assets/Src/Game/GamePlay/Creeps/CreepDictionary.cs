@@ -10,6 +10,7 @@ public class CreepDef
 
     public CreepStats stats;
     public ICreepView view;
+    public Sprite icon;
 }
 
 [System.Serializable]

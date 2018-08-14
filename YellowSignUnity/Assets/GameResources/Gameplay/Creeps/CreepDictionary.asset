@@ -17,6 +17,10 @@ MonoBehaviour:
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 546f6f4f623987d48a357f705d6f0810, type: 2}
     - {fileID: 114176168139462262, guid: 36cc2eb45c0f24f4199b4cbd2f9be8ad, type: 2}
+    - {fileID: 21300000, guid: 68c08376d83f5f84bb820af5b8508894, type: 3}
+    - {fileID: 11400000, guid: 3c3c249f69c84c0459b327f6b0fef996, type: 2}
+    - {fileID: 114176168139462262, guid: bb9a91b786bd34f4aa4de3c7a16b8b35, type: 2}
+    - {fileID: 21300000, guid: c976497cd14d32c49a45179d977e9b51, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -54,6 +58,9 @@ MonoBehaviour:
     - Name: view
       Entry: 10
       Data: 1
+    - Name: icon
+      Entry: 10
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -70,14 +77,17 @@ MonoBehaviour:
       Entry: 7
       Data: 3|CreepDef, Assembly-CSharp
     - Name: id
-      Entry: 6
-      Data: 
+      Entry: 1
+      Data: uber_dude
     - Name: stats
       Entry: 10
-      Data: 0
+      Data: 3
     - Name: view
       Entry: 10
-      Data: 1
+      Data: 4
+    - Name: icon
+      Entry: 10
+      Data: 5
     - Name: 
       Entry: 8
       Data: 

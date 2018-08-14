@@ -20,7 +20,7 @@ public class CreepSpawnerView : UIView
     public ToggleGroup _toggleGroup;
 
 
-    private string _currentCreepId;
+    private CreepDef _currentCreepDef;
     private List<CreepDef> _creepDataList;
     private GameplayResources _gameplayResources;
     private ViewFactory _viewFactory;
@@ -32,13 +32,24 @@ public class CreepSpawnerView : UIView
         _gameplayResources = gameplayResources;
     }
 
+
+    public CreepDef currentCreepDef
+    {
+        set
+        {
+            if(_currentCreepDef !=  value)
+            {
+                _currentCreepDef = value;
+                invalidateFlag |= InvalidationFlag.DYNAMIC_DATA;
+            }
+        }
+    }
+
     private void Awake()
     {
         _amountSlider.onValueChanged.AddListener( onSpawnAmountChanged);
         _spawnCreepBtn.onClick.AddListener(onCreepSpawn);
         _dismissBtn.onClick.AddListener(onDismiss);
-
-        AddListener(PlayerUIEventType.SELECT_CREEP_TYPE, onCreepSelected);
 
         _spawnCreepBtn.interactable = _toggleGroup.AnyTogglesOn();
         gameObject.SetActive(false);
@@ -89,6 +100,21 @@ public class CreepSpawnerView : UIView
         });
     }
 
+    protected override void OnViewUpdate()
+    {
+        if(IsInvalid(InvalidationFlag.DYNAMIC_DATA))
+        {
+            if(_currentCreepDef != null)
+            {
+                
+            }
+
+            if(_spawnCreepBtn != null && _toggleGroup != null)
+            {
+                _spawnCreepBtn.interactable = _toggleGroup.AnyTogglesOn();
+            }
+        }
+    }
     private void onSpawnAmountChanged(float newValue)
     {
         _amountTxt.text = newValue.ToString();
@@ -98,17 +124,11 @@ public class CreepSpawnerView : UIView
     {
         int spawnCount = (int)_amountSlider.value;
         
-        ICommand command = new SpawnCreepCommand(_currentCreepId, spawnCount);
+        ICommand command = new SpawnCreepCommand(_currentCreepDef.id, spawnCount);
         DispatchEvent(PlayerUIEventType.SPAWN_CREEPS, true, command);
     }
 
-    private void onCreepSelected(GeneralEvent e)
-    {
-        CreepDef def = e.data as CreepDef;
-        _currentCreepId = def.id;
-
-        _spawnCreepBtn.interactable = _toggleGroup.AnyTogglesOn();
-    }
+   
 
     private void onDismiss()
     {

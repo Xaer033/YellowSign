@@ -12,6 +12,9 @@ public class PlayerHudController : BaseController
     private CreepSpawnerView _creepSpawnerView;
     private HashSet<IEventDispatcher> _hoverItems = new HashSet<IEventDispatcher>();
 
+    private CreepDef _currentCreepDef;
+    private TowerDef _currentTowerDef;
+
     public PlayerHudController(PlayerController controller)
     {
         _controller = controller;
@@ -43,6 +46,8 @@ public class PlayerHudController : BaseController
             _creepSpawnerView.AddListener(HoverDispatcher.EVENT_HOVER, onHoverUI);
             _creepSpawnerView.AddListener(PlayerUIEventType.DISMISS_VIEW, onDismissCreepSpawner);
             _creepSpawnerView.AddListener(PlayerUIEventType.SPAWN_CREEPS, onSpawnCreeps);
+            _creepSpawnerView.AddListener(PlayerUIEventType.SELECT_CREEP_TYPE, onCreepSelected);
+
         });
     }
 
@@ -105,6 +110,14 @@ public class PlayerHudController : BaseController
     private void onToggleTowerView(GeneralEvent e)
     {
 
+    }
+
+    private void onCreepSelected(GeneralEvent e)
+    {
+        CreepDef def = e.data as CreepDef; // So much Def :O
+        _currentCreepDef = def;
+        _hudView.currentCreepDef = def;
+        _creepSpawnerView.currentCreepDef = def;
     }
 
     private List<CreepDef> _getCreepList()

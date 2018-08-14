@@ -12,6 +12,7 @@ public class TowerDef
     public AbstractTowerBrain  brain;
     public TowerStats   stats;
     public ITowerView   view;
+    public Sprite       icon;
 }
 
 //[ShowOdinSerializedPropertiesInInspector]
