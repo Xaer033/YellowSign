@@ -80,7 +80,7 @@ public class PlayerHudController : BaseController
 
         bool isHovering = (bool)e.data;
 
-        Debug.Log("IsHovering: " + isHovering);
+        //Debug.Log("IsHovering: " + isHovering);
         if(isHovering)
         {
             _controller.controlState = PlayerController.PlayerControlState.NONE;

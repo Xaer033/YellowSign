@@ -2,6 +2,11 @@
 
 public struct CreepSpawnInfo
 {
+    public byte         ownerId;
+    public byte         targetOwnerId;
+    public TSVector     targetPosition;
+    public TSVector     position;
+    public TSQuaternion rotation;
 
     public static CreepSpawnInfo Create(
         byte ownerId, 
@@ -18,10 +23,4 @@ public struct CreepSpawnInfo
         spawnInfo.targetPosition = targetPosition;
         return spawnInfo;
     }
-
-    public byte         ownerId;
-    public byte         targetOwnerId;
-    public TSVector     targetPosition;
-    public TSVector     position;
-    public TSQuaternion rotation;
 }

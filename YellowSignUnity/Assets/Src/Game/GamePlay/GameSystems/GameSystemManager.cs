@@ -11,6 +11,7 @@ public class GameSystemManager : EventDispatcher
     private CreepSystem _creepSystem;
     private CreepHealthUISystem _creepHealthUISystem;
     private CreepViewSystem _creepViewSystem;
+    private WaveSpawnerSystem _waveSpawnerSystem;
     private SyncStepper _syncStepper;
     private SyncStepper.Factory _syncFactory;
 
@@ -20,12 +21,14 @@ public class GameSystemManager : EventDispatcher
         CreepSystem creepSystem,
         CreepViewSystem creepViewSystem,
         CreepHealthUISystem creepHealthUISystem,
+        WaveSpawnerSystem waveSpawnerSystem,
         SyncStepper.Factory syncFactory)
     {
         _towerSystem = towerSystem;
         _creepSystem = creepSystem;
         _creepViewSystem = creepViewSystem;
         _creepHealthUISystem = creepHealthUISystem;
+        _waveSpawnerSystem = waveSpawnerSystem;
         _syncFactory = syncFactory;
     }
 
@@ -62,6 +65,7 @@ public class GameSystemManager : EventDispatcher
     {
         _creepSystem.FixedStep(fixedDeltaTime);
         _towerSystem.FixedStep(fixedDeltaTime);
+        _waveSpawnerSystem.FixedStep(fixedDeltaTime);
     }
 
     private void onFrameUpdate(float deltaTime)

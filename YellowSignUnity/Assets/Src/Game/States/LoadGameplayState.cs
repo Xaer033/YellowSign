@@ -20,8 +20,9 @@ public class LoadGameplayState : IGameState
 
     public void Init(Hashtable changeStateData)
     {
+        string sceneName = changeStateData["sceneName"] as string;
         _notificationDispatcher.AddListener(GameplayEventType.GAME_START, OnGameStart);
-        PhotonNetwork.LoadLevel("GameScene");
+        PhotonNetwork.LoadLevel(sceneName);
     }
 
     public void Step(float p_deltaTime)

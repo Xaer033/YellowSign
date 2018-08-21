@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
         NONE = 0,
         TOWER_BUILDER,
         STATS_LOOKUP
-
     }
 
     private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
@@ -18,17 +17,31 @@ public class PlayerController : MonoBehaviour
     private Commander _commander;
     private Grid _grid;
     private TowerHighlighter _highlighter;
-    private CreepSystem _creepSystem;
+    private WaveSpawnerSystem _waveSpawnerSystem;
     private TowerSystem _towerSystem;
     private TowerDictionary _towerDictionary;
     private GameplayResources _gameplayResources;
 
     private string _currentTowerId;
     private Camera _camera;
+    private PlayerSpawn _playerSpawn;
+
     
-    public PlayerSpawn playerSpawn { get; set; }
     public PlayerControlState controlState { get; set; }
     
+    public PlayerSpawn playerSpawn
+    {
+        get
+        {
+            return _playerSpawn;
+        }
+        set
+        {
+            _playerSpawn = value;
+            setupGrid();
+        }
+    }
+
     public TSPlayerInfo owner
     {
         get { return _commander.owner; }
@@ -36,12 +49,12 @@ public class PlayerController : MonoBehaviour
 
     [Inject]
     public void Construct(
-        CreepSystem creepSystem,
+        WaveSpawnerSystem waveSpawnerSystem,
         TowerSystem towerSystem,
         TowerDictionary towerDictionary,
         GameplayResources gameplayResources)
     {
-        _creepSystem = creepSystem;
+        _waveSpawnerSystem = waveSpawnerSystem;
         _towerSystem = towerSystem;
         _towerDictionary = towerDictionary;
         _gameplayResources = gameplayResources;
@@ -53,10 +66,7 @@ public class PlayerController : MonoBehaviour
     public void Awake()
     {
         controlState = PlayerControlState.TOWER_BUILDER;
-
-        GameObject gridObj = GameObject.FindGameObjectWithTag("grid_p1");
-        _grid = gridObj.GetComponent<Grid>();
-
+        
         _commander = GetComponent<Commander>();
         _commander.onCommandExecute += OnCommandExecute;
         _commander.onSyncedStep += OnSyncStep;
@@ -73,6 +83,11 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
+        if(_grid == null)
+        {
+            return;
+        }
+
         switch(controlState)
         {
             case PlayerControlState.NONE:           _noneState();           break;
@@ -107,9 +122,9 @@ public class PlayerController : MonoBehaviour
             case CommandType.SPAWN_CREEP:
                 {
                     SpawnCreepCommand scc = (SpawnCreepCommand)command;
-                    for (int s = 0; s < scc.count; ++s)
-                    {
-                        Transform spawnPoint = _grid.spawnPoints[s % _grid.spawnPoints.Length];
+                    //for (int s = 0; s < scc.count; ++s)
+                    //{
+                        Transform spawnPoint = _grid.spawnPoint;
                         TSVector startingPos = spawnPoint.position.ToTSVector();
                         TSVector targetPos = _grid.target.transform.position.ToTSVector();
 
@@ -122,9 +137,15 @@ public class PlayerController : MonoBehaviour
                             rotation,
                             targetOwnerId,
                             targetPos);
-                        
-                        _creepSystem.AddCreep(scc.type, spawnInfo);
-                    }
+
+                    SpawnWaveInfo wave = new SpawnWaveInfo();
+                    wave.betweenSpawnDelay = 0.5;
+                    wave.spawnCommand = scc;
+                    wave.spawnInfo = spawnInfo;
+
+                    _waveSpawnerSystem.AddWave(wave);
+                        //_creepSystem.AddCreep(scc.type, spawnInfo);
+                    //}
                     break;
                 }
             case CommandType.BUILD_TOWER:
@@ -196,11 +217,10 @@ public class PlayerController : MonoBehaviour
 
         Ray ray = (_camera != null) ? _camera.ScreenPointToRay(mousePos) : default(Ray);
         GridPosition pos;
-        bool canBuildTower = _grid.CanBuildTower(ray, out pos);
-
+        bool canBuildTowerQuick = _grid.CanBuildTower(ray, true, out pos);
         if(_highlighter)
         {
-            if(canBuildTower)
+            if(canBuildTowerQuick)
             {
                 _highlighter.gameObject.SetActive(true);
                 _highlighter.transform.position = pos.ToVector3();
@@ -213,7 +233,8 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0))
         {
-            if(canBuildTower && !_towerBlocker.Contains(pos))
+            //bool canBuildTowerDetailed = _grid.CanBuildTower(ray, true, out pos);
+            if(canBuildTowerQuick && !_towerBlocker.Contains(pos))
             {
                 ICommand command = CommandFactory.CreateCommand(CommandType.BUILD_TOWER, new object[] { _currentTowerId, pos });
                 _commander.AddCommand(command);
@@ -224,6 +245,20 @@ public class PlayerController : MonoBehaviour
         if(Input.GetMouseButtonDown(1))
         {
             _commander.AddCommand(new SpawnCreepCommand("basic_creep", 20));
+        }
+    }
+
+    private void setupGrid()
+    {
+        GameObject gridObj = GameObject.FindGameObjectWithTag("grid_p1");
+        Grid[] gridList = gridObj.GetComponents<Grid>();
+        foreach(Grid g in gridList)
+        {
+            if(g.playerNumber == playerSpawn.playerNumber)
+            {
+                _grid = g;
+                break;
+            }
         }
     }
 }

@@ -10,6 +10,8 @@ public class IntroState : IGameState
     private NetworkManager _networkManager;
     private GuiManager _gui;
 
+    private int _playersTemp = 1;
+
     public IntroState(
         NetworkManager networkManager,
         GuiManager gui,
@@ -37,7 +39,9 @@ public class IntroState : IGameState
 	{
 		if (_gotoMainMenu) 
 		{
-            _gameStateMachine.ChangeState(YellowSignStateType.LOAD_GAMEPLAY);
+            Hashtable table = new Hashtable();
+            table["sceneName"] = (_playersTemp == 1) ? "GameSceneSingleplayer" : "GameSceneMultiplayer";
+            _gameStateMachine.ChangeState(YellowSignStateType.LOAD_GAMEPLAY, table);
             _gotoMainMenu = false;
 		}
     }
@@ -63,7 +67,7 @@ public class IntroState : IGameState
         options.Receivers = ReceiverGroup.All;
 
         Debug.Log("JOINED ROOM: Player count: " + PhotonNetwork.playerList.Length);
-        if(PhotonNetwork.playerList.Length == 1)
+        if(PhotonNetwork.playerList.Length == _playersTemp)
         {
             PhotonNetwork.RaiseEvent(1, null, true, options);
         }

@@ -54,21 +54,6 @@ public class BasicTowerBrain : AbstractTowerBrain
     private void _doTargeting(Tower tower, FP fixedDeltaTime)
     {
         // Target enemy based off of some criteria (lowest health/closest range, etc.)
-        //var colliderList = Physics.OverlapSphere(tower.view.position.ToVector(), tower.state.range.AsFloat(), creepLayer, QueryTriggerInteraction.Collide);
-        //if(colliderList != null && colliderList.Length > 0)
-        //{
-        //    ICreepView cView = null;
-        //    for(int i = 0; i < colliderList.Length; ++i)
-        //    {
-        //        cView = colliderList[i].gameObject.GetComponent<ICreepView>();
-        //        if(cView != null && !cView.creep.isDead)
-        //        {
-        //            tower.targetCreep = cView.creep;
-        //            tower.behaviorState = Tower.BehaviorState.VISUAL_ATTACK;
-        //            break;
-        //        }
-        //    }
-
         Creep target = getClosestCreep(tower);
         if(target != null && target.isValid)
         {

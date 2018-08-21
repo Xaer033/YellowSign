@@ -42,6 +42,7 @@ public class GuiManager : IInitializable, ITickable
         GameObject obj = GameObject.FindGameObjectWithTag("GuiObject");
         if(obj)
         {
+            GameObject.DontDestroyOnLoad(obj);
             return obj;
         }
 

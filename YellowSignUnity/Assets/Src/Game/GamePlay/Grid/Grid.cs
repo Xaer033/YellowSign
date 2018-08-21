@@ -5,13 +5,14 @@ using Pathfinding;
 
 public class Grid : MonoBehaviour
 {
-    public Transform[] spawnPoints;
+    public PlayerNumber playerNumber;
+    public Transform spawnPoint;
     public Transform target;
 
     private AstarPath _path;
     private GridGraph _graph;
-    private Vector3 _start = new Vector3(0, 4, 5);
-    private Vector3 _end = new Vector3(0, 0.0f, 8);
+    private Vector3 _start;
+    private Vector3 _end;
     private GraphNode _startNode;
     private GraphNode _endNode;
     private BoxCollider _clickCollider;
@@ -22,11 +23,18 @@ public class Grid : MonoBehaviour
     private const int kHalfInterval = kInterval / 2;
 
     private int _clickLayer;
+    
     // Use this for initialization
     void Start ()
     {
         _path = GetComponent<AstarPath>();
-        _graph = (_path.graphs[0]) as GridGraph;
+
+        int graphIndex = (byte)playerNumber - 1;
+        _graph = (_path.graphs[graphIndex]) as GridGraph;
+
+        _startNode = _graph.GetNearest(spawnPoint.position).node;
+        _endNode = _graph.GetNearest(target.position).node;
+
         _clickLayer = LayerMask.NameToLayer("click_check");
 
         _clickObj = new GameObject("clickObj");
@@ -37,8 +45,6 @@ public class Grid : MonoBehaviour
         _clickCollider.size = new Vector3(_graph.Width, 0.1f, _graph.Depth) * _graph.nodeSize;
         _clickObj.transform.SetParent(transform);
 
-        _startNode = _graph.GetNearest(spawnPoints[0].position).node;
-        _endNode = _graph.GetNearest(target.position).node;
 
 	}
     
@@ -54,25 +60,32 @@ public class Grid : MonoBehaviour
                                     mz - ((mz / kHalfInterval) % kInterval));
     }
 
-    public bool CanBuildTower(Ray rayToGrid, out GridPosition gridPosition)
+    public bool CanBuildTower(Ray rayToGrid, bool preventBlocking, out GridPosition gridPosition)
     {
         bool result = false;
         gridPosition = GridPosition.Create(0, 0);
         
-        if (Physics.RaycastNonAlloc(rayToGrid, _hitResults, 100.0f, ~_clickLayer, QueryTriggerInteraction.Collide) > 0)
+        if (Physics.RaycastNonAlloc(rayToGrid, _hitResults, 200.0f, ~_clickLayer, QueryTriggerInteraction.Collide) > 0)
         {
             RaycastHit hit = _hitResults[0]; // Only care about the first one
 
             Debug.DrawRay(hit.point, Vector3.up, Color.blue);
 
             gridPosition = GetGridPosition(hit.point);
-            if(CanBuildTowerAtPos(gridPosition))
+            Color color = result ? Color.green : Color.red;
+            Debug.DrawRay(gridPosition.ToVector3(), Vector3.up, color);
+
+            if(preventBlocking)
+            {
+                if(CanBuildTowerAtPos(gridPosition))
+                {
+                    result = true;
+                }
+            }
+            else
             {
                 result = true;
             }
-
-            Color color = result ? Color.green : Color.red;
-            Debug.DrawRay(gridPosition.ToVector3(), Vector3.up, color);
         }
 
         return result;
@@ -84,7 +97,7 @@ public class Grid : MonoBehaviour
         GraphNode nodeAtPos = nodeInfo.node;
         bool isWalkable = nodeAtPos.Walkable;
 
-        bool isBuildable = nodeAtPos.Tag != 1;
+        bool isBuildable = nodeAtPos.Tag != 1 && nodeAtPos.Tag != 2;
         
         Bounds testBounds = _getApproximateBoundsFromGridPos(gridPosition);
         GraphUpdateObject guo = new GraphUpdateObject(testBounds);
