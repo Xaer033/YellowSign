@@ -17,7 +17,7 @@ public class TowerDef
 
 //[ShowOdinSerializedPropertiesInInspector]
 [System.Serializable]
-[CreateAssetMenu(menuName = "YellowSign/Tower Dictionary")]
+[CreateAssetMenu(menuName = "YellowSign/Towers/Tower Dictionary")]
 public class TowerDictionary : DefinitionDictionary<TowerDef>
 {
     public override void Initialize()

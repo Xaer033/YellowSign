@@ -11,7 +11,7 @@ public enum CreepType
 }
 
 
-[CreateAssetMenu(menuName = "YellowSign/CreepStats")]
+[CreateAssetMenu(menuName = "YellowSign/Creeps/Creep Stats")]
 public class CreepStats : ScriptableObject
 {
     public CreepType creepType;

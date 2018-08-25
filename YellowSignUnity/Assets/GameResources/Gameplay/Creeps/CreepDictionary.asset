@@ -72,7 +72,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 1
-      Data: uber_dude
+      Data: advance_creep
     - Name: 
       Entry: 7
       Data: 3|CreepDef, Assembly-CSharp

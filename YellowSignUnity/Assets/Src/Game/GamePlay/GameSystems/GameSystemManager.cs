@@ -44,7 +44,10 @@ public class GameSystemManager : EventDispatcher
         _creepSystem.AddListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
         _creepSystem.AddListener(GameplayEventType.CREEP_KILLED, onCreepKilled);
         _creepSystem.AddListener(GameplayEventType.CREEP_SPAWNED, onCreepSpawned);
-        
+
+        _waveSpawnerSystem.AddListener(GameplayEventType.WAVE_START, onWaveStart);
+        _waveSpawnerSystem.AddListener(GameplayEventType.WAVE_COMPLETE, onWaveComplete);
+
     }
 
     public void CleanUp()
@@ -58,6 +61,9 @@ public class GameSystemManager : EventDispatcher
         _creepSystem.RemoveListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
         _creepSystem.RemoveListener(GameplayEventType.CREEP_KILLED, onCreepKilled);
         _creepSystem.RemoveListener(GameplayEventType.CREEP_SPAWNED, onCreepSpawned);
+
+        _waveSpawnerSystem.RemoveListener(GameplayEventType.WAVE_START, onWaveStart);
+        _waveSpawnerSystem.RemoveListener(GameplayEventType.WAVE_COMPLETE, onWaveComplete);
     }
 
 
@@ -111,5 +117,16 @@ public class GameSystemManager : EventDispatcher
         AttackResult ar = (AttackResult)e.data;
         _creepHealthUISystem.ShowHealthOnCreep(ar.target as Creep);
         //Debug.LogFormat("Creep took '{0}' and has '{1}' remaining health!", ar.totalDamageDelt, ar.targetHealthRemaining);
+    }
+
+    private void onWaveStart(GhostGen.GeneralEvent e)
+    {
+        Debug.Log("Wave start: " + e.data);
+    }
+
+    private void onWaveComplete(GhostGen.GeneralEvent e)
+    {
+
+        Debug.Log("Wave complete: " + e.data);
     }
 }

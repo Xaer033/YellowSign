@@ -9,4 +9,7 @@
 
     public const string TOWER_BUILT = "tower_built";
     public const string TOWER_DESTROYED = "tower_destroyed";
+
+    public const string WAVE_START = "wave_start";
+    public const string WAVE_COMPLETE = "wave_complete";
 }

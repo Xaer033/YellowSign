@@ -21,6 +21,7 @@ MonoBehaviour:
   - {fileID: 114531687681047532}
   - {fileID: 114948178680163138}
   - {fileID: 114030099586748616}
+  - {fileID: 114616282431091586}
 --- !u!114 &114030099586748616
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -38,7 +39,7 @@ MonoBehaviour:
     value: 1
   intensity:
     overrideState: 1
-    value: 47
+    value: -100
   intensityX:
     overrideState: 1
     value: 1
@@ -53,7 +54,7 @@ MonoBehaviour:
     value: 0
   scale:
     overrideState: 1
-    value: 1.05
+    value: 2.22
 --- !u!114 &114179717019789778
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -208,7 +209,7 @@ MonoBehaviour:
     value: 0
   postExposure:
     overrideState: 1
-    value: 0.05
+    value: 0.1
   contrast:
     overrideState: 0
     value: 0
@@ -241,13 +242,13 @@ MonoBehaviour:
     value: 100
   lift:
     overrideState: 1
-    value: {x: 1, y: 0.98938644, z: 0.9833284, w: 0.027586201}
+    value: {x: 1, y: 0.98938644, z: 0.9833284, w: -0.03969717}
   gamma:
     overrideState: 1
-    value: {x: 1, y: 1, z: 1, w: -0.013793103}
+    value: {x: 1, y: 1, z: 1, w: 0.02607225}
   gain:
     overrideState: 1
-    value: {x: 0.9591228, y: 1, z: 0.54007375, w: -0.055172414}
+    value: {x: 0.9591228, y: 1, z: 0.54007375, w: -0.27384353}
   masterCurve:
     overrideState: 0
     value:
@@ -1448,6 +1449,33 @@ MonoBehaviour:
       - 0.5
       - 0.5
       - 0.5
+--- !u!114 &114616282431091586
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 556797029e73b2347956b6579e77e05b, type: 3}
+  m_Name: DepthOfField
+  m_EditorClassIdentifier: 
+  active: 0
+  enabled:
+    overrideState: 1
+    value: 1
+  focusDistance:
+    overrideState: 1
+    value: 24.52
+  aperture:
+    overrideState: 1
+    value: 0.3
+  focalLength:
+    overrideState: 1
+    value: 49
+  kernelSize:
+    overrideState: 0
+    value: 1
 --- !u!114 &114677804666309102
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1558,10 +1586,10 @@ MonoBehaviour:
     value: {x: 0.5, y: 0.5}
   intensity:
     overrideState: 1
-    value: 0.324
+    value: 0.308
   smoothness:
     overrideState: 1
-    value: 0.4
+    value: 0.508
   roundness:
     overrideState: 1
     value: 1
@@ -1601,7 +1629,7 @@ MonoBehaviour:
     value: 0.559
   clamp:
     overrideState: 1
-    value: 65467.11
+    value: 65443.95
   diffusion:
     overrideState: 1
     value: 6.01

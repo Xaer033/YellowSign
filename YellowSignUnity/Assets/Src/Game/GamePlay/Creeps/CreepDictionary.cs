@@ -14,7 +14,7 @@ public class CreepDef
 }
 
 [System.Serializable]
-[CreateAssetMenu(menuName = "YellowSign/Creep Dictionary")]
+[CreateAssetMenu(menuName = "YellowSign/Creeps/Creep Dictionary")]
 public class CreepDictionary : DefinitionDictionary<CreepDef>
 {
     public override void Initialize()

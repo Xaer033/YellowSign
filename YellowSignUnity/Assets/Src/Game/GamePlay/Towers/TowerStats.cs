@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using TrueSync;
 
-[CreateAssetMenu(menuName = "YellowSign/TowerStats")]
+[CreateAssetMenu(menuName = "YellowSign/Towers/Tower Stats")]
 public class TowerStats : ScriptableObject
 {
     public DamageType   damageType;

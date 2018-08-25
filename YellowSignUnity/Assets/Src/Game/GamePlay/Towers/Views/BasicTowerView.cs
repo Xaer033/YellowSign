@@ -94,7 +94,7 @@ public class BasicTowerView : MonoBehaviour, ITowerView
         TrailRenderer fx = getNextFX();
         fx.transform.position = startPos;
 
-        Vector3 forwardVec = target.transformTS.forward.ToVector() * target.creep.stats.baseSpeed * (kTimeToAttack);
+        Vector3 forwardVec = target.transformTS.forward.ToVector() * target.creep.stats.baseSpeed * (kTimeToAttack) * 5.0f;
         Vector3 endPos = target.targetPosition + (forwardVec * TrueSyncManager.DeltaTime.AsFloat());
 
         recalculatePath(startPos, endPos);

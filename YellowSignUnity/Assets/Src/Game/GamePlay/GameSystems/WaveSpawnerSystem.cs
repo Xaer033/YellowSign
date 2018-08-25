@@ -53,8 +53,8 @@ public class WaveSpawnerSystem : EventDispatcher
 
         Creep c = _creepSystem.AddCreep(creepId, spawnInfo);
         FP scaler = 0.2;
-        _spawnTimer = _currentWave.betweenSpawnDelay * (c.stats.baseSpeed) * scaler;
-        ;
+        _spawnTimer = _currentWave.betweenSpawnDelay * c.stats.baseSpeed * scaler;
+        
         _currentCreepCount--;
         
         _spawnState = State.SPAWN_PAUSE;
@@ -67,6 +67,8 @@ public class WaveSpawnerSystem : EventDispatcher
             _spawnState = State.SPAWNING;
             _currentWave = _spawnQueue.Dequeue();
             _currentCreepCount = _currentWave.spawnCommand.count;
+
+            DispatchEvent(GameplayEventType.WAVE_START, true, _currentWave);
         }
     }
 
@@ -83,6 +85,7 @@ public class WaveSpawnerSystem : EventDispatcher
             else
             {
                 _spawnState = State.IDLE;
+                DispatchEvent(GameplayEventType.WAVE_COMPLETE, true, _currentWave);
             }
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 using GhostGen;
 using Zenject;
 
-[CreateAssetMenu(menuName = "YellowSign/TowerBrain")]
+[CreateAssetMenu(menuName = "YellowSign/Towers/Basic Tower Brain")]
 public class BasicTowerBrain : AbstractTowerBrain
 {
     private const string CREEP_LAYER_NAME = "creep";
