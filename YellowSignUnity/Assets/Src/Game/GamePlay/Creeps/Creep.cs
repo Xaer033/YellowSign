@@ -47,7 +47,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
     public CreepState state { get; set; }
     public CreepStats stats { get; set; }
 
-    public TSTransform transform { get { return _transform; } }
+    //public TSTransform transform { get { return _transform; } }
     public ICreepView view { get; private set; }
 
     public bool flagForRemoval { get;  set; }
@@ -59,14 +59,14 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
 
     private Seeker _seeker;
     private bool _canSearchAgain;
-    private TSTransform _transform;
+    //private TSTransform _transform;
     private FP _nextRepath;
 
     private List<TSVector> _vectorPath;
     private int _waypointIndex;
-    private FP _distanceToNextWaypoint = 0.35f;
+    private FP _distanceToNextWaypoint = 0.35;
 
-    private FP _drag = 5f;
+    private FP _drag = 5;
     private TSVector _targetPosition;
     private Path _path = null;
     private FP _speed;
@@ -101,7 +101,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         view.creep = this;
         
 
-        _transform = view.transformTS;
+        //_transform = view.transformTS;
         _seeker = view.seeker;
         
         _nextRepath = 0;

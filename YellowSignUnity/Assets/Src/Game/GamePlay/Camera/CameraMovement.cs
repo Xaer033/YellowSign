@@ -6,8 +6,6 @@ using Sirenix.OdinInspector;
 
 public class CameraMovement : MonoBehaviour
 {
-    public Rect[] worldLimits;
-
     public float speed;
     public float drag;
     public float edgeLimit;
@@ -76,11 +74,11 @@ public class CameraMovement : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.C))
         {
+            _velocity = Vector3.zero;
+            _currentPos = _startPos;
             transform.localPosition = _startPos;
         }
-
-
-
+        
         if(transform != null)
         {
             transform.localPosition = Vector3.Lerp(transform.localPosition, _currentPos, Time.deltaTime);

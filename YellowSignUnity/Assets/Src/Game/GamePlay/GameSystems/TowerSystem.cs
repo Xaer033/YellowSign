@@ -4,13 +4,15 @@ using TrueSync;
 
 public class TowerSystem : EventDispatcher
 {
-    private List<Tower> _towerList;
+    //private List<Tower> _towerList;
     private Tower.Factory _towerFactory;
-
-    public TowerSystem(Tower.Factory towerFactory)
+    private GameState _gameState;
+    
+    public TowerSystem(GameState gameState, Tower.Factory towerFactory)
     {
         _towerFactory = towerFactory;
-        _towerList = new List<Tower>(200);
+        _gameState = gameState;
+        //_towerList = new List<Tower>(200);
     }
 
     public Tower AddTower(string towerId, TowerSpawnInfo spawnInfo)
@@ -46,6 +48,14 @@ public class TowerSystem : EventDispatcher
         {
             Tower t = _towerList[i];
             t.FixedStep(fixedDeltaTime);
+        }
+    }
+
+    private List<Tower> _towerList
+    {
+        get
+        {
+            return _gameState.towerList;
         }
     }
 }

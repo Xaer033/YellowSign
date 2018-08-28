@@ -10,7 +10,6 @@ public class BasicTowerBrain : AbstractTowerBrain
     private const string CREEP_LAYER_NAME = "creep";
     
     private int _creepLayer = -666;
-    private Collider[] _hitList;
     private IEventDispatcher _notificationDispatcher;
     
     private CreepSystem _creepSystem;

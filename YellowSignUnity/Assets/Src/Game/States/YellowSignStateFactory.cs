@@ -23,7 +23,8 @@ public class YellowSignStateFactory : ScriptableObjectInstaller, IStateFactory<Y
     {
         Container.Bind<IntroState>().AsTransient();
         Container.Bind<MainMenuState>().AsTransient();
-        Container.Bind<GamePlayState>().AsTransient();
+        Container.Bind<SingleplayerGameplayState>().AsTransient();
+        Container.Bind<MultiplayerGameplayState>().AsTransient();
         Container.Bind<LoadGameplayState>().AsTransient();
     }
 
@@ -31,18 +32,17 @@ public class YellowSignStateFactory : ScriptableObjectInstaller, IStateFactory<Y
     {
         switch (stateId)
         {
-            case YellowSignStateType.INTRO:                     return Container.Instantiate<IntroState>();
-            case YellowSignStateType.MAIN_MENU:                 return Container.Instantiate<MainMenuState>();
-            case YellowSignStateType.LOAD_GAMEPLAY:             return Container.Instantiate<LoadGameplayState>();
+            case YellowSignStateType.INTRO:                     return Container.Resolve<IntroState>();
+            case YellowSignStateType.MAIN_MENU:                 return Container.Resolve<MainMenuState>();
+            case YellowSignStateType.LOAD_GAMEPLAY:             return Container.Resolve<LoadGameplayState>();
             case YellowSignStateType.MULTIPLAYER_GAME_SETUP:    break;//return new GameplayState();
-            case YellowSignStateType.MULTIPLAYER_GAMEPLAY:      return Container.Instantiate<GamePlayState>();//eturn new PlayerSetupState();
+            case YellowSignStateType.MULTIPLAYER_GAMEPLAY:      return Container.Resolve<MultiplayerGameplayState>();//eturn new PlayerSetupState();
             case YellowSignStateType.SINGLEPLAYER_GAME_SETUP:   break;//return new MultiplayerSetupState();
-            case YellowSignStateType.SINGLEPLAYER_GAMEPLAY:     break;//return new MultiplayerSetupState();
+            case YellowSignStateType.SINGLEPLAYER_GAMEPLAY:     return Container.Resolve<SingleplayerGameplayState>();
             case YellowSignStateType.CREDITS:                   break;
         }
 
         Debug.LogError("Error: state ID: " + stateId + " does not exist!");
         return null;
     }
-
 }

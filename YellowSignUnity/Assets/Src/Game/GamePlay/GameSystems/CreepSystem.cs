@@ -8,23 +8,25 @@ public class CreepSystem : EventDispatcher
 {
     private const int kMaxCreeps = 200;
 
-    private Dictionary<byte, List<Creep>> _creeps;
+    //private Dictionary<byte, List<Creep>> _creeps;
     private List<Pathfinding.Path> _generatingPath;
     private Creep.Factory _creepFactory;
+    private GameState _gameState;
 
     public bool recalculatePaths { set; get; }
     
-    public CreepSystem(Creep.Factory creepFactory)
+    public CreepSystem(GameState gameState, Creep.Factory creepFactory)
     {
         _creepFactory = creepFactory;
+        _gameState = gameState;
 
         int maxPlayers = NetworkManager.kMaxPlayers;
-        _creeps = new Dictionary<byte, List<Creep>>(maxPlayers);
+        //_creeps = new Dictionary<byte, List<Creep>>(maxPlayers);
 
-        for(int i = 0; i < maxPlayers; ++i)
-        {
-            _creeps.Add((byte)(i + 1), new List<Creep>(kMaxCreeps));
-        }
+        //for(int i = 0; i < maxPlayers; ++i)
+        //{
+        //    _creeps.Add((byte)(i + 1), new List<Creep>(kMaxCreeps));
+        //}
 
         _generatingPath = new List<Pathfinding.Path>(kMaxCreeps);
     }
@@ -48,64 +50,64 @@ public class CreepSystem : EventDispatcher
     //public void RemoveCreep
     public List<Creep> GetCreepList(byte ownerId)
     {
-        if(ownerId < 0 || ownerId > NetworkManager.kMaxPlayers)
-        {
-            Debug.LogError("Owner is out of range!");
-            return null;
-        }
-        return _creeps[ownerId];
+        return _gameState.creepList;
+        //if(ownerId < 0 || ownerId > NetworkManager.kMaxPlayers)
+        //{
+        //    Debug.LogError("Owner is out of range!");
+        //    return null;
+        //}
+        //return _creeps[ownerId];
     }
 
     public void Step(float deltaTime)
     {
-        float lerpFactory = deltaTime * 10.0f;
+        //float lerpFactory = deltaTime * 10.0f;
 
-        for(byte o = 1; o <= _creeps.Count; ++o)
-        {
-            int count = _creeps[o].Count;
-            for (int i = 0; i < count; ++i)
-            {
-                //TSTransform tsTransform = _creepList[i];
-                //Transform t = tsTransform.transform;
-                //tsTransform.UpdatePlayMode();
-                //t.position = Vector3.Lerp(t.position, tsTransform.position.ToVector(), deltaTime * 10f);
-                //t.position = Vector3.Lerp(t.position, tsTransform.position.ToVector(), lerpFactory);
-            }
-        }
+        //for(byte o = 1; o <= _creeps.Count; ++o)
+        //{
+        //    int count = _creeps[o].Count;
+        //    for (int i = 0; i < count; ++i)
+        //    {
+        //        //TSTransform tsTransform = _creepList[i];
+        //        //Transform t = tsTransform.transform;
+        //        //tsTransform.UpdatePlayMode();
+        //        //t.position = Vector3.Lerp(t.position, tsTransform.position.ToVector(), deltaTime * 10f);
+        //        //t.position = Vector3.Lerp(t.position, tsTransform.position.ToVector(), lerpFactory);
+        //    }
+        //}
     }
 
     public void FixedStep(FP fixedDeltaTime)
     {
         _generatingPath.Clear();
 
-        for (byte o = 1; o <= _creeps.Count; ++o)
+        var creepList = GetCreepList(0);
+        
+        int count = creepList.Count;
+        for (int i = count - 1; i >= 0; --i)
         {
-            int count = _creeps[o].Count;
-            for (int i = count - 1; i >= 0; --i)
+            Creep c = creepList[i];
+            c.FixedStep(fixedDeltaTime);
+
+            if(c.reachedTarget)
             {
-                Creep c = _creeps[o][i];
-                c.FixedStep(fixedDeltaTime);
+                DispatchEvent(GameplayEventType.CREEP_REACHED_GOAL, false, c);
+            }
+            
+            if (c.flagForRemoval)
+            {
+                DispatchEvent(GameplayEventType.CREEP_KILLED, false, c);
 
-                if(c.reachedTarget)
-                {
-                    DispatchEvent(GameplayEventType.CREEP_REACHED_GOAL, false, c);
-                }
-                
-                if (c.flagForRemoval)
-                {
-                    DispatchEvent(GameplayEventType.CREEP_KILLED, false, c);
+                c.RemoveListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
+                //GameObject.Destroy(c.view.gameObject);
+                creepList[i] = null;
+                creepList.RemoveAt(i);
+                continue;
+            }
 
-                    c.RemoveListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
-                    //GameObject.Destroy(c.view.gameObject);
-                    _creeps[o][i] = null;
-                    _creeps[o].RemoveAt(i);
-                    continue;
-                }
-
-                if (recalculatePaths)
-                {
-                    _generatingPath.Add(c.RecalculatePath());
-                }
+            if (recalculatePaths)
+            {
+                _generatingPath.Add(c.RecalculatePath());
             }
         }
 

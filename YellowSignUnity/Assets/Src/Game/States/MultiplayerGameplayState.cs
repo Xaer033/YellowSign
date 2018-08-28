@@ -6,7 +6,7 @@ using TrueSync;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-public class GamePlayState : IGameState
+public class MultiplayerGameplayState : IGameState
 {
     private PlayerHudController _hudController;
     private PlayerController[] _playerList;
@@ -23,20 +23,16 @@ public class GamePlayState : IGameState
    
 
 
-    public GamePlayState(
+    public MultiplayerGameplayState(
         [Inject(Id = GameInstaller.GLOBAL_DISPATCHER)]
         IEventDispatcher notificationDispatcher,
         GameSystemManager gameSystems,
-        CreepSystem creepSystem,
-        TowerSystem towerSystem, 
         GameplayResources gameplayResources,
         GuiManager guiManager,
         SyncStepper.Factory syncFactory)
     {
         _notificationDispatcher = notificationDispatcher;
-        _gameplayResources      = gameplayResources;
-        _creepSystem    = creepSystem;
-        _towerSystem    = towerSystem;        
+        _gameplayResources      = gameplayResources;       
         _guiManager     = guiManager;
         _gameSystems    = gameSystems;
     }
@@ -77,6 +73,8 @@ public class GamePlayState : IGameState
         {
             _guiManager.screenFader.FadeIn(1.5f);
         });
+        Debug.Log("Tick: " + TrueSyncManager.Ticks);
+        TrueSyncManager.RunSimulation();
     }
     
     public void Step(float deltaTime)

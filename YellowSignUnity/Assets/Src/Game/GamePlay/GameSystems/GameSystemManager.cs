@@ -1,12 +1,15 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using GhostGen;
 using Zenject;
 using TrueSync;
+using ExitGames.Client.Photon;
 
 public class GameSystemManager : EventDispatcher
 {
+    private GameState _gameState;
     private TowerSystem _towerSystem;
     private CreepSystem _creepSystem;
     private CreepHealthUISystem _creepHealthUISystem;
@@ -15,8 +18,19 @@ public class GameSystemManager : EventDispatcher
     private SyncStepper _syncStepper;
     private SyncStepper.Factory _syncFactory;
 
-    
+    [Inject]
+    private NetworkManager _networkManager;
+
+    [Inject]
+    private WaveAISystem _waveAISystem;
+
+    [Inject]
+    private GameTimerManager _timerManager;
+
+    private Dictionary<int, Dictionary<int, string>> _checksumMap;
+
     public GameSystemManager(
+        GameState gameState,
         TowerSystem towerSystem,
         CreepSystem creepSystem,
         CreepViewSystem creepViewSystem,
@@ -24,12 +38,16 @@ public class GameSystemManager : EventDispatcher
         WaveSpawnerSystem waveSpawnerSystem,
         SyncStepper.Factory syncFactory)
     {
+        _gameState = gameState;
         _towerSystem = towerSystem;
         _creepSystem = creepSystem;
         _creepViewSystem = creepViewSystem;
         _creepHealthUISystem = creepHealthUISystem;
         _waveSpawnerSystem = waveSpawnerSystem;
         _syncFactory = syncFactory;
+
+        _checksumMap = new Dictionary<int, Dictionary<int, string>>();
+
     }
 
     public void Initialize()
@@ -39,15 +57,14 @@ public class GameSystemManager : EventDispatcher
         _syncStepper.onFrameUpdate += onFrameUpdate;
 
         _towerSystem.AddListener(GameplayEventType.TOWER_BUILT, onTowerBuilt);
-
         _creepSystem.AddListener(GameplayEventType.CREEP_REACHED_GOAL, onCreepGoalReached);
         _creepSystem.AddListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
         _creepSystem.AddListener(GameplayEventType.CREEP_KILLED, onCreepKilled);
         _creepSystem.AddListener(GameplayEventType.CREEP_SPAWNED, onCreepSpawned);
-
         _waveSpawnerSystem.AddListener(GameplayEventType.WAVE_START, onWaveStart);
         _waveSpawnerSystem.AddListener(GameplayEventType.WAVE_COMPLETE, onWaveComplete);
-
+        
+        _networkManager.onCustomEvent += onCustomEvent;
     }
 
     public void CleanUp()
@@ -56,14 +73,16 @@ public class GameSystemManager : EventDispatcher
         _syncStepper.onFrameUpdate -= onFrameUpdate;
 
         _towerSystem.RemoveListener(GameplayEventType.TOWER_BUILT, onTowerBuilt);
-
         _creepSystem.RemoveListener(GameplayEventType.CREEP_REACHED_GOAL, onCreepGoalReached);
         _creepSystem.RemoveListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
         _creepSystem.RemoveListener(GameplayEventType.CREEP_KILLED, onCreepKilled);
         _creepSystem.RemoveListener(GameplayEventType.CREEP_SPAWNED, onCreepSpawned);
-
         _waveSpawnerSystem.RemoveListener(GameplayEventType.WAVE_START, onWaveStart);
         _waveSpawnerSystem.RemoveListener(GameplayEventType.WAVE_COMPLETE, onWaveComplete);
+
+        _networkManager.onCustomEvent -= onCustomEvent;
+
+        _waveAISystem.CleanUp();
     }
 
 
@@ -72,6 +91,11 @@ public class GameSystemManager : EventDispatcher
         _creepSystem.FixedStep(fixedDeltaTime);
         _towerSystem.FixedStep(fixedDeltaTime);
         _waveSpawnerSystem.FixedStep(fixedDeltaTime);
+        
+        if(TrueSyncManager.Players.Count >= 2)
+        {
+            md5Checksum();
+        }
     }
 
     private void onFrameUpdate(float deltaTime)
@@ -80,6 +104,18 @@ public class GameSystemManager : EventDispatcher
         _towerSystem.Step(deltaTime);
 
         _creepViewSystem.Step(deltaTime);
+    }
+
+    private void md5Checksum()
+    {
+        RaiseEventOptions options = new RaiseEventOptions();
+        options.Receivers = ReceiverGroup.All;
+
+        Hashtable table = new Hashtable();
+        table["tick"] = TrueSyncManager.Ticks;
+        table["id"] = PhotonNetwork.player.ID;
+        table["checksum"] = _gameState.GetMd5();
+        PhotonNetwork.RaiseEvent(2, table, true, options);
     }
     
     private void onTowerBuilt(GeneralEvent e)
@@ -128,5 +164,45 @@ public class GameSystemManager : EventDispatcher
     {
 
         Debug.Log("Wave complete: " + e.data);
+    }
+
+    private void onCustomEvent(byte eventCode, object content, int senderId)
+    {
+        if(eventCode == 2)
+        {
+            Hashtable c = content as Hashtable;
+            int tick = (int)c["tick"];
+            int id = (int)c["id"];            
+            string checksum = c["checksum"] as string;
+
+            addChecksum(tick, id, checksum);
+        }
+    }
+
+    private bool addChecksum(int tick, int id, string checksum)
+    {
+        bool result = false;
+        Dictionary<int, string> playerMap;
+        if(!_checksumMap.TryGetValue(tick, out playerMap))
+        {
+            playerMap = new Dictionary<int, string>(NetworkManager.kMaxPlayers);
+            _checksumMap.Add(tick, playerMap);
+        }
+
+        playerMap[id] = checksum;
+
+        if(playerMap.Count == 2)
+        {
+            if(!StateChecker.VerifyMd5Hash(playerMap[1], playerMap[2]))
+            {
+                Debug.LogError("Checksum error!");
+                //EditorApplication.isPaused = true;
+            }
+            else
+            {
+                result = true;
+            }
+        }
+        return result;
     }
 }

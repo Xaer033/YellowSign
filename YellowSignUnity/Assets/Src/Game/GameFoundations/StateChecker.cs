@@ -15,13 +15,11 @@ public class StateChecker
         return System.Text.Encoding.UTF8.GetBytes(json);
     }
     
-
-    static string GetMd5Hash(object state)
+    static public string GetMd5Hash(byte[] byteList)
     {
-        byte[] input = ToByteArray(state);
         // Convert the input string to a byte array and compute the hash.
-        byte[] data = md5.ComputeHash(input);
-        
+        byte[] data = md5.ComputeHash(byteList);
+
         StringBuilder sBuilder = new StringBuilder();
         for(int i = 0; i < data.Length; i++)
         {
@@ -32,11 +30,17 @@ public class StateChecker
         return sBuilder.ToString();
     }
 
+    static public string GetMd5Hash(object state)
+    {
+        byte[] input = ToByteArray(state);
+        return GetMd5Hash(input);
+    }
+
     // Verify a hash against a string.
-    static bool VerifyMd5Hash(string a, string b)
+    static public bool VerifyMd5Hash(string a, string b)
     {
         StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-        if(0 == comparer.Compare(a, b))
+        if(comparer.Compare(a, b) == 0)
         {
             return true;
         }

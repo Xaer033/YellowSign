@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
 
     public void Awake()
     {
+        Singleton.instance.diContainer.InjectGameObject(gameObject);
         controlState = PlayerControlState.TOWER_BUILDER;
         
         _commander = GetComponent<Commander>();
