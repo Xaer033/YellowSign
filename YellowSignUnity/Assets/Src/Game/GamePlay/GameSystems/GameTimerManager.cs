@@ -15,9 +15,9 @@ public class GameTimerManager : EventDispatcher
         _stepper.onSyncedStep += onSyncStep;
     }
 
-    public GameTimer Create(FP duration, FP interval)
+    public GameTimer Create(FP interval, FP duration)
     {
-        GameTimer timer = new GameTimer(duration, interval);
+        GameTimer timer = new GameTimer(interval, duration);
         _timerList.Add(timer);
         return timer;
     }

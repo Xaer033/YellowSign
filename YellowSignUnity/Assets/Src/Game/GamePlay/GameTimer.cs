@@ -3,6 +3,8 @@ using TrueSync;
 
 public class GameTimer
 {
+    private const int kBigNumber = 9999999;
+
     private FP _duration;
     private FP _updateInterval;
 
@@ -27,9 +29,9 @@ public class GameTimer
 
     public bool isPaused { get; set; }
 
-    public GameTimer(FP duration, FP updateInterval)
+    public GameTimer(FP updateInterval, FP duration)
     {
-        _duration = duration;
+        _duration = duration <= 0 ? kBigNumber : duration;
         _updateInterval = updateInterval;
 
         Reset();
@@ -68,7 +70,14 @@ public class GameTimer
 
             if(_timer <= 0)
             {
-                callTimerComplete();
+                if(_duration <= 0)
+                {
+                    _timer = int.MaxValue;
+                }
+                else
+                {
+                    callTimerComplete();
+                }
             }
         }
     }
