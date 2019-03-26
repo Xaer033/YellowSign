@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using GhostGen;
+﻿using GhostGen;
+using System.Collections;
 using Zenject;
 
 public class LoadGameplayState : IGameState

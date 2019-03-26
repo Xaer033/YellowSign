@@ -40,7 +40,7 @@ public class IntroState : IGameState
 		if (_gotoMainMenu) 
 		{
             Hashtable table = new Hashtable();
-            table["sceneName"] = (_playersTemp == 1) ? "GameSceneSingleplayer" : "GameSceneMultiplayer";
+            table["sceneName"] = "GameSceneMultiplayer"; //(_playersTemp == 1) ? "GameSceneSingleplayer" : "GameSceneMultiplayer";
             _gameStateMachine.ChangeState(YellowSignStateType.LOAD_GAMEPLAY, table);
             _gotoMainMenu = false;
 		}

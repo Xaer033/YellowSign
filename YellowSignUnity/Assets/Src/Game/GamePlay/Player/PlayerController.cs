@@ -78,8 +78,12 @@ public class PlayerController : MonoBehaviour
 
     public void CleanUp()
     {
-        _commander.onCommandExecute -= OnCommandExecute;
-        _commander.onSyncedStep -= OnSyncStep;
+        if(_commander != null)
+        {
+            _commander.onCommandExecute -= OnCommandExecute;
+            _commander.onSyncedStep -= OnSyncStep;
+            _commander.onSyncStartLocalPlayer -= OnSyncStartLocalPlayer;
+        }
     }
 
     public void Update()
@@ -237,7 +241,7 @@ public class PlayerController : MonoBehaviour
             //bool canBuildTowerDetailed = _grid.CanBuildTower(ray, true, out pos);
             if(canBuildTowerQuick && !_towerBlocker.Contains(pos))
             {
-                ICommand command = CommandFactory.CreateCommand(CommandType.BUILD_TOWER, new object[] { _currentTowerId, pos });
+                ICommand command = new BuildTowerCommand(_currentTowerId, pos);
                 _commander.AddCommand(command);
                 _towerBlocker.Add(pos); // Prevents trying to add multiple towers to the same spot before next sync Update
             }

@@ -40,12 +40,7 @@ public class StateChecker
     static public bool VerifyMd5Hash(string a, string b)
     {
         StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-        if(comparer.Compare(a, b) == 0)
-        {
-            return true;
-        }
-
-        return false;
+        return comparer.Compare(a, b) == 0;
     }
 
     private static MD5 md5

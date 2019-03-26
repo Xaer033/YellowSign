@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TrueSync;
-using Sirenix.OdinInspector;
+﻿using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -18,7 +14,8 @@ public class CameraMovement : MonoBehaviour
     //private Transform _movementTransform;
     private Rect _worldLimit;
     private Camera _camera;
-    
+    private bool _isLocked;
+
     public PlayerSpawn playerSpawn { get; set; }
 
     public void Setup(PlayerSpawn spawn)
@@ -61,7 +58,12 @@ public class CameraMovement : MonoBehaviour
 
     public void Update()
     {
-        if(playerSpawn == null || playerSpawn.cameraHook == null)
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            _isLocked = !_isLocked;
+        }
+
+        if(_isLocked || playerSpawn == null || playerSpawn.cameraHook == null)
         {
             return;
         }
@@ -101,18 +103,18 @@ public class CameraMovement : MonoBehaviour
         //Debug.Log("CamPos: " + camPos);
         //Debug.Log("WorldLim: " + _worldLimit);
 
-        //if (mouseX < edgeLimit)// && camPos.x > _worldLimit.x )
-        //{
-        //    //Debug.Log("Left");
-        //    _acceleration.x = (-transform.right).x;
-        //}
-        //else if(mouseX > Screen.width - edgeLimit)// && camPos.x < _worldLimit.width)
-        //{
-        //    //Debug.Log("Right");
-        //    _acceleration.x = (transform.right).x;
-        //}
+        if(mouseX < edgeLimit)// && camPos.x > _worldLimit.x )
+        {
+            //Debug.Log("Left");
+            _acceleration.x = (-transform.right).x;
+        }
+        else if(mouseX > Screen.width - edgeLimit)// && camPos.x < _worldLimit.width)
+        {
+            //Debug.Log("Right");
+            _acceleration.x = (transform.right).x;
+        }
 
-        if (mouseY < edgeLimit)// && camPos.z > _worldLimit.y)
+        if(mouseY < edgeLimit)// && camPos.z > _worldLimit.y)
         {
             //Debug.Log("Back");
             _acceleration.z = (-transform.forward).z;
