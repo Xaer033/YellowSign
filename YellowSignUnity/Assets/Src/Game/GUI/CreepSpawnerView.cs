@@ -123,7 +123,8 @@ public class CreepSpawnerView : UIView
     private void onCreepSpawn()
     {
         int spawnCount = (int)_amountSlider.value;
-        
+
+        Debug.Log("Creep 1");
         ICommand command = new SpawnCreepCommand(_currentCreepDef.id, spawnCount);
         DispatchEvent(PlayerUIEventType.SPAWN_CREEPS, true, command);
     }

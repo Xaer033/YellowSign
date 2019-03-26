@@ -47,6 +47,7 @@ public class Commander : TrueSyncBehaviour
 
     public void AddCommand(ICommand command)
     {
+        Debug.Log("Command: " + command.commandType);
         _commandQueue.Enqueue(command);
     }
 
@@ -84,10 +85,13 @@ public class Commander : TrueSyncBehaviour
         int commandCount = _commandQueue.Count;
         TrueSyncInput.SetByte(iterKey++, localOwner.Id);
         TrueSyncInput.SetInt(iterKey++, commandCount);
+        
 
-        while (_commandQueue.Count > 0)
+        while(_commandQueue.Count > 0)
         {
             ICommand ct = _commandQueue.Dequeue();
+            Debug.Log("Submit command: " + ct.commandType);
+
             TrueSyncInput.SetByte(iterKey++, (byte)ct.commandType);
             byte[] byteCommand = CommandFactory.ToByteArray(ct);
             TrueSyncInput.SetByteArray(iterKey++, byteCommand);
@@ -103,6 +107,7 @@ public class Commander : TrueSyncBehaviour
         for (int i = 0; i < commandCount; ++i) 
         {
             CommandType type = (CommandType)TrueSyncInput.GetByte(ownerId, iterKey++);
+            Debug.Log("Consumbed command: " + type.ToString());
             byte[] byteCommand = TrueSyncInput.GetByteArray(ownerId, iterKey++);
             ICommand command = CommandFactory.CreateFromByteArray(type, byteCommand);
 

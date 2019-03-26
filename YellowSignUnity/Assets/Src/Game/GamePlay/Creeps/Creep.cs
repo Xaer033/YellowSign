@@ -41,9 +41,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
             _container.Instantiate<Creep>(new object[] { null, null, 0 });
         }
     }
-
-    public FP REPATH_RATE = 0.75f;
-
+    
     public CreepState state { get; set; }
     public CreepStats stats { get; set; }
 

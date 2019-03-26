@@ -13,13 +13,23 @@ public class WaveSpawnerSystem : EventDispatcher
         SPAWN_PAUSE
     }
 
-    private CreepSystem _creepSystem;
-    private FP _spawnTimer;
-    private State _spawnState;
-    private SpawnWaveInfo _currentWave;
-    private int _currentCreepCount;
+    private class PlayerSpawnWaveInfo
+    {
+        public FP spawnTimer;
+        public State spawnState;
+        public SpawnWaveInfo currentWave;
+        public int currentCreepCount;
+        public Queue<SpawnWaveInfo> spawnQueue = new Queue<SpawnWaveInfo>();
+    }
 
-    private Queue<SpawnWaveInfo> _spawnQueue = new Queue<SpawnWaveInfo>();
+    private CreepSystem _creepSystem;
+    //private FP _spawnTimer;
+    //private State _spawnState;
+    //private SpawnWaveInfo _currentWave;
+    //private int _currentCreepCount;
+
+    private Dictionary<PlayerNumber, PlayerSpawnWaveInfo> _playerSpawnQueue = new Dictionary<PlayerNumber, PlayerSpawnWaveInfo>();
+    //private Queue<SpawnWaveInfo> _spawnQueue = new Queue<SpawnWaveInfo>();
 
     public TSVector spawnPoint { get; set; }
 
@@ -27,65 +37,81 @@ public class WaveSpawnerSystem : EventDispatcher
     public WaveSpawnerSystem(CreepSystem creepSystem)
     {
         _creepSystem = creepSystem;
-        _spawnState = State.IDLE;
+        //_spawnState = State.IDLE;
     }
 
     public void AddWave(SpawnWaveInfo spawnWave)
     {
-        _spawnQueue.Enqueue(spawnWave);
+        //_spawnQueue.Enqueue(spawnWave);
+        PlayerSpawnWaveInfo playerSpawnWaveInfo;
+        PlayerNumber pNumber = (PlayerNumber)spawnWave.spawnInfo.targetOwnerId;
+        if(!_playerSpawnQueue.TryGetValue(pNumber, out playerSpawnWaveInfo))
+        {
+            playerSpawnWaveInfo = new PlayerSpawnWaveInfo();
+            playerSpawnWaveInfo.spawnState = State.IDLE;
+            _playerSpawnQueue.Add(pNumber, playerSpawnWaveInfo);
+            Debug.Log("Creating new info for player: " + pNumber);
+        }
+
+        playerSpawnWaveInfo.spawnQueue.Enqueue(spawnWave);
+        Debug.Log("Spawning for player: " + pNumber);
     }
 
     public void FixedStep(FP fixedDeltaTime)
     {
-        switch(_spawnState)
+        foreach(var pair in _playerSpawnQueue)
         {
-            case State.IDLE:        _idle(fixedDeltaTime);       break;
-            case State.SPAWNING:    _spawning(fixedDeltaTime);   break;
-            case State.SPAWN_PAUSE: _spawnPause(fixedDeltaTime); break;
+            PlayerSpawnWaveInfo playerSpawnWaveInfo = pair.Value;
+            State state = playerSpawnWaveInfo.spawnState;
+            switch(state)
+            {
+                case State.IDLE:        _idle(fixedDeltaTime, playerSpawnWaveInfo);       break;
+                case State.SPAWNING:    _spawning(fixedDeltaTime, playerSpawnWaveInfo);   break;
+                case State.SPAWN_PAUSE: _spawnPause(fixedDeltaTime, playerSpawnWaveInfo); break;
+            }
         }
     }
 
-    private void _spawning(FP fixedDeltaTime)
+    private void _spawning(FP fixedDeltaTime, PlayerSpawnWaveInfo info)
     {
-
-        string creepId = _currentWave.spawnCommand.type;
-        CreepSpawnInfo spawnInfo = _currentWave.spawnInfo;
+        string creepId = info.currentWave.spawnCommand.type;
+        CreepSpawnInfo spawnInfo = info.currentWave.spawnInfo;
 
         Creep c = _creepSystem.AddCreep(creepId, spawnInfo);
         FP scaler = 0.2;
-        _spawnTimer = _currentWave.betweenSpawnDelay * c.stats.baseSpeed * scaler;
-        
-        _currentCreepCount--;
-        
-        _spawnState = State.SPAWN_PAUSE;
+        info.spawnTimer = info.currentWave.betweenSpawnDelay * c.stats.baseSpeed * scaler;
+
+        info.currentCreepCount--;
+
+        info.spawnState = State.SPAWN_PAUSE;
     }
 
-    private void _idle(FP fixedDeltaTime)
+    private void _idle(FP fixedDeltaTime, PlayerSpawnWaveInfo info)
     {
-        if(_spawnQueue.Count > 0)
+        if(info.spawnQueue.Count > 0)
         {
-            _spawnState = State.SPAWNING;
-            _currentWave = _spawnQueue.Dequeue();
-            _currentCreepCount = _currentWave.spawnCommand.count;
+            info.spawnState = State.SPAWNING;
+            info.currentWave = info.spawnQueue.Dequeue();
+            info.currentCreepCount = info.currentWave.spawnCommand.count;
 
-            DispatchEvent(GameplayEventType.WAVE_START, true, _currentWave);
+            DispatchEvent(GameplayEventType.WAVE_START, true, info.currentWave);
         }
     }
 
-    private void _spawnPause(FP fixedDeltaTime)
+    private void _spawnPause(FP fixedDeltaTime, PlayerSpawnWaveInfo info)
     {
-        _spawnTimer -= fixedDeltaTime;
+        info.spawnTimer -= fixedDeltaTime;
 
-        if(_spawnTimer <= 0)
+        if(info.spawnTimer <= 0)
         {
-            if(_currentCreepCount > 0)
+            if(info.currentCreepCount > 0)
             {
-                _spawnState = State.SPAWNING;
+                info.spawnState = State.SPAWNING;
             }
             else
             {
-                _spawnState = State.IDLE;
-                DispatchEvent(GameplayEventType.WAVE_COMPLETE, true, _currentWave);
+                info.spawnState = State.IDLE;
+                DispatchEvent(GameplayEventType.WAVE_COMPLETE, true, info.currentWave);
             }
         }
     }

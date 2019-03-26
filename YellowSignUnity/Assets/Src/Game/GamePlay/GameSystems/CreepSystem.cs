@@ -19,8 +19,7 @@ public class CreepSystem : EventDispatcher
     {
         _creepFactory = creepFactory;
         _gameState = gameState;
-
-        int maxPlayers = NetworkManager.kMaxPlayers;
+        
         //_creeps = new Dictionary<byte, List<Creep>>(maxPlayers);
 
         //for(int i = 0; i < maxPlayers; ++i)
@@ -36,9 +35,7 @@ public class CreepSystem : EventDispatcher
         Creep creep = _creepFactory.Create(creepId, spawnInfo);
         if(creep != null)
         {
-            List<Creep> creepList = GetCreepList(spawnInfo.ownerId);
-
-            creepList.Add(creep);
+            _gameState.creepList.Add(creep);
             creep.AddListener(GameplayEventType.CREEP_DAMAGED, onCreepDamaged);
 
             DispatchEvent(GameplayEventType.CREEP_SPAWNED, false, creep);
@@ -48,7 +45,7 @@ public class CreepSystem : EventDispatcher
     }
 
     //public void RemoveCreep
-    public List<Creep> GetCreepList(byte ownerId)
+    public List<Creep> GetCreepList()
     {
         return _gameState.creepList;
         //if(ownerId < 0 || ownerId > NetworkManager.kMaxPlayers)
@@ -81,8 +78,9 @@ public class CreepSystem : EventDispatcher
     {
         _generatingPath.Clear();
 
-        var creepList = GetCreepList(0);
-        
+        var creepList = _gameState.creepList;
+
+
         int count = creepList.Count;
         for (int i = count - 1; i >= 0; --i)
         {

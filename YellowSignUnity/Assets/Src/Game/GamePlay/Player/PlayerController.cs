@@ -15,7 +15,9 @@ public class PlayerController : MonoBehaviour
     private HashSet<GridPosition> _towerBlocker = new HashSet<GridPosition>();
 
     private Commander _commander;
-    private Grid _grid;
+    private Grid _myGrid;
+    private List<Grid> _enemyGridList;
+
     private TowerHighlighter _highlighter;
     private WaveSpawnerSystem _waveSpawnerSystem;
     private TowerSystem _towerSystem;
@@ -88,7 +90,7 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
-        if(_grid == null)
+        if(_myGrid == null)
         {
             return;
         }
@@ -102,6 +104,7 @@ public class PlayerController : MonoBehaviour
 
     public void AddCommand(ICommand command)
     {
+        Debug.Log("Base commander: " + _commander.ownerIndex);
         _commander.AddCommand(command);
     }
 
@@ -125,58 +128,18 @@ public class PlayerController : MonoBehaviour
         switch(type)
         {
             case CommandType.SPAWN_CREEP:
-                {
-                    SpawnCreepCommand scc = (SpawnCreepCommand)command;
-                    //for (int s = 0; s < scc.count; ++s)
-                    //{
-                        Transform spawnPoint = _grid.spawnPoint;
-                        TSVector startingPos = spawnPoint.position.ToTSVector();
-                        TSVector targetPos = _grid.target.transform.position.ToTSVector();
-
-                        byte targetOwnerId = ownerId == (byte)1 ? (byte)2 : (byte)1;
-                        TSQuaternion rotation = ownerId == (byte)1 ? TSQuaternion.Euler(0, 180, 0) : TSQuaternion.identity;
-
-                        CreepSpawnInfo spawnInfo = CreepSpawnInfo.Create(
-                            ownerId,
-                            startingPos, 
-                            rotation,
-                            targetOwnerId,
-                            targetPos);
-
-                    SpawnWaveInfo wave = new SpawnWaveInfo();
-                    wave.betweenSpawnDelay = 0.5;
-                    wave.spawnCommand = scc;
-                    wave.spawnInfo = spawnInfo;
-
-                    _waveSpawnerSystem.AddWave(wave);
-                        //_creepSystem.AddCreep(scc.type, spawnInfo);
-                    //}
-                    break;
-                }
+            {
+                SpawnCreepCommand scc = (SpawnCreepCommand)command;
+                spawnCreeps(ownerId, scc);
+                break;
+            }
             case CommandType.BUILD_TOWER:
-                {
-                    BuildTowerCommand btc = (BuildTowerCommand)command;
-
-                    if(_grid.CanBuildTowerAtPos(btc.position))
-                    {
-                        TSVector pos = btc.position.ToTSVector();
-                        TSQuaternion rotation = ownerId == (byte)1 ? TSQuaternion.identity : TSQuaternion.Euler(0, 180, 0);
-
-                        TowerSpawnInfo spawnInfo = TowerSpawnInfo.Create(ownerId, pos, rotation);
-                        Tower tower = _towerSystem.AddTower(btc.type, spawnInfo);
-
-                        _grid.UpdateGridPosition(tower.view.bounds);
-                        _towerBlocker.Remove(btc.position);
-                    }
-                    else
-                    {
-                        Debug.Log("Tower Denied");
-                    }
-
-                    break;
-                }
+            {
+                BuildTowerCommand btc = (BuildTowerCommand)command;
+                buildTower(ownerId, btc);
+                break;
+            }
         }
-        
     }
 
     private void OnSyncStep(FP fixedDeltaTime)
@@ -222,7 +185,7 @@ public class PlayerController : MonoBehaviour
 
         Ray ray = (_camera != null) ? _camera.ScreenPointToRay(mousePos) : default(Ray);
         GridPosition pos;
-        bool canBuildTowerQuick = _grid.CanBuildTower(ray, true, out pos);
+        bool canBuildTowerQuick = _myGrid.CanBuildTower(ray, true, out pos);
         if(_highlighter)
         {
             if(canBuildTowerQuick)
@@ -255,15 +218,69 @@ public class PlayerController : MonoBehaviour
 
     private void setupGrid()
     {
-        GameObject gridObj = GameObject.FindGameObjectWithTag("grid_p1");
-        Grid[] gridList = gridObj.GetComponents<Grid>();
+        _enemyGridList = new List<Grid>(NetworkManager.kMaxPlayers);
+
+        Grid[] gridList = GameObject.FindObjectsOfType<Grid>();
         foreach(Grid g in gridList)
         {
             if(g.playerNumber == playerSpawn.playerNumber)
             {
-                _grid = g;
-                break;
+                _myGrid = g;
             }
+            else
+            {
+                _enemyGridList.Add(g);
+            }
+        }
+    }
+
+    private void spawnCreeps(byte ownerId, SpawnCreepCommand command)
+    {
+        TSQuaternion rotation = TSQuaternion.Euler(0, 180, 0);
+
+        for(var i = 0; i < _enemyGridList.Count; ++i)
+        {
+            Grid enemyGrid = _enemyGridList[i];
+
+            Transform spawnPoint = enemyGrid.spawnPoint;
+            TSVector startingPos = spawnPoint.position.ToTSVector();
+            TSVector targetPos = enemyGrid.target.transform.position.ToTSVector();
+
+            byte targetOwnerId = (byte)enemyGrid.playerNumber;
+
+            CreepSpawnInfo spawnInfo = CreepSpawnInfo.Create(
+                ownerId,
+                startingPos,
+                rotation,
+                targetOwnerId,
+                targetPos);
+
+            SpawnWaveInfo wave = new SpawnWaveInfo();
+            wave.betweenSpawnDelay = 0.5;
+            wave.spawnCommand = command;
+            wave.spawnInfo = spawnInfo;
+
+            _waveSpawnerSystem.AddWave(wave);
+            Debug.Log("Adding Wave from: " + ownerId + ", to " + targetOwnerId);
+        }
+    }
+
+    private void buildTower(byte ownerId, BuildTowerCommand command)
+    {
+        if(_myGrid.CanBuildTowerAtPos(command.position))
+        {
+            TSVector pos = command.position.ToTSVector();
+            TSQuaternion rotation = TSQuaternion.identity;
+
+            TowerSpawnInfo spawnInfo = TowerSpawnInfo.Create(ownerId, pos, rotation);
+            Tower tower = _towerSystem.AddTower(command.type, spawnInfo);
+
+            _myGrid.UpdateGridPosition(tower.view.bounds);
+            _towerBlocker.Remove(command.position);
+        }
+        else
+        {
+            Debug.Log("Tower Denied");
         }
     }
 }

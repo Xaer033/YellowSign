@@ -95,6 +95,8 @@ public class PlayerHudController : BaseController
     {
         SpawnCreepCommand command = (SpawnCreepCommand)e.data;
         _controller.AddCommand(command);
+
+        Debug.Log("Creep 2 " +  _controller.owner.Id);
     }
 
     private void onDismissCreepSpawner(GeneralEvent e)

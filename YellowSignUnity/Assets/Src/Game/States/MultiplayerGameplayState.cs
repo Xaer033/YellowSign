@@ -59,7 +59,7 @@ public class MultiplayerGameplayState : IGameState
             Singleton.instance.diContainer.InjectGameObject(pController.gameObject);
             pController.SetCurrentTower("basic_tower");
 
-            if((byte)pController.playerSpawn.playerNumber == TrueSyncManager.LocalPlayer.Id)
+            if((byte)pController.playerSpawn.playerNumber != TrueSyncManager.LocalPlayer.Id)
             {
                 localPlayer = pController;
             }
@@ -68,10 +68,12 @@ public class MultiplayerGameplayState : IGameState
 
         _gameSystems.Initialize();
 
+        Debug.Log("LocalPlayer: " + localPlayer.owner.Id); 
+
         _hudController = new PlayerHudController(localPlayer);
         _hudController.Start(() =>
         {
-            _guiManager.screenFader.FadeIn(1.5f);
+            _guiManager.screenFader.FadeIn(0.5f);
         });
         Debug.Log("Tick: " + TrueSyncManager.Ticks);
         TrueSyncManager.RunSimulation();

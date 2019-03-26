@@ -166,12 +166,20 @@ public class BasicTowerBrain : AbstractTowerBrain
     {
         FP minDistance = 99999;
         Creep target = null;
-        List<Creep> creepList = creepSystem.GetCreepList(1);
+        List<Creep> creepList = creepSystem.GetCreepList();
 
         for(int i = 0; i < creepList.Count; ++i)
         {
             Creep c = creepList[i];
+            // Check for valid Creep State
             if(c != null && !c.isValid)
+            {
+                continue;
+            }
+
+            // Self explanitory
+            bool isPlayerCreep = c.ownerId == tower.ownerId;
+            if(isPlayerCreep)
             {
                 continue;
             }
@@ -182,6 +190,7 @@ public class BasicTowerBrain : AbstractTowerBrain
                 continue;
             }
 
+            // Find closest creep
             if(dist < minDistance)
             {
                 minDistance = dist;
