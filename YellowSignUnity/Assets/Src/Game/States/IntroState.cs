@@ -10,7 +10,7 @@ public class IntroState : IGameState
     private NetworkManager _networkManager;
     private GuiManager _gui;
 
-    private int _playersTemp = 2;
+    private int _playersTemp = 1;
 
     public IntroState(
         NetworkManager networkManager,

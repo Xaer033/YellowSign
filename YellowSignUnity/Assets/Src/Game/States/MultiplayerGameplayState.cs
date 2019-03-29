@@ -54,12 +54,19 @@ public class MultiplayerGameplayState : IGameState
         {
             int spawnIndex = i < sp.Count ? i : sp.Count - 1;
             var pController = _playerList[i];
-            pController.playerSpawn = sp[spawnIndex];
+            foreach(PlayerSpawn spawn in sp)
+            {
+                if(pController.owner.Id == (byte)spawn.playerNumber)
+                {
+                    pController.playerSpawn = sp[spawnIndex];
+                    break;
+                }
+            }
 
             Singleton.instance.diContainer.InjectGameObject(pController.gameObject);
             pController.SetCurrentTower("basic_tower");
 
-            if((byte)pController.playerSpawn.playerNumber != TrueSyncManager.LocalPlayer.Id)
+            if((byte)pController.playerSpawn.playerNumber == TrueSyncManager.LocalPlayer.Id)
             {
                 localPlayer = pController;
             }
@@ -68,13 +75,10 @@ public class MultiplayerGameplayState : IGameState
 
         _gameSystems.Initialize();
 
-        Debug.Log("LocalPlayer: " + localPlayer.owner.Id); 
+        Debug.Log("LocalPlayer: " + localPlayer.owner.Id);
 
-        _hudController = new PlayerHudController(localPlayer);
-        _hudController.Start(() =>
-        {
-            _guiManager.screenFader.FadeIn(0.5f);
-        });
+        _guiManager.screenFader.FadeIn(0.5f);
+
         Debug.Log("Tick: " + TrueSyncManager.Ticks);
         TrueSyncManager.RunSimulation();
     }

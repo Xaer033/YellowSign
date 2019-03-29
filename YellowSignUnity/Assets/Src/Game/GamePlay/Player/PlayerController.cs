@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private string _currentTowerId;
     private Camera _camera;
     private PlayerSpawn _playerSpawn;
-
+    private PlayerHudController _hudController;
     
     public PlayerControlState controlState { get; set; }
     
@@ -105,6 +105,7 @@ public class PlayerController : MonoBehaviour
     public void AddCommand(ICommand command)
     {
         Debug.Log("Base commander: " + _commander.ownerIndex);
+        Debug.Log("PlayerIndex: " + _playerSpawn.playerNumber);
         _commander.AddCommand(command);
     }
 
@@ -167,6 +168,11 @@ public class PlayerController : MonoBehaviour
         //        _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
 
         //_camera = cameraObj.GetComponent<Camera>();
+
+        _hudController = new PlayerHudController(this);
+        _hudController.Start(() =>
+        {
+        });
     }
     
 
@@ -221,6 +227,8 @@ public class PlayerController : MonoBehaviour
         _enemyGridList = new List<Grid>(NetworkManager.kMaxPlayers);
 
         Grid[] gridList = GameObject.FindObjectsOfType<Grid>();
+        List<TSPlayerInfo> playerList = TrueSyncManager.Players;
+
         foreach(Grid g in gridList)
         {
             if(g.playerNumber == playerSpawn.playerNumber)
@@ -229,7 +237,14 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                _enemyGridList.Add(g);
+                foreach(TSPlayerInfo info in playerList)
+                {
+                    if(info.Id == (byte)g.playerNumber)
+                    {
+                        _enemyGridList.Add(g);
+                        break;
+                    }
+                }
             }
         }
     }

@@ -54,7 +54,7 @@ public class WaveSpawnerSystem : EventDispatcher
         }
 
         playerSpawnWaveInfo.spawnQueue.Enqueue(spawnWave);
-        Debug.Log("Spawning for player: " + pNumber);
+        Debug.Log("Spawning for target player: " + pNumber);
     }
 
     public void FixedStep(FP fixedDeltaTime)

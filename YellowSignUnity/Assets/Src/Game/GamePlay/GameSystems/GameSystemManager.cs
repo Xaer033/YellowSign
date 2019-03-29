@@ -191,16 +191,20 @@ public class GameSystemManager : EventDispatcher
 
         playerMap[id] = checksum;
 
-        if(playerMap.Count == 2)
+        if(playerMap.Count == TrueSyncManager.Players.Count)
         {
-            if(!StateChecker.VerifyMd5Hash(playerMap[1], playerMap[2]))
+            string firstHash = playerMap[1];
+            foreach(var pair in playerMap)
             {
-                Debug.LogError("Checksum error!");
-                //EditorApplication.isPaused = true;
-            }
-            else
-            {
-                result = true;
+                if(!StateChecker.VerifyMd5Hash(firstHash, pair.Value))
+                {
+                    Debug.LogError("Checksum error!");
+                    //EditorApplication.isPaused = true;
+                }
+                else
+                {
+                    result = true;
+                }
             }
         }
         return result;
