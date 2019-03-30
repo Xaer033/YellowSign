@@ -95,6 +95,14 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if(playerSpawn != null)
+        {
+            if((byte)playerSpawn.playerNumber != TrueSyncManager.LocalPlayer.Id)
+            {
+                return;
+            }
+        }
+
         switch(controlState)
         {
             case PlayerControlState.NONE:           _noneState();           break;

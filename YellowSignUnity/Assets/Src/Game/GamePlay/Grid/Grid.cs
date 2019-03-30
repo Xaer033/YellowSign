@@ -50,14 +50,13 @@ public class Grid : MonoBehaviour
     
     public GridPosition GetGridPosition(Vector3 closestPosition)
     {
-        int mx = (int)Mathf.RoundToInt(closestPosition.x);
-        int mz = (int)Mathf.RoundToInt(closestPosition.z);
+        int mx = kInterval * Mathf.RoundToInt(closestPosition.x / kInterval);
+        int mz = kInterval * Mathf.RoundToInt(closestPosition.z / kInterval);
 
         GridPosition tmp = GridPosition.Create(mx, mz);
         Debug.DrawRay(tmp.ToVector3(), Vector3.up, Color.grey);
 
-        return GridPosition.Create( mx - ((mx / kHalfInterval) % kInterval), 
-                                    mz - ((mz / kHalfInterval) % kInterval));
+        return GridPosition.Create(mx, mz);
     }
 
     public bool CanBuildTower(Ray rayToGrid, bool preventBlocking, out GridPosition gridPosition)

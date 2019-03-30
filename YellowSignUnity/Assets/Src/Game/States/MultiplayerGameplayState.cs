@@ -47,40 +47,40 @@ public class MultiplayerGameplayState : IGameState
         _playerList = GameObject.FindObjectsOfType<PlayerController>();
         PlayerSpawn[] spawnList = GameObject.FindObjectsOfType<PlayerSpawn>();
         List<PlayerSpawn> sp = new List<PlayerSpawn>(spawnList);
-        sp.Sort((a, b) => a.playerNumber.CompareTo(b.playerNumber));
+        //sp.Sort((a, b) => a.playerNumber.CompareTo(b.playerNumber));
 
-        PlayerController localPlayer = null;
+        byte localPlayerId = TrueSyncManager.LocalPlayer.Id;
+        Debug.LogError("LocalPlayerID: " + localPlayerId);
+
         for(int i = 0; i < _playerList.Length; ++i)
         {
             int spawnIndex = i < sp.Count ? i : sp.Count - 1;
             var pController = _playerList[i];
+            byte pControllerId = pController.owner.Id;
+
+            Debug.LogError("PlayerControllerId: " + pControllerId);
+
             foreach(PlayerSpawn spawn in sp)
             {
-                if(pController.owner.Id == (byte)spawn.playerNumber)
+                if(pControllerId == (byte)spawn.playerNumber)
                 {
-                    pController.playerSpawn = sp[spawnIndex];
+                    pController.playerSpawn = spawn;
+
+                    Debug.LogError("Spawn Id: " + (byte)pController.playerSpawn.playerNumber);
                     break;
                 }
             }
-
-            Singleton.instance.diContainer.InjectGameObject(pController.gameObject);
+            
             pController.SetCurrentTower("basic_tower");
-
-            if((byte)pController.playerSpawn.playerNumber == TrueSyncManager.LocalPlayer.Id)
-            {
-                localPlayer = pController;
-            }
-            Debug.LogWarningFormat("LocalPlayer: {0}, PlayerNumber: {1}", TrueSyncManager.LocalPlayer.Id, pController.playerSpawn.playerNumber);
+            
         }
 
         _gameSystems.Initialize();
-
-        Debug.Log("LocalPlayer: " + localPlayer.owner.Id);
-
+        
         _guiManager.screenFader.FadeIn(0.5f);
 
-        Debug.Log("Tick: " + TrueSyncManager.Ticks);
         TrueSyncManager.RunSimulation();
+        Debug.Log("Tick: " + TrueSyncManager.Ticks);
     }
     
     public void Step(float deltaTime)

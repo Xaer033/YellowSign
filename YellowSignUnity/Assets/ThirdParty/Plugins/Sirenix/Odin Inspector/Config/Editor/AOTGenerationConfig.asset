@@ -15,7 +15,7 @@ MonoBehaviour:
   automateBeforeBuilds: 1
   deleteDllAfterBuilds: 1
   automateForPlatforms: 090000001400000013000000
-  lastScan: 636894260672478473
+  lastScan: 636894912275396209
   supportSerializedTypes:
   - TypeName: CreepDef, Assembly-CSharp
     IsCustom: 0
