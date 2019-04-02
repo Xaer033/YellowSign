@@ -24,6 +24,8 @@ public class PlayerHudController : BaseController
 
     public void Start(Action onViewCreated)
     {
+        Debug.Log("Building Hud");
+
         viewFactory.CreateAsync<PlayerHudView>("GUI/Gameplay/PlayerHudView", (x) =>
         {
             _hudView = x as PlayerHudView;

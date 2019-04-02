@@ -32,23 +32,12 @@ public class Tower : IAttacker, IAttackTarget
         }
     }
 
-    public enum BehaviorState
-    {
-        MOCK,
-        SPAWNING,
-        IDLE,
-        TARGETING,
-        VISUAL_ATTACK,
-        ATTACK,
-        RECOVERING
-    }
 
     public byte             ownerId         { get; private set; }
     public TowerStats       stats           { get; private set; }
     public ITowerView       view            { get; private set; }
     public FP               spawnTime       { get; private set; }
 
-    public BehaviorState    behaviorState   { get; set; }
     public Creep            targetCreep     { get; set; }
     public TowerState       state           { get; set; }
 
@@ -73,8 +62,7 @@ public class Tower : IAttacker, IAttackTarget
 
         view = towerGameObject.GetComponent<ITowerView>();
         view.tower = this;
-
-        behaviorState = BehaviorState.SPAWNING;        
+       
 	}
 	
     public int health

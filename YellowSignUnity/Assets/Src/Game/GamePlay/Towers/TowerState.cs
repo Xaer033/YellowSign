@@ -1,8 +1,21 @@
 ﻿using TrueSync;
 using UnityEngine;
 
+
 public class TowerState
 {
+    public enum BehaviorMode
+    {
+        MOCK,
+        SPAWNING,
+        IDLE,
+        TARGETING,
+        VISUAL_ATTACK,
+        ATTACK,
+        RECOVERING
+    }
+
+
     public int  health;
     public int  attackDamage;
 
@@ -12,6 +25,8 @@ public class TowerState
 
     public TSVector position;
     public TSQuaternion rotation;
+    
+    public BehaviorMode behaviorMode;
 
     public FP   range
     {
@@ -32,7 +47,9 @@ public class TowerState
 
         position = TSVector.zero;
         rotation = TSQuaternion.identity;
-        
+
+        behaviorMode = BehaviorMode.SPAWNING;
+
     }
 
     public static TowerState CreateFromStats(TowerStats stats)

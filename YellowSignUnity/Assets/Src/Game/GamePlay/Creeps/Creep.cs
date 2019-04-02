@@ -54,8 +54,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
     public byte ownerId         { get; private set; }
     public byte targetOwnerId   { get; private set; }
     public int  guid            { get; private set; }
-
-    private Seeker _seeker;
+    
     private bool _canSearchAgain;
     //private TSTransform _transform;
     private FP _nextRepath;
@@ -86,7 +85,6 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         _targetPosition = spawnInfo.targetPosition;
         targetOwnerId = spawnInfo.targetOwnerId;
 
-
         ownerId = spawnInfo.ownerId;
 
         // Move outside creep state
@@ -97,18 +95,13 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
         
         view = creepObj.GetComponent<ICreepView>();
         view.creep = this;
-        
 
-        //_transform = view.transformTS;
-        _seeker = view.seeker;
-        
         _nextRepath = 0;
         _waypointIndex = 0;
         _canSearchAgain = true;
         reachedTarget = false;
         _vectorPath = new List<TSVector>();
-
-
+        
         RecalculatePath();
     }
 
@@ -216,10 +209,12 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
     {
         _canSearchAgain = false;
 
-        Path result = _seeker.StartPath(
+        Path result = ABPath.Construct(
                         state.position.ToVector(), 
                         _targetPosition.ToVector(), 
                         onPathComplete);
+
+        AstarPath.StartPath(result);
 
         return result;
     }
@@ -244,13 +239,7 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
             _vectorPath = null;
             return;
         }
-
-        TSVector p1 = p.originalStartPoint.ToTSVector();
-        TSVector p2 = state.position;
-
-        p1.y = p2.y;
-
-        //FP d = (p2 - p1).magnitude;
+        
         _waypointIndex = 0;
 
         _vectorPath.Clear();

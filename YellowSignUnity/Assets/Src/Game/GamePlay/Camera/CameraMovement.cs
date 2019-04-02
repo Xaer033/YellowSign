@@ -40,6 +40,8 @@ public class CameraMovement : MonoBehaviour
             transform.SetPositionAndRotation(spawn.cameraHook.position, rot);
             _currentPos = transform.localPosition;
             _startPos = _currentPos;
+
+            _isLocked = true;
         }
     }
 

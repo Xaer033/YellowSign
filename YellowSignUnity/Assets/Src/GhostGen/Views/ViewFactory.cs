@@ -58,7 +58,8 @@ namespace GhostGen
                 Assert.IsNotNull(block.request.asset, "Asset: " + block.name + " couldn't be loaded!");
 
                 UIView prefab = (UIView)block.request.asset;
-                _assetCache.Add(block.name, prefab);
+                _assetCache[block.name] = prefab;
+
                 UIView view = _createView(prefab, block.parent);
                 Assert.IsNotNull(view);
             

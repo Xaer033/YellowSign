@@ -17,14 +17,14 @@ public class BasicTowerBrain : AbstractTowerBrain
 
     public override void FixedStep(Tower tower, FP fixedDeltaTime)
     {
-        switch(tower.behaviorState)
+        switch(tower.state.behaviorMode)
         {
-            case Tower.BehaviorState.SPAWNING:      _doSpawning(tower, fixedDeltaTime);     break;
-            case Tower.BehaviorState.IDLE:          _doIdling(tower, fixedDeltaTime);       break;
-            case Tower.BehaviorState.TARGETING:     _doTargeting(tower, fixedDeltaTime);    break;
-            case Tower.BehaviorState.VISUAL_ATTACK: _doVisualAttack(tower, fixedDeltaTime); break;
-            case Tower.BehaviorState.ATTACK:        _doAttack(tower, fixedDeltaTime);       break;
-            case Tower.BehaviorState.RECOVERING:    _doRecovering(tower, fixedDeltaTime);   break;
+            case TowerState.BehaviorMode.SPAWNING:      _doSpawning(tower, fixedDeltaTime);     break;
+            case TowerState.BehaviorMode.IDLE:          _doIdling(tower, fixedDeltaTime);       break;
+            case TowerState.BehaviorMode.TARGETING:     _doTargeting(tower, fixedDeltaTime);    break;
+            case TowerState.BehaviorMode.VISUAL_ATTACK: _doVisualAttack(tower, fixedDeltaTime); break;
+            case TowerState.BehaviorMode.ATTACK:        _doAttack(tower, fixedDeltaTime);       break;
+            case TowerState.BehaviorMode.RECOVERING:    _doRecovering(tower, fixedDeltaTime);   break;
         }
     }
 
@@ -32,7 +32,7 @@ public class BasicTowerBrain : AbstractTowerBrain
     {
         // Have tower view animate its spawning animation 
         tower.state.idleTimer = 0;
-        tower.behaviorState = Tower.BehaviorState.IDLE;
+        tower.state.behaviorMode = TowerState.BehaviorMode.IDLE;
     }
 
     private void _doIdling(Tower tower, FP fixedDeltaTime)
@@ -42,7 +42,7 @@ public class BasicTowerBrain : AbstractTowerBrain
         if(idleTimer <= 0)
         {
             tower.state.idleTimer = tower.stats.idleTime;
-            tower.behaviorState = Tower.BehaviorState.TARGETING;
+            tower.state.behaviorMode = TowerState.BehaviorMode.TARGETING;
         }
         else
         {
@@ -57,11 +57,11 @@ public class BasicTowerBrain : AbstractTowerBrain
         if(target != null && target.isValid)
         {
             tower.targetCreep = target;
-            tower.behaviorState = Tower.BehaviorState.VISUAL_ATTACK;
+            tower.state.behaviorMode = TowerState.BehaviorMode.VISUAL_ATTACK;
         }
         else
         {
-            tower.behaviorState = Tower.BehaviorState.IDLE;
+            tower.state.behaviorMode = TowerState.BehaviorMode.IDLE;
         }
     }
 
@@ -69,13 +69,13 @@ public class BasicTowerBrain : AbstractTowerBrain
     {
         if(tower.targetCreep != null && !tower.targetCreep.isValid)
         {
-            tower.behaviorState = Tower.BehaviorState.IDLE;
+            tower.state.behaviorMode = TowerState.BehaviorMode.IDLE;
             return;
         }
 
         // attack target creep    
         tower.state.attackTimer = tower.view.VisualAttack(tower.targetCreep.view);
-        tower.behaviorState = Tower.BehaviorState.ATTACK;
+        tower.state.behaviorMode = TowerState.BehaviorMode.ATTACK;
         
     }
 
@@ -95,7 +95,7 @@ public class BasicTowerBrain : AbstractTowerBrain
             AttackData attackData = tower.CreateAttackData();
             AttackResult attackResult = victim.TakeDamage(attackData);
             
-            tower.behaviorState = Tower.BehaviorState.RECOVERING;
+            tower.state.behaviorMode = TowerState.BehaviorMode.RECOVERING;
         }
     }
 
@@ -111,15 +111,15 @@ public class BasicTowerBrain : AbstractTowerBrain
             cooldownTimer = stats.reloadTime;
             if(!tower.targetCreep.isValid)
             {
-                tower.behaviorState = Tower.BehaviorState.TARGETING;
+                tower.state.behaviorMode = TowerState.BehaviorMode.TARGETING;
             }
             else if(TSVector.Distance(tower.view.position, tower.targetCreep.view.position) <= tower.state.range)
             {
-                tower.behaviorState = Tower.BehaviorState.VISUAL_ATTACK;
+                tower.state.behaviorMode = TowerState.BehaviorMode.VISUAL_ATTACK;
             }
             else
             {
-                tower.behaviorState = Tower.BehaviorState.IDLE;
+                tower.state.behaviorMode = TowerState.BehaviorMode.IDLE;
             }
         }
         state.reloadTimer = cooldownTimer;
@@ -164,7 +164,7 @@ public class BasicTowerBrain : AbstractTowerBrain
 
     private Creep getClosestCreep(Tower tower)
     {
-        FP minDistance = 99999;
+        FP minDistance = tower.stats.baseRange + 9999999;
         Creep target = null;
         List<Creep> creepList = creepSystem.GetCreepList();
 
@@ -178,8 +178,8 @@ public class BasicTowerBrain : AbstractTowerBrain
             }
 
             // Self explanitory
-            bool isPlayerCreep = c.ownerId == tower.ownerId;
-            if(isPlayerCreep)
+            bool isPlayerOwnedCreep = c.ownerId == tower.ownerId;
+            if(isPlayerOwnedCreep)
             {
                 continue;
             }
