@@ -293,7 +293,7 @@ namespace Pathfinding {
 
 			switch (heuristic) {
 			case Heuristic.Euclidean:
-				h = (uint)(((GetHTarget() - node.position).costMagnitude)*heuristicScale);
+				h = (uint)(((GetHTarget() - node.position).costMagnitude));
 				// Inlining this check and the return
 				// for each case saves an extra jump.
 				// This code is pretty hot
@@ -303,7 +303,7 @@ namespace Pathfinding {
 				return h;
 			case Heuristic.Manhattan:
 				Int3 p2 = node.position;
-				h = (uint)((System.Math.Abs(hTarget.x-p2.x) + System.Math.Abs(hTarget.y-p2.y) + System.Math.Abs(hTarget.z-p2.z))*heuristicScale);
+				h = (uint)((System.Math.Abs(hTarget.x-p2.x) + System.Math.Abs(hTarget.y-p2.y) + System.Math.Abs(hTarget.z-p2.z)));
 				if (hTargetNode != null) {
 					h = System.Math.Max(h, AstarPath.active.euclideanEmbedding.GetHeuristic(node.NodeIndex, hTargetNode.NodeIndex));
 				}
@@ -315,7 +315,7 @@ namespace Pathfinding {
 				p.z = System.Math.Abs(p.z);
 				int diag = System.Math.Min(p.x, p.z);
 				int diag2 = System.Math.Max(p.x, p.z);
-				h = (uint)((((14*diag)/10) + (diag2-diag) + p.y) * heuristicScale);
+				h = (uint)((((14*diag)/10) + (diag2-diag) + p.y));
 				if (hTargetNode != null) {
 					h = System.Math.Max(h, AstarPath.active.euclideanEmbedding.GetHeuristic(node.NodeIndex, hTargetNode.NodeIndex));
 				}

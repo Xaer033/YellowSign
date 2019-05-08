@@ -27,7 +27,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1078415216825356}
-  m_LocalRotation: {x: 0.5813501, y: -0, z: -0, w: 0.8136536}
+  m_LocalRotation: {x: 0.5813493, y: 0, z: 0, w: 0.8136541}
   m_LocalPosition: {x: 0, y: 0, z: -23.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -51,8 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0c17006d167114f879a925ea0af4c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 25000
-  drag: 15
+  speed: 27500
+  drag: 0.277
   edgeLimit: 10
 --- !u!20 &20577902682525880
 Camera:
@@ -78,7 +78,7 @@ Camera:
     height: 1
   near clip plane: 1
   far clip plane: 140.8
-  field of view: 51
+  field of view: 64.8
   orthographic: 0
   orthographic size: 4.8627324
   m_Depth: -1
@@ -121,12 +121,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   stopNaNPropagation: 1
-  antialiasingMode: 3
+  finalBlitToCameraTarget: 1
+  antialiasingMode: 1
   temporalAntialiasing:
-    jitterSpread: 0.779
-    sharpness: 0.32
-    stationaryBlending: 0.921
-    motionBlending: 0.408
+    jitterSpread: 0.705
+    sharpness: 0.2
+    stationaryBlending: 0.897
+    motionBlending: 0.223
   subpixelMorphologicalAntialiasing:
     quality: 2
   fastApproximateAntialiasing:

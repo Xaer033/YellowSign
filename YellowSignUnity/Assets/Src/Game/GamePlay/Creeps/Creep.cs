@@ -163,11 +163,6 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
             return;
         }
 
-        //if(TrueSyncManager.Time >= _nextRepath && _canSearchAgain)
-        //{
-        //    RecalculatePath();
-        //}
-
         TSVector pos = state.position;
         TSVector force = TSVector.zero;
         if (/*_canSearchAgain &&*/ _vectorPath != null && _vectorPath.Count != 0)
@@ -213,9 +208,8 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
                         state.position.ToVector(), 
                         _targetPosition.ToVector(), 
                         onPathComplete);
-
+        
         AstarPath.StartPath(result);
-
         return result;
     }
 

@@ -25,11 +25,11 @@ public class CameraMovement : MonoBehaviour
             playerSpawn = spawn;
             //playerNumber = spawn.playerNumber;
 
-            Rect temp = spawn.cameraLimit;
-            _worldLimit.x = Mathf.Min(temp.x, temp.width);
-            _worldLimit.width = Mathf.Max(temp.x, temp.width);
-            _worldLimit.y = Mathf.Min(temp.y, temp.height);
-            _worldLimit.height = Mathf.Max(temp.y, temp.height);
+            _worldLimit = spawn.cameraLimit;
+            //_worldLimit.x = Mathf.Min(temp.x, temp.width);
+            //_worldLimit.width = Mathf.Max(temp.x, temp.width);
+            //_worldLimit.y = Mathf.Min(temp.y, temp.height);
+            //_worldLimit.height = Mathf.Max(temp.y, temp.height);
             
             float pitch = transform.localEulerAngles.x;
 
@@ -53,6 +53,7 @@ public class CameraMovement : MonoBehaviour
 	void Awake ()
     {
         _acceleration = Vector3.zero;
+        _velocity = Vector3.zero;
 
         _camera = GetComponent<Camera>();
         _currentPos = transform.localPosition;
@@ -96,7 +97,7 @@ public class CameraMovement : MonoBehaviour
             return;
         }
 
-        Vector3 camPos = playerSpawn.cameraHook.position + transform.position;
+        Vector3 camPos = /*playerSpawn.cameraHook.position +*/ transform.position;
         
         int mouseX = (int)Input.mousePosition.x;
         int mouseY = (int)Input.mousePosition.y;
@@ -105,36 +106,35 @@ public class CameraMovement : MonoBehaviour
         //Debug.Log("CamPos: " + camPos);
         //Debug.Log("WorldLim: " + _worldLimit);
 
-        if(mouseX < edgeLimit)// && camPos.x > _worldLimit.x )
+        if(mouseX < edgeLimit && camPos.x > _worldLimit.x )
         {
             //Debug.Log("Left");
-            _acceleration.x = (-transform.right).x;
+            _acceleration.x = -(transform.right).x;
         }
-        else if(mouseX > Screen.width - edgeLimit)// && camPos.x < _worldLimit.width)
+        else if(mouseX > Screen.width - edgeLimit && camPos.x < _worldLimit.width)
         {
             //Debug.Log("Right");
             _acceleration.x = (transform.right).x;
         }
 
-        if(mouseY < edgeLimit)// && camPos.z > _worldLimit.y)
+        if(mouseY < edgeLimit && camPos.z > _worldLimit.height)
         {
             //Debug.Log("Back");
-            _acceleration.z = (-transform.forward).z;
+            _acceleration.z = -(transform.forward).z;
         }
-        else if (mouseY > Screen.height - edgeLimit)// && camPos.z < _worldLimit.height)
+        else if (mouseY > Screen.height - edgeLimit && camPos.z < _worldLimit.y)
         {
             //Debug.Log("Forward");
             _acceleration.z = (transform.forward).z;
         }
 
         float deltaTime = Time.fixedDeltaTime;
-        _acceleration = _acceleration.normalized * speed;
-        _currentPos = transform.localPosition + _velocity * deltaTime;
+        Vector3 dragForce = _velocity * -drag;
 
-        float dragForce = (1.0f - drag * deltaTime);
-        _velocity = (_velocity + _acceleration * deltaTime) * dragForce;
-        _velocity.y = 0;
-        
+        _acceleration = _acceleration.normalized * speed;
+        _velocity = _velocity + dragForce + (_acceleration * deltaTime);
+        _currentPos = transform.localPosition + (_velocity * deltaTime);
+
         _acceleration = Vector3.zero;
     }
 }

@@ -884,11 +884,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grids
       objectReference: {fileID: 0}
-    - target: {fileID: 114815490914342720, guid: 246f0cfa878885143b205c6afae978e4,
-        type: 3}
-      propertyPath: data.dataString
-      value: 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
-      objectReference: {fileID: 0}
     - target: {fileID: 4517876448255690, guid: 246f0cfa878885143b205c6afae978e4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -932,6 +927,46 @@ PrefabInstance:
     - target: {fileID: 4517876448255690, guid: 246f0cfa878885143b205c6afae978e4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114447457363183686, guid: 246f0cfa878885143b205c6afae978e4,
+        type: 3}
+      propertyPath: cameraLimit.y
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114447457363183686, guid: 246f0cfa878885143b205c6afae978e4,
+        type: 3}
+      propertyPath: cameraLimit.height
+      value: -44
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051966355856500, guid: 246f0cfa878885143b205c6afae978e4,
+        type: 3}
+      propertyPath: cameraLimit.y
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051966355856500, guid: 246f0cfa878885143b205c6afae978e4,
+        type: 3}
+      propertyPath: cameraLimit.height
+      value: -44
+      objectReference: {fileID: 0}
+    - target: {fileID: 5821191655717286638, guid: 246f0cfa878885143b205c6afae978e4,
+        type: 3}
+      propertyPath: cameraLimit.y
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5821191655717286638, guid: 246f0cfa878885143b205c6afae978e4,
+        type: 3}
+      propertyPath: cameraLimit.height
+      value: -44
+      objectReference: {fileID: 0}
+    - target: {fileID: 1024778485984307706, guid: 246f0cfa878885143b205c6afae978e4,
+        type: 3}
+      propertyPath: cameraLimit.y
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1024778485984307706, guid: 246f0cfa878885143b205c6afae978e4,
+        type: 3}
+      propertyPath: cameraLimit.height
+      value: -44
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 246f0cfa878885143b205c6afae978e4, type: 3}
@@ -1693,7 +1728,7 @@ MonoBehaviour:
   _installerPrefabs: []
   _scriptableObjectInstallers: []
   _autoRun: 1
-  _parentNewObjectsUnderRoot: 0
+  _parentNewObjectsUnderRoot: 1
   _contractNames: []
   _parentContractNames: []
 --- !u!4 &741845448
@@ -3744,27 +3779,7 @@ PrefabInstance:
     - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
         type: 3}
       propertyPath: antialiasingMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
-        type: 3}
-      propertyPath: temporalAntialiasing.jitterSpread
-      value: 0.705
-      objectReference: {fileID: 0}
-    - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
-        type: 3}
-      propertyPath: temporalAntialiasing.sharpness
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
-        type: 3}
-      propertyPath: temporalAntialiasing.stationaryBlending
-      value: 0.897
-      objectReference: {fileID: 0}
-    - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
-        type: 3}
-      propertyPath: temporalAntialiasing.motionBlending
-      value: 0.223
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
@@ -3779,7 +3794,7 @@ PrefabInstance:
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -49.7
+      value: -48.5
       objectReference: {fileID: 0}
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
@@ -3824,7 +3839,7 @@ PrefabInstance:
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -0.2
       objectReference: {fileID: 0}
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
@@ -3870,11 +3885,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 20577902682525880, guid: e61e7243322a37b428e92da265080831,
-        type: 3}
-      propertyPath: field of view
-      value: 64.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e61e7243322a37b428e92da265080831, type: 3}
