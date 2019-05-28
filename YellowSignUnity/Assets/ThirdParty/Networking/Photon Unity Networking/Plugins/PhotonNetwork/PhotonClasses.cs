@@ -1305,7 +1305,7 @@ public class PhotonStream
 #endif
 
 
-#if !UNITY_MIN_5_3  && ! UNITY_2017 && !UNITY_2018
+#if !UNITY_MIN_5_3  && ! UNITY_2017 && !UNITY_2018 && !UNITY_2019
 // in Unity 5.3 and up, we have to use a SceneManager. This section re-implements it for older Unity versions
 
 #if UNITY_EDITOR
