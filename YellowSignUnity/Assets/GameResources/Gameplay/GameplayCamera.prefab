@@ -27,7 +27,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1078415216825356}
-  m_LocalRotation: {x: 0.5813501, y: -0, z: -0, w: 0.8136536}
+  m_LocalRotation: {x: 0.5813493, y: 0, z: 0, w: 0.8136541}
   m_LocalPosition: {x: 0, y: 0, z: -23.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -66,9 +66,10 @@ Camera:
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_GateFitMode: 2
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -78,7 +79,7 @@ Camera:
     height: 1
   near clip plane: 1
   far clip plane: 140.8
-  field of view: 51
+  field of view: 64.8
   orthographic: 0
   orthographic size: 4.8627324
   m_Depth: -1
@@ -121,12 +122,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   stopNaNPropagation: 1
-  antialiasingMode: 3
+  finalBlitToCameraTarget: 0
+  antialiasingMode: 1
   temporalAntialiasing:
-    jitterSpread: 0.779
-    sharpness: 0.32
-    stationaryBlending: 0.921
-    motionBlending: 0.408
+    jitterSpread: 0.705
+    sharpness: 0.2
+    stationaryBlending: 0.897
+    motionBlending: 0.223
   subpixelMorphologicalAntialiasing:
     quality: 2
   fastApproximateAntialiasing:

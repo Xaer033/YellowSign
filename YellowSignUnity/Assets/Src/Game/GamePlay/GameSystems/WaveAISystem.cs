@@ -4,7 +4,8 @@ using UnityEngine;
 using GhostGen;
 using TrueSync;
 
-public class WaveAISystem : EventDispatcher
+public class 
+    WaveAISystem : EventDispatcher
 {
     public enum State
     {
@@ -72,7 +73,7 @@ public class WaveAISystem : EventDispatcher
         switch(_waveState)
         {
             case State.INIT:                        return introState(dt);
-            case State.INIT_TO_BEGIN_WAVE:          return introToBeginWaveState(dt);
+            case State.INIT_TO_BEGIN_WAVE:          return introToBegintoWaveState(dt);
             case State.BEGIN_WAVE:                  return beginWaveState(dt);
             case State.BEGIN_WAVE_TO_END_WAVE:      return beginWaveToEndWaveState(dt);
             case State.END_WAVE:                    return endWaveState(dt);
@@ -88,11 +89,11 @@ public class WaveAISystem : EventDispatcher
         return true;
     }
 
-    private bool introToBeginWaveState(FP dt)
+    private bool introToBegintoWaveState(FP dt)
     {
         _waveSpawner.AddListener(GameplayEventType.WAVE_COMPLETE, onWaveSpawnerComplete);
         WaveInfo waveInfo = _waveSequence.GetWaveInfo(_sequenceIndex);
-        //_waveSpawner.AddWave()
+        //_waveSpawner.AddWave()to
         return true;
     }
 

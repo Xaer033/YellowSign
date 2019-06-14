@@ -10,7 +10,7 @@ public class IntroState : IGameState
     private NetworkManager _networkManager;
     private GuiManager _gui;
 
-    private int _playersTemp = 2;
+    private int _playersTemp = 1;
 
     public IntroState(
         NetworkManager networkManager,
@@ -40,7 +40,7 @@ public class IntroState : IGameState
 		if (_gotoMainMenu) 
 		{
             Hashtable table = new Hashtable();
-            table["sceneName"] = "GameSceneMultiplayer"; //(_playersTemp == 1) ? "GameSceneSingleplayer" : "GameSceneMultiplayer";
+            table["sceneName"] = (_playersTemp == 1) ? "GameSceneSingleplayer" : "GameSceneMultiplayer";
             _gameStateMachine.ChangeState(YellowSignStateType.LOAD_GAMEPLAY, table);
             _gotoMainMenu = false;
 		}
@@ -55,7 +55,7 @@ public class IntroState : IGameState
         _networkManager.onCustomEvent -= OnCustomEvent;
     }
 
-    void OnJoinedLobby()
+    private void OnJoinedLobby()
     {
         RoomOptions options = new RoomOptions();
         PhotonNetwork.JoinOrCreateRoom("Poop", options, TypedLobby.Default);

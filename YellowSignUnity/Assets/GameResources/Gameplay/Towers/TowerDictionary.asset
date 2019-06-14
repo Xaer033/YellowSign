@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -17,7 +18,7 @@ MonoBehaviour:
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 3f81046e8de9f2845b03b69f8c2e6206, type: 2}
     - {fileID: 11400000, guid: c04e5e02788b3d640b37b32ed4a06cc9, type: 2}
-    - {fileID: 114006405693211276, guid: 79af4031cb68b4346adf3d0b54065725, type: 2}
+    - {fileID: 114006405693211276, guid: 79af4031cb68b4346adf3d0b54065725, type: 3}
     - {fileID: 21300000, guid: a446d5c8ad5be8942953f41619edd07a, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -48,8 +49,8 @@ MonoBehaviour:
       Entry: 7
       Data: 2|TowerDef, Assembly-CSharp
     - Name: id
-      Entry: 1
-      Data: basic_tower
+      Entry: 6
+      Data: 
     - Name: brain
       Entry: 10
       Data: 0
