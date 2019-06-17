@@ -1305,7 +1305,7 @@ PrefabInstance:
     - target: {fileID: 224834588004288176, guid: b9dfacd79dad72c4b897ef47d9cbd10c,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 86.600006
+      value: 86.5
       objectReference: {fileID: 0}
     - target: {fileID: 224834588004288176, guid: b9dfacd79dad72c4b897ef47d9cbd10c,
         type: 3}
@@ -9004,7 +9004,7 @@ Camera:
   m_GameObject: {fileID: 2017715999}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 3
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -9026,8 +9026,8 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1537
-  m_RenderingPath: 0
+    m_Bits: 4294967295
+  m_RenderingPath: 1
   m_TargetTexture: {fileID: 8600000, guid: da1d6a1656af5164cbe5187cce39713a, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3

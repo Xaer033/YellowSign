@@ -30,7 +30,8 @@ public class GameInstaller : ScriptableObjectInstaller
         Container.Bind<WaveAISystem>().AsSingle();
         Container.Bind<CreepViewSystem>().AsSingle();
         Container.Bind<WaveSpawnerSystem>().AsSingle();
-        Container.Bind<GameSystemManager>().AsSingle();
+        Container.Bind<MultiplayerGameSystemManager>().AsSingle();
+        Container.Bind<SingleplayerGameSystemManager>().AsSingle();
         Container.Bind<CreepSystem>().AsSingle();
         Container.Bind<TowerSystem>().AsSingle();
         Container.Bind<TowerDictionary>().FromInstance(towerDictionary).AsSingle();

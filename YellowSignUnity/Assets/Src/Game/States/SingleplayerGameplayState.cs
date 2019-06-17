@@ -16,13 +16,13 @@ public class SingleplayerGameplayState : IGameState
     private GameplayResources _gameplayResources;
     private GuiManager _guiManager;
     private SyncStepper _commander;
-    private GameSystemManager _gameSystems;
+    private SingleplayerGameSystemManager _gameSystemManager;
     //private SyncStepper.Factory _syncFactory;
    
     public SingleplayerGameplayState(
         [Inject(Id = GameInstaller.GLOBAL_DISPATCHER)]
         IEventDispatcher notificationDispatcher,
-        GameSystemManager gameSystems,
+        SingleplayerGameSystemManager gameSystemManager,
         GameplayResources gameplayResources,
         GuiManager guiManager,
         SyncStepper.Factory syncFactory)
@@ -30,7 +30,7 @@ public class SingleplayerGameplayState : IGameState
         _notificationDispatcher = notificationDispatcher;
         _gameplayResources      = gameplayResources;       
         _guiManager     = guiManager;
-        _gameSystems    = gameSystems;
+        _gameSystemManager    = gameSystemManager;
     }
 
     public void Init(Hashtable changeStateData)
@@ -46,7 +46,7 @@ public class SingleplayerGameplayState : IGameState
         _playerController.playerSpawn = playerSpawn;
         _playerController.SetCurrentTower("basic_tower");
         
-        _gameSystems.Initialize();
+        _gameSystemManager.Initialize();
 
         _hudController = new PlayerHudController(_playerController);
         _hudController.Start(() =>
@@ -65,7 +65,7 @@ public class SingleplayerGameplayState : IGameState
     public void Exit()
     {
         _playerController.CleanUp();
-        _gameSystems.CleanUp();
+        _gameSystemManager.CleanUp();
         
         TrueSyncManager.EndSimulation();
         TrueSyncManager.CleanUp();

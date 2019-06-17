@@ -49,8 +49,8 @@ MonoBehaviour:
       Entry: 7
       Data: 2|TowerDef, Assembly-CSharp
     - Name: id
-      Entry: 6
-      Data: 
+      Entry: 1
+      Data: basic_tower
     - Name: brain
       Entry: 10
       Data: 0

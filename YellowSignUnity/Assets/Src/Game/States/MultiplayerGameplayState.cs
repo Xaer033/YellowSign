@@ -18,7 +18,7 @@ public class MultiplayerGameplayState : IGameState
     private GameplayResources _gameplayResources;
     private GuiManager _guiManager;
     private SyncStepper _commander;
-    private GameSystemManager _gameSystems;
+    private MultiplayerGameSystemManager _gameSystemManager;
     //private SyncStepper.Factory _syncFactory;
    
 
@@ -26,18 +26,18 @@ public class MultiplayerGameplayState : IGameState
     public MultiplayerGameplayState(
         [Inject(Id = GameInstaller.GLOBAL_DISPATCHER)]
         IEventDispatcher notificationDispatcher,
-        GameSystemManager gameSystems,
+        MultiplayerGameSystemManager gameSystemManager,
         GameplayResources gameplayResources,
         GuiManager guiManager,
         SyncStepper.Factory syncFactory)
     {
         _notificationDispatcher = notificationDispatcher;
         _gameplayResources      = gameplayResources;       
-        _guiManager     = guiManager;
-        _gameSystems    = gameSystems;
+        _guiManager             = guiManager;
+        _gameSystemManager      = gameSystemManager;
     }
 
-    public void Init(Hashtable changeStateData)
+    public void Init(Hashtable changeStateData)    
     {
         _initialize();
     }
@@ -75,7 +75,7 @@ public class MultiplayerGameplayState : IGameState
             
         }
 
-        _gameSystems.Initialize();
+        _gameSystemManager.Initialize();
         
         _guiManager.screenFader.FadeIn(0.5f);
 
@@ -94,7 +94,7 @@ public class MultiplayerGameplayState : IGameState
             _playerList[i].CleanUp();
         }
 
-        _gameSystems.CleanUp();
+        _gameSystemManager.CleanUp();
         
         TrueSyncManager.EndSimulation();
         TrueSyncManager.CleanUp();

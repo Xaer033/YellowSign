@@ -6,6 +6,7 @@ using UnityEngine.Assertions;
 [System.Serializable]
 public struct WaveInfo
 {
+    
     public string creepId;
     public int count;
 }
@@ -21,5 +22,10 @@ public class WaveSequence : ScriptableObject
     {
         Assert.IsTrue(index >= 0 && index < sequenceList.Count);
         return sequenceList[index];
+    }
+
+    public int waveCount
+    {
+        get { return sequenceList.Count; }
     }
 }

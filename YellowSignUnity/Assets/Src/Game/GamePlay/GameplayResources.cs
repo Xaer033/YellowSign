@@ -10,5 +10,6 @@ public class GameplayResources : ScriptableObject
 
     public CreepHealthUIView creepHealthUIPrefab;
     public CreepUIItemView creepUIItemPrefab;
-    public TowerHighlighter highlighterPrefab; 
+    public TowerHighlighter highlighterPrefab;
+    public WaveSequence waveSequence;
 }

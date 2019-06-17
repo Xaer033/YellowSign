@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using TrueSync;
 using UnityEngine;
-using Zenject;
 
 public class Commander : TrueSyncBehaviour
 {
@@ -90,7 +89,7 @@ public class Commander : TrueSyncBehaviour
         while(_commandQueue.Count > 0)
         {
             ICommand ct = _commandQueue.Dequeue();
-            Debug.Log("Submit command: " + ct.commandType);
+           // Debug.Log("Submit command: " + ct.commandType);
 
             TrueSyncInput.SetByte(iterKey++, (byte)ct.commandType);
             byte[] byteCommand = CommandFactory.ToByteArray(ct);
@@ -107,7 +106,7 @@ public class Commander : TrueSyncBehaviour
         for (int i = 0; i < commandCount; ++i) 
         {
             CommandType type = (CommandType)TrueSyncInput.GetByte(ownerId, iterKey++);
-            Debug.Log("Consumbed command: " + type.ToString());
+            //Debug.Log("Consuming command: " + type.ToString());
             byte[] byteCommand = TrueSyncInput.GetByteArray(ownerId, iterKey++);
             ICommand command = CommandFactory.CreateFromByteArray(type, byteCommand);
 

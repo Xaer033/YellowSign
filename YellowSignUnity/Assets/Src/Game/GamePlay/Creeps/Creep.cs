@@ -187,8 +187,9 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
                 force = dirNormalized * _speed;
                 force = force * (1 - fixedDeltaTime * _drag);
 
-                Quaternion rot = Quaternion.LookRotation(dirNormalized.ToVector(), Vector3.up);
-                state.rotation = new TSQuaternion(rot.x, rot.y, rot.z, rot.w);
+                //Quaternion rot = Quaternion.LookRotation(dirNormalized.ToVector(), Vector3.up);
+                TSQuaternion rot = TSQuaternion.LookRotation(dirNormalized, TSVector.up);
+                state.rotation = rot;//new TSQuaternion(rot.x, rot.y, rot.z, rot.w);
 
                 if((pos - _vectorPath[_vectorPath.Count - 1]).sqrMagnitude < 2)
                 {
@@ -199,6 +200,8 @@ public class Creep : EventDispatcher, IAttacker, IAttackTarget
             else
             {
                 Debug.Log("Seems to be in a bad way...Explode to damage nearby towers");
+                flagForRemoval = true;
+                reachedTarget = true;
             }
         }
 

@@ -36,6 +36,6 @@ public class LoadGameplayState : IGameState
     private void OnGameStart(GeneralEvent e)
     {
         _notificationDispatcher.RemoveListener(GameplayEventType.GAME_START, OnGameStart);
-        _gameStateMachine.ChangeState(YellowSignStateType.MULTIPLAYER_GAMEPLAY);
+        _gameStateMachine.ChangeState(YellowSignStateType.SINGLEPLAYER_GAMEPLAY);
     }
 }

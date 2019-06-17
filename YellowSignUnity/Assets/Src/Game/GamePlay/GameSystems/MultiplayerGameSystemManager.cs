@@ -7,7 +7,7 @@ using Zenject;
 using TrueSync;
 using ExitGames.Client.Photon;
 
-public class GameSystemManager : EventDispatcher
+public class MultiplayerGameSystemManager : EventDispatcher
 {
     private GameState _gameState;
     private TowerSystem _towerSystem;
@@ -21,7 +21,7 @@ public class GameSystemManager : EventDispatcher
     [Inject]
     private NetworkManager _networkManager;
 
-    [Inject]
+//    [Inject]
     private WaveAISystem _waveAISystem;
 
     [Inject]
@@ -29,13 +29,14 @@ public class GameSystemManager : EventDispatcher
 
     private Dictionary<int, Dictionary<int, string>> _checksumMap;
 
-    public GameSystemManager(
+    public MultiplayerGameSystemManager(
         GameState gameState,
         TowerSystem towerSystem,
         CreepSystem creepSystem,
         CreepViewSystem creepViewSystem,
         CreepHealthUISystem creepHealthUISystem,
         WaveSpawnerSystem waveSpawnerSystem,
+        WaveAISystem waveAISystem,
         SyncStepper.Factory syncFactory)
     {
         _gameState = gameState;
@@ -44,6 +45,7 @@ public class GameSystemManager : EventDispatcher
         _creepViewSystem = creepViewSystem;
         _creepHealthUISystem = creepHealthUISystem;
         _waveSpawnerSystem = waveSpawnerSystem;
+        _waveAISystem = waveAISystem;
         _syncFactory = syncFactory;
 
         _checksumMap = new Dictionary<int, Dictionary<int, string>>();

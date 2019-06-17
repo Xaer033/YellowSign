@@ -259,35 +259,48 @@ public class PlayerController : MonoBehaviour
 
     private void spawnCreeps(byte ownerId, SpawnCreepCommand command)
     {
-        TSQuaternion rotation = TSQuaternion.Euler(0, 180, 0);
-
-        for(var i = 0; i < _enemyGridList.Count; ++i)
+        // TODO: do this better...
+        if (PhotonNetwork.countOfPlayers == 1)
         {
-            Grid enemyGrid = _enemyGridList[i];
+            addWave(_myGrid, ownerId, command);
+        }
+        else
+        {
+            for(var i = 0; i < _enemyGridList.Count; ++i)
+            {
+                Grid enemyGrid = _enemyGridList[i];
 
-            Transform spawnPoint = enemyGrid.spawnPoint;
-            TSVector startingPos = spawnPoint.position.ToTSVector();
-            TSVector targetPos = enemyGrid.target.transform.position.ToTSVector();
-
-            byte targetOwnerId = (byte)enemyGrid.playerNumber;
-
-            CreepSpawnInfo spawnInfo = CreepSpawnInfo.Create(
-                ownerId,
-                startingPos,
-                rotation,
-                targetOwnerId,
-                targetPos);
-
-            SpawnWaveInfo wave = new SpawnWaveInfo();
-            wave.betweenSpawnDelay = 0.5;
-            wave.spawnCommand = command;
-            wave.spawnInfo = spawnInfo;
-
-            _waveSpawnerSystem.AddWave(wave);
-            Debug.Log("Adding Wave from: " + ownerId + ", to " + targetOwnerId);
+                addWave(enemyGrid, ownerId, command);
+            }
         }
     }
 
+    private void addWave(Grid grid, byte ownerId, SpawnCreepCommand command)
+    {
+        TSQuaternion rotation = TSQuaternion.Euler(0, 180, 0);
+
+        Transform spawnPoint = grid.spawnPoint;
+        TSVector startingPos = spawnPoint.position.ToTSVector();
+        TSVector targetPos = grid.target.position.ToTSVector();
+
+        byte targetOwnerId = (byte)grid.playerNumber;
+
+        CreepSpawnInfo spawnInfo = CreepSpawnInfo.Create(
+            ownerId,
+            startingPos,
+            rotation,
+            targetOwnerId,
+            targetPos);
+
+        SpawnWaveInfo wave = new SpawnWaveInfo();
+        wave.betweenSpawnDelay = 0.5;
+        wave.spawnCommand = command;
+        wave.spawnInfo = spawnInfo;
+
+        _waveSpawnerSystem.AddWave(wave);
+        Debug.Log("Adding Wave from: " + ownerId + ", to " + targetOwnerId);
+    }
+    
     private void buildTower(byte ownerId, BuildTowerCommand command)
     {
         if(_myGrid.CanBuildTowerAtPos(command.position))

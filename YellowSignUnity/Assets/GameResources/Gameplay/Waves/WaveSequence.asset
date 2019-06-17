@@ -4,17 +4,18 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4df1a237767bdcd4fbe2fecf251c5c84, type: 3}
   m_Name: WaveSequence
   m_EditorClassIdentifier: Assembly-CSharp::WaveSequence
-  prepareTime: 5
-  intervalTime: 10
+  prepareTime: 3
+  intervalTime: 2
   sequenceList:
   - creepId: basic_creep
-    count: 20
-  - creepId: basic_creep
-    count: 25
+    count: 5
+  - creepId: advance_creep
+    count: 5
