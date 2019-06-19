@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ModestTree;
 using TrueSync;
 using UnityEngine;
 using Zenject;
@@ -28,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private Camera _camera;
     private PlayerSpawn _playerSpawn;
     private PlayerHudController _hudController;
+    private ActorSelector _actorSelector;
+    private int _selectionMask;
     
     public PlayerControlState controlState { get; set; }
     
@@ -69,13 +72,18 @@ public class PlayerController : MonoBehaviour
     {
         Singleton.instance.diContainer.InjectGameObject(gameObject);
         controlState = PlayerControlState.TOWER_BUILDER;
-        
+
         _commander = GetComponent<Commander>();
         _commander.onCommandExecute += OnCommandExecute;
         _commander.onSyncedStep += OnSyncStep;
         _commander.onSyncStartLocalPlayer += OnSyncStartLocalPlayer;
+
+        byte ownerId = _commander.localOwner.Id;
+        Debug.Log("Owner: " + ownerId);
+
+        _actorSelector = new ActorSelector(ownerId, 25);
         
-        Debug.Log("Owner: " + _commander.localOwner.Id);
+        _selectionMask = LayerMask.GetMask(new []{"tower"});
     }
 
     public void CleanUp()
@@ -221,6 +229,16 @@ public class PlayerController : MonoBehaviour
                 ICommand command = new BuildTowerCommand(_currentTowerId, pos);
                 _commander.AddCommand(command);
                 _towerBlocker.Add(pos); // Prevents trying to add multiple towers to the same spot before next sync Update
+            }
+            else
+            {
+                ITowerView towerView;
+                bool foundTower = _actorSelector.CheckPickSelection<ITowerView>(ray, _selectionMask, out towerView);
+                if (foundTower)
+                {
+                    Debug.Log("TowerView" + towerView.tower.ownerId);
+                }
+
             }
         }
 

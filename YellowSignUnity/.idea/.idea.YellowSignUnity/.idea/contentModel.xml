@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Xaer0\.Rider2019.1\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Xaer0\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_YellowSignUnity.437881167.00" t="ExcludeRecursive" />
-    <e p="S:\GameDev\Projects\YellowSign\YellowSignUnity" t="IncludeRecursive">
+    <e p="$USER_HOME$/.Rider2019.1/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.1/system/resharper-host/local/Transient/ReSharperHost/v191/SolutionCaches/_YellowSignUnity.-1110797302.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="changelog.txt" t="Include" />
         <e p="GameResources" t="Include">
           <e p="Art(Depricated)" t="Include">
             <e p="Day-Night Skyboxes" t="Include">
-              <e p="readme.txt" t="Include" />
               <e p="Textures" t="Include">
                 <e p="Readme for Assigning.txt" t="Include" />
               </e>
+              <e p="readme.txt" t="Include" />
             </e>
           </e>
         </e>
         <e p="Src" t="Include">
           <e p="Game" t="Include">
+            <e p="GUI" t="Include">
+              <e p="CreepSpawnerView.cs" t="Include" />
+              <e p="CreepUIItemView.cs" t="Include" />
+              <e p="MainMenuController.cs" t="Include" />
+              <e p="MainMenuView.cs" t="Include" />
+              <e p="PlayerHudController.cs" t="Include" />
+              <e p="PlayerHudView.cs" t="Include" />
+              <e p="StarScapeView.cs" t="Include" />
+            </e>
             <e p="GameFoundations" t="Include">
               <e p="BaseController.cs" t="Include" />
               <e p="GameConfig.cs" t="Include" />
@@ -37,8 +45,8 @@
                 <e p="AttackResult.cs" t="Include" />
                 <e p="AttackType.cs" t="Include" />
                 <e p="DamageType.cs" t="Include" />
-                <e p="IAttacker.cs" t="Include" />
                 <e p="IAttackTarget.cs" t="Include" />
+                <e p="IAttacker.cs" t="Include" />
               </e>
               <e p="Camera" t="Include">
                 <e p="CameraMovement.cs" t="Include" />
@@ -65,8 +73,6 @@
                   <e p="ICreepView.cs" t="Include" />
                 </e>
               </e>
-              <e p="GameplayEventType.cs" t="Include" />
-              <e p="GameplayResources.cs" t="Include" />
               <e p="GameState.cs" t="Include" />
               <e p="GameSystems" t="Include">
                 <e p="CreepHealthUISystem.cs" t="Include" />
@@ -80,11 +86,15 @@
                 <e p="WaveSpawnerSystem.cs" t="Include" />
               </e>
               <e p="GameTimer.cs" t="Include" />
+              <e p="GameplayEventType.cs" t="Include" />
+              <e p="GameplayResources.cs" t="Include" />
               <e p="Grid" t="Include">
                 <e p="Grid.cs" t="Include" />
                 <e p="GridPosition.cs" t="Include" />
               </e>
+              <e p="IActor.cs" t="Include" />
               <e p="Player" t="Include">
+                <e p="ActorSelector.cs" t="Include" />
                 <e p="Commander.cs" t="Include" />
                 <e p="PlayerController.cs" t="Include" />
                 <e p="PlayerSpawn.cs" t="Include" />
@@ -113,15 +123,6 @@
               <e p="Waves" t="Include">
                 <e p="WaveSequence.cs" t="Include" />
               </e>
-            </e>
-            <e p="GUI" t="Include">
-              <e p="CreepSpawnerView.cs" t="Include" />
-              <e p="CreepUIItemView.cs" t="Include" />
-              <e p="MainMenuController.cs" t="Include" />
-              <e p="MainMenuView.cs" t="Include" />
-              <e p="PlayerHudController.cs" t="Include" />
-              <e p="PlayerHudView.cs" t="Include" />
-              <e p="StarScapeView.cs" t="Include" />
             </e>
             <e p="States" t="Include">
               <e p="IntroState.cs" t="Include" />
@@ -180,7 +181,6 @@
               <e p="AIDestinationSetter.cs" t="Include" />
               <e p="Patrol.cs" t="Include" />
             </e>
-            <e p="changelog.cs" t="Include" />
             <e p="Core" t="Include">
               <e p="AI" t="Include">
                 <e p="AIBase.cs" t="Include" />
@@ -193,7 +193,6 @@
                 <e p="Seeker.cs" t="Include" />
                 <e p="TurnBasedAI.cs" t="Include" />
               </e>
-              <e p="astarclasses.cs" t="Include" />
               <e p="AstarData.cs" t="Include" />
               <e p="AstarMath.cs" t="Include" />
               <e p="AstarPath.cs" t="Include" />
@@ -247,6 +246,7 @@
                 <e p="TinyJson.cs" t="Include" />
               </e>
               <e p="VersionedMonoBehaviour.cs" t="Include" />
+              <e p="astarclasses.cs" t="Include" />
             </e>
             <e p="Editor" t="Include">
               <e p="AIBaseEditor.cs" t="Include" />
@@ -282,19 +282,19 @@
               </e>
               <e p="NavmeshCutEditor.cs" t="Include" />
               <e p="OptimizationHandler.cs" t="Include" />
-              <e p="RecastMeshObjEditor.cs" t="Include" />
               <e p="RVOControllerEditor.cs" t="Include" />
               <e p="RVONavmeshEditor.cs" t="Include" />
               <e p="RVOSimulatorEditor.cs" t="Include" />
               <e p="RVOSquareObstacleEditor.cs" t="Include" />
+              <e p="RecastMeshObjEditor.cs" t="Include" />
               <e p="SeekerEditor.cs" t="Include" />
             </e>
             <e p="Generators" t="Include">
               <e p="Base.cs" t="Include" />
               <e p="GridGenerator.cs" t="Include" />
               <e p="LayerGridGraphGenerator.cs" t="Include" />
-              <e p="NavmeshBase.cs" t="Include" />
               <e p="NavMeshGenerator.cs" t="Include" />
+              <e p="NavmeshBase.cs" t="Include" />
               <e p="NodeClasses" t="Include">
                 <e p="GridNode.cs" t="Include" />
                 <e p="GridNodeBase.cs" t="Include" />
@@ -333,15 +333,14 @@
               <e p="Editor" t="Include">
                 <e p="LegacyAIPathEditor.cs" t="Include" />
                 <e p="LegacyEditorHelper.cs" t="Include" />
-                <e p="LegacyRichAIEditor.cs" t="Include" />
                 <e p="LegacyRVOControllerEditor.cs" t="Include" />
+                <e p="LegacyRichAIEditor.cs" t="Include" />
               </e>
               <e p="LegacyAIPath.cs" t="Include" />
-              <e p="LegacyRichAI.cs" t="Include" />
               <e p="LegacyRVOController.cs" t="Include" />
+              <e p="LegacyRichAI.cs" t="Include" />
               <e p="MiscLegacy.cs" t="Include" />
             </e>
-            <e p="link.xml" t="Include" />
             <e p="Modifiers" t="Include">
               <e p="AdvancedSmooth.cs" t="Include" />
               <e p="AlternativePath.cs" t="Include" />
@@ -380,16 +379,14 @@
               <e p="Clipper" t="Include">
                 <e p="ClipperLicense.txt" t="Include" />
               </e>
-              <e p="dependencies.txt" t="Include" />
               <e p="DotNetZip" t="Include">
                 <e p="DotNetZipLicense.txt" t="Include" />
               </e>
               <e p="Poly2Tri" t="Include">
                 <e p="Poly2TriLicense.txt" t="Include" />
               </e>
+              <e p="dependencies.txt" t="Include" />
             </e>
-            <e p="readme.txt" t="Include" />
-            <e p="Readme_upgrading.txt" t="Include" />
             <e p="RVO" t="Include">
               <e p="RVOController.cs" t="Include" />
               <e p="RVONavmesh.cs" t="Include" />
@@ -397,6 +394,8 @@
               <e p="RVOSimulator.cs" t="Include" />
               <e p="RVOSquareObstacle.cs" t="Include" />
             </e>
+            <e p="Readme.txt" t="Include" />
+            <e p="Readme_upgrading.txt" t="Include" />
             <e p="TurnBased" t="Include">
               <e p="BlockManager.cs" t="Include" />
               <e p="SingleNodeBlocker.cs" t="Include" />
@@ -417,12 +416,8 @@
               <e p="RetainedGizmos.cs" t="Include" />
               <e p="UnityReferenceHelper.cs" t="Include" />
             </e>
-          </e>
-          <e p="codeandweb.com" t="Include">
-            <e p="Editor" t="Include">
-              <e p="SettingsTexturePackerImporter.txt" t="Include" />
-            </e>
-            <e p="readme.txt" t="Include" />
+            <e p="changelog.cs" t="Include" />
+            <e p="link.xml" t="Include" />
           </e>
           <e p="DOTween" t="Include">
             <e p="DOTween43.xml" t="Include" />
@@ -439,7 +434,6 @@
           </e>
           <e p="Networking" t="Include">
             <e p="Photon Unity Networking" t="Include">
-              <e p="changelog.txt" t="Include" />
               <e p="Editor" t="Include">
                 <e p="PhotonNetwork" t="Include">
                   <e p="AccountService.cs" t="Include" />
@@ -462,7 +456,6 @@
                   </e>
                 </e>
               </e>
-              <e p="link.xml" t="Include" />
               <e p="Plugins" t="Include">
                 <e p="PhotonNetwork" t="Include">
                   <e p="CustomTypes.cs" t="Include" />
@@ -481,9 +474,9 @@
                   <e p="PhotonStreamQueue.cs" t="Include" />
                   <e p="PhotonView.cs" t="Include" />
                   <e p="PingCloudRegions.cs" t="Include" />
+                  <e p="RPC.cs" t="Include" />
                   <e p="Room.cs" t="Include" />
                   <e p="RoomInfo.cs" t="Include" />
-                  <e p="RPC.cs" t="Include" />
                   <e p="RpcIndexComponent.cs" t="Include" />
                   <e p="ServerSettings.cs" t="Include" />
                   <e p="SocketUdp.cs" t="Include" />
@@ -502,15 +495,14 @@
                   </e>
                 </e>
               </e>
-              <e p="readme.txt" t="Include" />
               <e p="UtilityScripts" t="Include">
                 <e p="ConnectAndJoinRandom.cs" t="Include" />
                 <e p="CullArea.cs" t="Include" />
                 <e p="HighlightOwnedGameObj.cs" t="Include" />
-                <e p="InputToEvent.cs" t="Include" />
                 <e p="InRoomChat.cs" t="Include" />
                 <e p="InRoomRoundTimer.cs" t="Include" />
                 <e p="InRoomTime.cs" t="Include" />
+                <e p="InputToEvent.cs" t="Include" />
                 <e p="ManualPhotonViewAllocator.cs" t="Include" />
                 <e p="MoveByKeys.cs" t="Include" />
                 <e p="NetworkCullingHandler.cs" t="Include" />
@@ -547,6 +539,9 @@
                   <e p="TextToggleIsOnTransition.cs" t="Include" />
                 </e>
               </e>
+              <e p="changelog.txt" t="Include" />
+              <e p="link.xml" t="Include" />
+              <e p="readme.txt" t="Include" />
             </e>
             <e p="TrueSync" t="Include">
               <e p="Engine" t="Include">
@@ -570,7 +565,6 @@
                 <e p="TrueSyncExtensions.cs" t="Include" />
                 <e p="TrueSyncInput.cs" t="Include" />
               </e>
-              <e p="link.xml" t="Include" />
               <e p="Physics" t="Include">
                 <e p="Farseer" t="Include">
                   <e p="Collision" t="Include">
@@ -741,8 +735,8 @@
                     <e p="JointFactory.cs" t="Include" />
                     <e p="LinkFactory.cs" t="Include" />
                   </e>
-                  <e p="license.txt" t="Include" />
                   <e p="Settings.cs" t="Include" />
+                  <e p="license.txt" t="Include" />
                 </e>
                 <e p="IBody2D.cs" t="Include" />
                 <e p="IBody3D.cs" t="Include" />
@@ -816,32 +810,29 @@
                     </e>
                   </e>
                   <e p="IDebugDraw.cs" t="Include" />
-                  <e p="license.txt" t="Include" />
                   <e p="LinearMath" t="Include">
                     <e p="TSBBox.cs" t="Include" />
                     <e p="TSConvexHull.cs" t="Include" />
                   </e>
                   <e p="World.cs" t="Include" />
+                  <e p="license.txt" t="Include" />
                 </e>
                 <e p="readme.txt" t="Include" />
               </e>
               <e p="Unity" t="Include">
                 <e p="Editor" t="Include">
                   <e p="MenuContext.cs" t="Include" />
-                  <e p="TrueSyncConfigEditor.cs" t="Include" />
                   <e p="TSFPDrawer.cs" t="Include" />
                   <e p="TSRigidBodyEditor.cs" t="Include" />
                   <e p="TSVector2Drawer.cs" t="Include" />
                   <e p="TSVectorDrawer.cs" t="Include" />
+                  <e p="TrueSyncConfigEditor.cs" t="Include" />
                 </e>
                 <e p="LayerCollisionMatrix.cs" t="Include" />
                 <e p="PhotonTrueSyncCommunicator.cs" t="Include" />
                 <e p="Physics2DWorldManager.cs" t="Include" />
                 <e p="PhysicsManagerFactory.cs" t="Include" />
                 <e p="PhysicsWorldManager.cs" t="Include" />
-                <e p="TrueSyncBehaviour.cs" t="Include" />
-                <e p="TrueSyncConfig.cs" t="Include" />
-                <e p="TrueSyncManager.cs" t="Include" />
                 <e p="TSBoxCollider.cs" t="Include" />
                 <e p="TSBoxCollider2D.cs" t="Include" />
                 <e p="TSCapsuleCollider.cs" t="Include" />
@@ -863,22 +854,25 @@
                 <e p="TSTerrainCollider.cs" t="Include" />
                 <e p="TSTransform.cs" t="Include" />
                 <e p="TSTransform2D.cs" t="Include" />
+                <e p="TrueSyncBehaviour.cs" t="Include" />
+                <e p="TrueSyncConfig.cs" t="Include" />
+                <e p="TrueSyncManager.cs" t="Include" />
                 <e p="UnityUtils.cs" t="Include" />
               </e>
+              <e p="link.xml" t="Include" />
             </e>
           </e>
           <e p="Plugins" t="Include">
             <e p="Photon3Unity3D.xml" t="Include" />
-            <e p="release_history.txt" t="Include" />
             <e p="Sirenix" t="Include">
               <e p="Assemblies" t="Include">
-                <e p="link.xml" t="Include" />
                 <e p="Sirenix.OdinInspector.Attributes.xml" t="Include" />
                 <e p="Sirenix.OdinInspector.Editor.xml" t="Include" />
                 <e p="Sirenix.Serialization.Config.xml" t="Include" />
                 <e p="Sirenix.Serialization.xml" t="Include" />
                 <e p="Sirenix.Utilities.Editor.xml" t="Include" />
                 <e p="Sirenix.Utilities.xml" t="Include" />
+                <e p="link.xml" t="Include" />
               </e>
               <e p="Odin Inspector" t="Include">
                 <e p="Scripts" t="Include">
@@ -897,16 +891,21 @@
                   <e p="VectorIntFormatters.cs" t="Include" />
                 </e>
               </e>
-              <e p="readme.txt" t="Include" />
+              <e p="Readme.txt" t="Include" />
             </e>
             <e p="WebSocket" t="Include">
               <e p="WebSocket.cs" t="Include" />
             </e>
             <e p="Zenject" t="Include">
-              <e p="license.txt" t="Include" />
-              <e p="link.xml" t="Include" />
+              <e p="LICENSE.txt" t="Include" />
               <e p="Source" t="Include">
                 <e p="Binding" t="Include">
+                  <e p="BindInfo" t="Include">
+                    <e p="BindInfo.cs" t="Include" />
+                    <e p="FactoryBindInfo.cs" t="Include" />
+                    <e p="GameObjectCreationParameters.cs" t="Include" />
+                    <e p="MemoryPoolBindInfo.cs" t="Include" />
+                  </e>
                   <e p="Binders" t="Include">
                     <e p="ArgConditionCopyNonLazyBinder.cs" t="Include" />
                     <e p="ArgNonLazyBinder.cs" t="Include" />
@@ -1016,12 +1015,6 @@
                     <e p="ScopeNonLazyBinder.cs" t="Include" />
                     <e p="SubContainerBinder.cs" t="Include" />
                   </e>
-                  <e p="BindInfo" t="Include">
-                    <e p="BindInfo.cs" t="Include" />
-                    <e p="FactoryBindInfo.cs" t="Include" />
-                    <e p="GameObjectCreationParameters.cs" t="Include" />
-                    <e p="MemoryPoolBindInfo.cs" t="Include" />
-                  </e>
                   <e p="BindingUtil.cs" t="Include" />
                   <e p="Finalizers" t="Include">
                     <e p="BindFinalizerWrapper.cs" t="Include" />
@@ -1038,6 +1031,10 @@
                   </e>
                 </e>
                 <e p="Editor" t="Include">
+                  <e p="EditorStaticInstaller.cs" t="Include" />
+                  <e p="EditorWindow" t="Include">
+                    <e p="ZenjectEditorWindow.cs" t="Include" />
+                  </e>
                   <e p="Editors" t="Include">
                     <e p="ContextEditor.cs" t="Include" />
                     <e p="GameObjectContextEditor.cs" t="Include" />
@@ -1046,19 +1043,15 @@
                     <e p="SceneContextEditor.cs" t="Include" />
                     <e p="SceneDecoratorContextEditor.cs" t="Include" />
                   </e>
-                  <e p="EditorStaticInstaller.cs" t="Include" />
-                  <e p="EditorWindow" t="Include">
-                    <e p="ZenjectEditorWindow.cs" t="Include" />
-                  </e>
                   <e p="ObjectGraphVisualizer.cs" t="Include" />
                   <e p="SceneParentLoading" t="Include">
                     <e p="DefaultSceneContractConfig.cs" t="Include" />
                     <e p="SceneParentAutomaticLoader.cs" t="Include" />
                   </e>
                   <e p="UnityInspectorListEditor.cs" t="Include" />
-                  <e p="Zenject-Editor.asmdef" t="Include" />
                   <e p="ZenMenuItems.cs" t="Include" />
                   <e p="ZenUnityEditorUtil.cs" t="Include" />
+                  <e p="Zenject-Editor.asmdef" t="Include" />
                 </e>
                 <e p="Factories" t="Include">
                   <e p="FactoryProviderWrapper.cs" t="Include" />
@@ -1072,8 +1065,8 @@
                     <e p="MemoryPoolBase.cs" t="Include" />
                     <e p="MonoMemoryPool.cs" t="Include" />
                     <e p="MonoPoolableMemoryPool.cs" t="Include" />
-                    <e p="PoolableMemoryPool.cs" t="Include" />
                     <e p="PoolFactory.cs" t="Include" />
+                    <e p="PoolableMemoryPool.cs" t="Include" />
                     <e p="Static" t="Include">
                       <e p="PoolableStaticMemoryPool.cs" t="Include" />
                       <e p="StaticMemoryPool.cs" t="Include" />
@@ -1089,9 +1082,9 @@
                   <e p="PrefabFactory.cs" t="Include" />
                 </e>
                 <e p="Injection" t="Include">
-                  <e p="InjectableInfo.cs" t="Include" />
                   <e p="InjectContext.cs" t="Include" />
                   <e p="InjectUtil.cs" t="Include" />
+                  <e p="InjectableInfo.cs" t="Include" />
                   <e p="LazyInject.cs" t="Include" />
                 </e>
                 <e p="Install" t="Include">
@@ -1156,9 +1149,9 @@
                   </e>
                   <e p="GetterProvider.cs" t="Include" />
                   <e p="IFactoryProvider.cs" t="Include" />
-                  <e p="InstanceProvider.cs" t="Include" />
                   <e p="IProvider.cs" t="Include" />
                   <e p="IProviderExtensions.cs" t="Include" />
+                  <e p="InstanceProvider.cs" t="Include" />
                   <e p="MethodMultipleProviderUntyped.cs" t="Include" />
                   <e p="MethodProvider.cs" t="Include" />
                   <e p="MethodProviderMultiple.cs" t="Include" />
@@ -1228,11 +1221,11 @@
                   <e p="UnityUtil.cs" t="Include" />
                   <e p="ValidationUtil.cs" t="Include" />
                   <e p="ZenAutoInjecter.cs" t="Include" />
+                  <e p="ZenUtilInternal.cs" t="Include" />
                   <e p="ZenjectException.cs" t="Include" />
                   <e p="ZenjectSceneLoader.cs" t="Include" />
                   <e p="ZenjectStateMachineBehaviourAutoInjecter.cs" t="Include" />
                   <e p="ZenjectTypeInfo.cs" t="Include" />
-                  <e p="ZenUtilInternal.cs" t="Include" />
                 </e>
                 <e p="Validation" t="Include">
                   <e p="IValidatable.cs" t="Include" />
@@ -1240,8 +1233,10 @@
                 </e>
               </e>
               <e p="Version.txt" t="Include" />
+              <e p="link.xml" t="Include" />
               <e p="zenject.asmdef" t="Include" />
             </e>
+            <e p="release_history.txt" t="Include" />
           </e>
           <e p="PostProcessing" t="Include">
             <e p="PostProcessing" t="Include">
@@ -1472,18 +1467,25 @@
               <e p="EmojiOne Attribution.txt" t="Include" />
             </e>
           </e>
+          <e p="codeandweb.com" t="Include">
+            <e p="Editor" t="Include">
+              <e p="SettingsTexturePackerImporter.txt" t="Include" />
+            </e>
+            <e p="Readme.txt" t="Include" />
+          </e>
         </e>
+        <e p="changelog.txt" t="Include" />
       </e>
-      <e p="obj" t="ExcludeRecursive" />
-      <e p="packages" t="ExcludeRecursive" />
-      <e p="Temp\bin" t="ExcludeRecursive" />
-      <e p="Unity.Postprocessing.Editor.csproj" t="IncludeRecursive" />
+      <e p="Temp/bin" t="ExcludeRecursive" />
       <e p="Unity.Postprocessing.Editor.Tests.csproj" t="IncludeRecursive" />
-      <e p="Unity.Postprocessing.Runtime.csproj" t="IncludeRecursive" />
+      <e p="Unity.Postprocessing.Editor.csproj" t="IncludeRecursive" />
       <e p="Unity.Postprocessing.Runtime.Tests.csproj" t="IncludeRecursive" />
+      <e p="Unity.Postprocessing.Runtime.csproj" t="IncludeRecursive" />
       <e p="YellowSignUnity.sln" t="IncludeFlat" />
       <e p="Zenject-Editor.csproj" t="IncludeRecursive" />
       <e p="Zenject.csproj" t="IncludeRecursive" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
     </e>
   </component>
 </project>

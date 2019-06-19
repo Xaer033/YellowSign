@@ -78,7 +78,7 @@ public class BasicTowerView : MonoBehaviour, ITowerView
 
     public FP VisualAttack(ICreepView target)
     {
-        const float kDuration = 0.25f;
+        const float kDuration = 0.3f;
         const float kPreFireDelay = 0.01f;
         const float kTimeToAttack = kDuration + kPreFireDelay;
 
@@ -137,9 +137,9 @@ public class BasicTowerView : MonoBehaviour, ITowerView
         Vector3 upVector = Vector3.up * kUpScale;
 
         _fxArcPositions[0] = start;
-        _fxArcPositions[1] = Vector3.Lerp(start, end, 0.15f) + (upVector * 0.25f);
-        _fxArcPositions[2] = Vector3.Lerp(start, end, 0.35f) + (upVector * 0.75f);
-        _fxArcPositions[3] = Vector3.Lerp(start, end, 0.5f) + (upVector * 1.0f);
+        _fxArcPositions[1] = Vector3.Lerp(start, end, 0.15f) + (upVector * 0.05f);
+        _fxArcPositions[2] = Vector3.Lerp(start, end, 0.35f) + (upVector * 0.25f);
+        _fxArcPositions[3] = Vector3.Lerp(start, end, 0.5f) + (upVector * 0.4f);
         _fxArcPositions[4] = Vector3.Lerp(start, end, 0.75f) + (upVector * 0.35f);
         _fxArcPositions[5] = Vector3.Lerp(start, end, 0.85f) + (upVector * 0.15f);
         _fxArcPositions[6] = end;

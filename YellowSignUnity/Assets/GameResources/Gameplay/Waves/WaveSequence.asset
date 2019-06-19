@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df1a237767bdcd4fbe2fecf251c5c84, type: 3}
   m_Name: WaveSequence
   m_EditorClassIdentifier: Assembly-CSharp::WaveSequence
-  prepareTime: 3
-  intervalTime: 2
+  prepareTime: 4
+  intervalTime: 5
   sequenceList:
   - creepId: basic_creep
-    count: 5
+    count: 10
   - creepId: advance_creep
-    count: 5
+    count: 10

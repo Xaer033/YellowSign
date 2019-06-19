@@ -58,13 +58,13 @@ public class Grid : MonoBehaviour
 
         return GridPosition.Create(mx, mz);
     }
-
+    
     public bool CanBuildTower(Ray rayToGrid, bool preventBlocking, out GridPosition gridPosition)
     {
         bool result = false;
         gridPosition = GridPosition.Create(0, 0);
         
-        if (Physics.RaycastNonAlloc(rayToGrid, _hitResults, 200.0f, ~_clickLayer, QueryTriggerInteraction.Collide) > 0)
+        if (Physics.RaycastNonAlloc(rayToGrid, _hitResults, 2000.0f, ~_clickLayer, QueryTriggerInteraction.Collide) > 0)
         {
             RaycastHit hit = _hitResults[0]; // Only care about the first one
 

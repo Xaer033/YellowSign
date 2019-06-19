@@ -177,7 +177,7 @@ public class BasicTowerBrain : AbstractTowerBrain
                 continue;
             }
 
-            // Self explanitory
+            // Self explanatory
             bool isPlayerOwnedCreep = PhotonNetwork.countOfPlayers != 1 && c.ownerId == tower.ownerId;
             if(isPlayerOwnedCreep)
             {

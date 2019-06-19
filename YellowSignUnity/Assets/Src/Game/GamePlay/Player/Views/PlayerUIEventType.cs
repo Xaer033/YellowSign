@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PlayerUIEventType
+﻿public class PlayerUIEventType
 {
     public const string SPAWN_CREEPS = "spawnCreeps";
     public const string SELECT_CREEP_TYPE = "selectCreepType";
