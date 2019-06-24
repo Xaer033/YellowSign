@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     private PlayerHudController _hudController;
     private ActorSelector _actorSelector;
     private int _selectionMask;
+    private Tower _selectedTower;
     
     public PlayerControlState controlState { get; set; }
     
@@ -233,10 +234,16 @@ public class PlayerController : MonoBehaviour
             else
             {
                 ITowerView towerView;
-                bool foundTower = _actorSelector.CheckPickSelection<ITowerView>(ray, _selectionMask, out towerView);
+                bool foundTower = _actorSelector.PickSelector<ITowerView>(ray, _selectionMask, out towerView);
                 if (foundTower)
                 {
+                    if (_selectedTower != null)
+                    {
+                        _selectedTower.view.shouldShowRange = false;
+                    }
+                    _selectedTower = towerView.tower;
                     Debug.Log("TowerView" + towerView.tower.ownerId);
+                    towerView.shouldShowRange = true;
                 }
 
             }

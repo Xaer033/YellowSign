@@ -78,7 +78,7 @@ MonoBehaviour:
     value: 1
   intensity:
     overrideState: 1
-    value: 0.65
+    value: 0.73
   color:
     overrideState: 1
     value: {r: 0.16037738, g: 0.15962088, b: 0.15962088, a: 1}
@@ -96,7 +96,7 @@ MonoBehaviour:
     value: -12
   thicknessModifier:
     overrideState: 1
-    value: 1.98
+    value: 1.8
   directLightingStrength:
     overrideState: 0
     value: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
     value: 1
   preset:
     overrideState: 1
-    value: 2
+    value: 3
   maximumIterationCount:
     overrideState: 1
     value: 15
@@ -141,7 +141,7 @@ MonoBehaviour:
     overrideState: 1
     value: 0.183
   vignette:
-    overrideState: 1
+    overrideState: 0
     value: 0.499
 --- !u!114 &114573676115578774
 MonoBehaviour:
@@ -214,7 +214,7 @@ MonoBehaviour:
     value: 0
   postExposure:
     overrideState: 1
-    value: 0.1
+    value: 0.19
   contrast:
     overrideState: 0
     value: 0
@@ -247,13 +247,13 @@ MonoBehaviour:
     value: 100
   lift:
     overrideState: 1
-    value: {x: 1, y: 0.98938644, z: 0.9833284, w: -0.03969717}
+    value: {x: 1, y: 0.9535603, z: 0.95356077, w: -0.24407673}
   gamma:
     overrideState: 1
-    value: {x: 1, y: 1, z: 1, w: 0.02607225}
+    value: {x: 0.9841278, y: 1, z: 0.90795046, w: 0.2304518}
   gain:
     overrideState: 1
-    value: {x: 0.9591228, y: 1, z: 0.54007375, w: -0.27384353}
+    value: {x: 1, y: 0.9322535, z: 0.62020445, w: -0.18625228}
   masterCurve:
     overrideState: 0
     value:
@@ -1500,7 +1500,7 @@ MonoBehaviour:
     value: 1
   shutterAngle:
     overrideState: 1
-    value: 226
+    value: 142
   sampleCount:
     overrideState: 1
     value: 4
@@ -1525,10 +1525,10 @@ MonoBehaviour:
     value: 1
   intensity:
     overrideState: 1
-    value: 0.112
+    value: 0.05
   size:
     overrideState: 1
-    value: 0.68
+    value: 1.36
   lumContrib:
     overrideState: 1
     value: 1
@@ -1596,7 +1596,7 @@ MonoBehaviour:
     value: {x: 0.5, y: 0.5}
   intensity:
     overrideState: 1
-    value: 0.308
+    value: 0.16
   smoothness:
     overrideState: 1
     value: 0.508

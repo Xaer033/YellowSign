@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TrueSync;
 using DG.Tweening;
+using GhostGen;
+using Sirenix.OdinInspector;
 
 [RequireComponent(typeof(TSTransform), typeof(Collider))]
-public class BasicTowerView : MonoBehaviour, ITowerView
+public class BasicTowerView : UIView, ITowerView
 {
     private const int kFXPoolSize = 3;
 
@@ -26,6 +29,9 @@ public class BasicTowerView : MonoBehaviour, ITowerView
     private TrailRenderer[] _fxPool;
 
     private int _fxIndex;
+    private bool _shouldShowRange;
+    private GameObject _rangeView;
+    private Tower _tower;
 
     void Awake()
     {
@@ -33,9 +39,24 @@ public class BasicTowerView : MonoBehaviour, ITowerView
         _collider = GetComponent<Collider>();        
 
         setupFXPool();
+
+        _shouldShowRange = false;
+        _rangeView = GameObject.Instantiate(Singleton.instance.gameConfig.gameplayResources.towerRangePrefab, transform);
+        _rangeView.transform.localPosition = Vector3.zero;
     }
 
-    public Tower tower { get; set; }
+    public Tower tower
+    {
+        get { return _tower; }
+        set
+        {
+            if (_tower != value)
+            {
+                _tower = value;
+                invalidateFlag = InvalidationFlag.STATIC_DATA;
+            }
+        }
+    }
 
     public Bounds bounds
     {
@@ -74,6 +95,34 @@ public class BasicTowerView : MonoBehaviour, ITowerView
             }
             return _transformTS;
         }
+    }
+
+    protected override void OnViewUpdate()
+    {
+        if (IsInvalid(InvalidationFlag.ALL))
+        {
+            if (_tower != null)
+            {
+                if (_rangeView != null)
+                {
+                    _rangeView.SetActive(_shouldShowRange);
+                    _rangeView.transform.localScale = Vector3.one * _tower.state.range.AsFloat();
+                }
+            }
+        }
+    }
+    
+    public bool shouldShowRange
+    {
+        set
+        {
+            if (_shouldShowRange != value)
+            {
+                _shouldShowRange = value;
+                invalidateFlag = InvalidationFlag.DYNAMIC_DATA;
+            }
+        }
+        get { return _shouldShowRange; }
     }
 
     public FP VisualAttack(ICreepView target)
@@ -165,4 +214,12 @@ public class BasicTowerView : MonoBehaviour, ITowerView
             _fxPool[i].emitting = (false);
         }
     }
+
+//    private void OnDrawGizmos()
+//    {
+//        if (tower != null)
+//        {
+//            Gizmos.DrawWireSphere(position.ToVector(), tower.state.range.AsFloat());
+//        }
+//    }
 }

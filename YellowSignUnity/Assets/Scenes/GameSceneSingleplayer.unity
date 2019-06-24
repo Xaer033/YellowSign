@@ -15,15 +15,15 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.6850303, g: 0.7742491, b: 0.8113208, a: 1}
+  m_FogColor: {r: 0.8254717, g: 0.84053034, b: 1, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.015
+  m_FogDensity: 0.021
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: 0.97
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: ac2eeb98f1b423941b373f537bc56e18, type: 2}
@@ -57,10 +57,10 @@ LightmapSettings:
     serializedVersion: 12
     m_Resolution: 2
     m_BakeResolution: 40
-    m_AtlasSize: 256
+    m_AtlasSize: 512
     m_AO: 1
     m_AOMaxDistance: 1
-    m_CompAOExponent: 1.63
+    m_CompAOExponent: 1.87
     m_CompAOExponentDirect: 0.28
     m_ExtractAmbientOcclusion: 0
     m_Padding: 2
@@ -72,7 +72,7 @@ LightmapSettings:
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 0
-    m_BakeBackend: 1
+    m_BakeBackend: 2
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 16
     m_PVRSampleCount: 128
@@ -814,7 +814,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 358422563}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 23.51, z: 0}
+  m_LocalPosition: {x: 0, y: 18.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1657660389}
@@ -9357,7 +9357,27 @@ PrefabInstance:
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -39.8
+      value: -36.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.5541182
+      objectReference: {fileID: 0}
+    - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.832438
       objectReference: {fileID: 0}
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
@@ -9367,7 +9387,7 @@ PrefabInstance:
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 64.7
+      value: 67.3
       objectReference: {fileID: 0}
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
@@ -9381,8 +9401,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
+        type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 17.8
+      value: 18.5
       objectReference: {fileID: 0}
     - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
         type: 3}
@@ -9424,15 +9449,25 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
+    - target: {fileID: 20577902682525880, guid: e61e7243322a37b428e92da265080831,
         type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.5350897
+      propertyPath: far clip plane
+      value: 175
       objectReference: {fileID: 0}
-    - target: {fileID: 224255886816450048, guid: e61e7243322a37b428e92da265080831,
+    - target: {fileID: 20577902682525880, guid: e61e7243322a37b428e92da265080831,
         type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.8447953
+      propertyPath: m_FOVAxisMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 20577902682525880, guid: e61e7243322a37b428e92da265080831,
+        type: 3}
+      propertyPath: m_projectionMatrixMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20577902682525880, guid: e61e7243322a37b428e92da265080831,
+        type: 3}
+      propertyPath: field of view
+      value: 65
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e61e7243322a37b428e92da265080831, type: 3}

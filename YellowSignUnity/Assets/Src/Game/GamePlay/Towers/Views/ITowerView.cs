@@ -8,10 +8,11 @@ public interface ITowerView : IActor
 
     Material material { get; }
     Material highlighterMaterial { get; }
-
-
+    
+    
     Tower tower { get; set; }
 
     FP VisualAttack(ICreepView target);
-    
+    bool shouldShowRange { get; set; }
+
 }

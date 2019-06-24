@@ -15,7 +15,7 @@ public class ActorSelector
         _hitResults = new RaycastHit[_maxSelection];
     }
 
-    public bool CheckPickSelection<T>(Ray ray, int validLayers, out T view) where T: IActor
+    public bool PickSelector<T>(Ray ray, int validLayers, out T view) where T: IActor
     {
         bool result = false;
         view = default(T);
