@@ -20,9 +20,13 @@ public class Tower : IAttacker, IAttackTarget
 
         public override Tower Create(string towerId, TowerSpawnInfo spawnInfo)
         {
+            Tower result = null;
             TowerDef def = _towerDefs.GetDef(towerId) as TowerDef;
-            Tower tower = _container.Instantiate<Tower>(new object[] { def, spawnInfo });
-            return tower;
+            if (def != null)
+            {
+                result = _container.Instantiate<Tower>(new object[] { def, spawnInfo });
+            }
+            return result;
         }
 
         public override void Validate()

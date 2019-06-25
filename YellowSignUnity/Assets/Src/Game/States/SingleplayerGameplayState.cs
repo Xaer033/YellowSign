@@ -8,7 +8,6 @@ using Zenject;
 
 public class SingleplayerGameplayState : IGameState
 {
-    private PlayerHudController _hudController;
     private PlayerController _playerController;
 
     private IEventDispatcher _notificationDispatcher;
@@ -44,15 +43,11 @@ public class SingleplayerGameplayState : IGameState
         _playerController = GameObject.FindObjectOfType<PlayerController>();
 
         _playerController.playerSpawn = playerSpawn;
-        _playerController.SetCurrentTower("basic_tower");
+//        _playerController.SetCurrentTower("basic_tower");
         
         _gameSystemManager.Initialize();
 
-        _hudController = new PlayerHudController(_playerController);
-        _hudController.Start(() =>
-        {
-            _guiManager.screenFader.FadeIn(1.5f);
-        });
+        _guiManager.screenFader.FadeIn(1.5f);
 
         Debug.Log("Tick: " + TrueSyncManager.Ticks);
         TrueSyncManager.RunSimulation();

@@ -42,8 +42,8 @@ public class CreepViewSystem : EventDispatcher
 
             if(creep.flagForRemoval)
             {
-                GameObject.Destroy(view.gameObject);
                 _creepViewList.RemoveAt(i);
+                GameObject.Destroy(view.gameObject);
                 continue;
             }
 

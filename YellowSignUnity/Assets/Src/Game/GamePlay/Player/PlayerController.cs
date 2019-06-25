@@ -32,7 +32,11 @@ public class PlayerController : MonoBehaviour
     private ActorSelector _actorSelector;
     private int _selectionMask;
     private Tower _selectedTower;
-    
+
+    private Vector3 _dragStartPos;
+    private Vector3 _cameraStartPos;
+    private bool _isDragging;
+    private bool _canBuildTowerQuick;
     public PlayerControlState controlState { get; set; }
     
     public PlayerSpawn playerSpawn
@@ -65,8 +69,6 @@ public class PlayerController : MonoBehaviour
         _towerDictionary = towerDictionary;
         _gameplayResources = gameplayResources;
         
-        _highlighter = GameObject.Instantiate<TowerHighlighter>(_gameplayResources.highlighterPrefab);
-        _highlighter.gameObject.SetActive(false);
     }
 
     public void Awake()
@@ -79,11 +81,6 @@ public class PlayerController : MonoBehaviour
         _commander.onSyncedStep += OnSyncStep;
         _commander.onSyncStartLocalPlayer += OnSyncStartLocalPlayer;
 
-        byte ownerId = _commander.localOwner.Id;
-        Debug.Log("Owner: " + ownerId);
-
-        _actorSelector = new ActorSelector(ownerId, 25);
-        
         _selectionMask = LayerMask.GetMask(new []{"tower"});
     }
 
@@ -94,6 +91,19 @@ public class PlayerController : MonoBehaviour
             _commander.onCommandExecute -= OnCommandExecute;
             _commander.onSyncedStep -= OnSyncStep;
             _commander.onSyncStartLocalPlayer -= OnSyncStartLocalPlayer;
+        }
+
+        if (_actorSelector != null)
+        {
+            _actorSelector.RemoveListener(PlayerUIEventType.PRIMARY_SELECT, onPrimarySelect);
+            _actorSelector.RemoveListener(PlayerUIEventType.SECONDARY_SELECT, onSecondarySelect);
+            _actorSelector.RemoveListener(PlayerUIEventType.DRAG_BEGIN, onDragBegin);
+            _actorSelector.RemoveListener(PlayerUIEventType.DRAG_END, onDragEnd);
+        }
+
+        if (_hudController != null)
+        {
+            _hudController.RemoveView(true);
         }
     }
 
@@ -181,17 +191,83 @@ public class PlayerController : MonoBehaviour
         camMovement.Setup(playerSpawn);
         _camera = camMovement.camera;
 
-        //GameObject cameraObj = GameObject.Instantiate<GameObject>(
-        //        _gameplayResources.gameplayCamera, _playerSpawn.cameraHook);
-
-        //_camera = cameraObj.GetComponent<Camera>();
-
+        _actorSelector = new ActorSelector(owner.Id, _camera, 25);
+        _actorSelector.AddListener(PlayerUIEventType.PRIMARY_SELECT, onPrimarySelect);
+        _actorSelector.AddListener(PlayerUIEventType.SECONDARY_SELECT, onSecondarySelect);
+        _actorSelector.AddListener(PlayerUIEventType.DRAG_BEGIN, onDragBegin);
+        _actorSelector.AddListener(PlayerUIEventType.DRAG_END, onDragEnd);
+        
         _hudController = new PlayerHudController(this);
-        _hudController.Start(() =>
-        {
-        });
+        _hudController.Start(null);
+        
+        
+        _highlighter = GameObject.Instantiate<TowerHighlighter>(_gameplayResources.highlighterPrefab);
+        _highlighter.gameObject.SetActive(false);
+        
+        SetCurrentTower("basic_tower");
     }
-    
+
+    private void onPrimarySelect(GhostGen.GeneralEvent e)
+    {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 1.0f;
+
+        Ray ray = (_camera != null) ? _camera.ScreenPointToRay(mousePos) : default(Ray);
+        GridPosition pos;
+        bool canBuildTowerQuick = _myGrid.CanBuildTower(ray, true, out pos);
+     
+
+            //bool canBuildTowerDetailed = _grid.CanBuildTower(ray, true, out pos);
+        if(canBuildTowerQuick && !_towerBlocker.Contains(pos))
+        {
+            ICommand command = new BuildTowerCommand(_currentTowerId, pos);
+            _commander.AddCommand(command);
+            _towerBlocker.Add(pos); // Prevents trying to add multiple towers to the same spot before next sync Update
+        }
+        else
+        {
+            ITowerView towerView;
+            bool foundTower = _actorSelector.PickSelector<ITowerView>(ray, _selectionMask, out towerView);
+            if (foundTower)
+            {
+                if (_selectedTower != null)
+                {
+                    _selectedTower.view.shouldShowRange = false;
+                }
+                _selectedTower = towerView.tower;
+                Debug.Log("TowerView" + towerView.tower.ownerId);
+                towerView.shouldShowRange = true;
+            }
+        }
+    }
+
+    private void onSecondarySelect(GhostGen.GeneralEvent e)
+    {
+        _commander.AddCommand(new SpawnCreepCommand("basic_creep", 20));
+    }
+    private void onDragBegin(GhostGen.GeneralEvent e )
+    {
+        _dragStartPos = (Vector3)e.data;
+        _cameraStartPos = _camera.transform.position;
+        _isDragging = true;
+        if (_hudController != null)
+        {
+            _hudController.isSelectionActive = true;
+            Debug.Log("Selection Active");
+        }
+    }
+   
+    private void onDragEnd(GhostGen.GeneralEvent e )
+    {
+        _isDragging = false;
+        if (_hudController != null)
+        {
+            _hudController.isSelectionActive = false;
+            Debug.Log("Selection De-active");
+        }
+        // Select a poop ton of stuff
+        
+    }
 
     private void _noneState()
     {
@@ -203,15 +279,26 @@ public class PlayerController : MonoBehaviour
 
     private void _towerBuilderState()
     {
+        _canBuildTowerQuick = false;
+        
+       
+        
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 1.0f;
 
         Ray ray = (_camera != null) ? _camera.ScreenPointToRay(mousePos) : default(Ray);
         GridPosition pos;
-        bool canBuildTowerQuick = _myGrid.CanBuildTower(ray, true, out pos);
+        _canBuildTowerQuick = _myGrid.CanBuildTower(ray, true, out pos);
+        
+        // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
+        if (_actorSelector != null)
+        {
+            _actorSelector.Tick();
+        }
+        
         if(_highlighter)
         {
-            if(canBuildTowerQuick)
+            if(_canBuildTowerQuick)
             {
                 _highlighter.gameObject.SetActive(true);
                 _highlighter.transform.position = pos.ToVector3();
@@ -221,37 +308,24 @@ public class PlayerController : MonoBehaviour
                 _highlighter.gameObject.SetActive(false);
             }
         }
-
-        if(Input.GetMouseButtonDown(0))
+        
+        if (Input.GetMouseButton(0))
         {
-            //bool canBuildTowerDetailed = _grid.CanBuildTower(ray, true, out pos);
-            if(canBuildTowerQuick && !_towerBlocker.Contains(pos))
+            if (_isDragging && _hudController != null)
             {
-                ICommand command = new BuildTowerCommand(_currentTowerId, pos);
-                _commander.AddCommand(command);
-                _towerBlocker.Add(pos); // Prevents trying to add multiple towers to the same spot before next sync Update
-            }
-            else
-            {
-                ITowerView towerView;
-                bool foundTower = _actorSelector.PickSelector<ITowerView>(ray, _selectionMask, out towerView);
-                if (foundTower)
-                {
-                    if (_selectedTower != null)
-                    {
-                        _selectedTower.view.shouldShowRange = false;
-                    }
-                    _selectedTower = towerView.tower;
-                    Debug.Log("TowerView" + towerView.tower.ownerId);
-                    towerView.shouldShowRange = true;
-                }
+                Vector3 camStart = _cameraStartPos;
+                camStart.y = camStart.z;
+                camStart = _camera.WorldToScreenPoint(camStart);
+                
+                Vector3 camPos = _camera.transform.position;
+                camPos.y = camPos.z;
+                camPos = _camera.WorldToScreenPoint(camPos);
 
+                Vector3 camDelta = (camStart - camPos);// / Singleton.instance.gui.mainCanvas.scaleFactor;
+                Debug.Log("CamPos: " + camPos + ", " + _cameraStartPos);
+                camDelta.z = 0;
+                _hudController.SetDragPoints(_dragStartPos + camDelta, Input.mousePosition);
             }
-        }
-
-        if(Input.GetMouseButtonDown(1))
-        {
-            _commander.AddCommand(new SpawnCreepCommand("basic_creep", 20));
         }
     }
 

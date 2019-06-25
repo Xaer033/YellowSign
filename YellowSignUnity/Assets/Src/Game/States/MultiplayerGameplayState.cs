@@ -70,9 +70,6 @@ public class MultiplayerGameplayState : IGameState
                     break;
                 }
             }
-            
-            pController.SetCurrentTower("basic_tower");
-            
         }
 
         _gameSystemManager.Initialize();

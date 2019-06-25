@@ -56,13 +56,45 @@ public class PlayerHudController : BaseController
     public override void RemoveView(bool immediately = false)
     {
         _hudView.RemoveListener(HoverDispatcher.EVENT_HOVER, onHoverUI);
+        _hudView.RemoveListener(PlayerUIEventType.TOGGLE_CREEP_VIEW, onToggleCreepView);
+        _hudView.RemoveListener(PlayerUIEventType.TOGGLE_TOWER_VIEW, onToggleTowerView);
+        
+        _creepSpawnerView.RemoveListener(HoverDispatcher.EVENT_HOVER, onHoverUI);
+        _creepSpawnerView.RemoveListener(PlayerUIEventType.DISMISS_VIEW, onDismissCreepSpawner);
+        _creepSpawnerView.RemoveListener(PlayerUIEventType.SPAWN_CREEPS, onSpawnCreeps);
+        _creepSpawnerView.RemoveListener(PlayerUIEventType.SELECT_CREEP_TYPE, onCreepSelected);
+        
+        viewFactory.RemoveView(_hudView, true);
+        viewFactory.RemoveView(_creepSpawnerView, true);
+        
         base.RemoveView(immediately);
+    }
+
+    public void SetDragPoints(Vector3 startPos, Vector3 endPos)
+    {
+        if (_hudView)
+        {
+            _hudView.SetDragPoints(startPos, endPos);
+        }
     }
 
     private bool hasHoverItems
     {
         get { return _hoverItems.Count > 0; }
     }
+
+    public bool isSelectionActive
+    {
+        get
+        {
+            return _hudView.isSelectionActive;
+        }
+        set
+        {
+            _hudView.isSelectionActive = value;
+        }
+    }
+
 
     private void setHoverItem(IEventDispatcher dispatcher, bool isHovering)
     {

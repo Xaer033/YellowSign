@@ -1,6 +1,7 @@
 ﻿using GhostGen;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 using Zenject;
 
 public class PlayerHudView : UIView
@@ -13,6 +14,8 @@ public class PlayerHudView : UIView
     public Button _creepButton;
     public Image _creepPortrait;
 
+    public Image _selectionImage;
+    
     private string _killText;
     private int creepsKilled;
     private int livesLost;
@@ -98,5 +101,48 @@ public class PlayerHudView : UIView
     private void onTowerButton()
     {
         DispatchEvent(PlayerUIEventType.TOGGLE_TOWER_VIEW);
+    }
+
+    public bool isSelectionActive
+    {
+        set
+        {
+            if (_selectionImage)
+            {
+                _selectionImage.gameObject.SetActive(value);
+                if (!value)
+                {
+                    _selectionImage.rectTransform.sizeDelta = Vector2.zero;
+                }
+            }
+        }
+        get
+        {
+            return _selectionImage ? _selectionImage.IsActive() : false;
+        }
+    }
+    public void SetDragPoints(Vector3 startPos, Vector3 endPos)
+    {
+        if (_selectionImage)
+        {
+            startPos.y = -(Screen.height-startPos.y);
+            endPos.y = -(Screen.height-endPos.y);
+                
+            
+            Vector3 min = Vector3.Min(startPos, endPos);
+            Vector3 max = Vector3.Max(startPos, endPos);
+            
+            float y = max.y;
+            max.y = min.y;
+            min.y = y;
+            
+            Vector3 size = max - min;
+            
+            size.y = -size.y;
+            
+            Debug.Log("Start: " + min + ", End: " + size);
+            _selectionImage.rectTransform.anchoredPosition3D = min /  Singleton.instance.gui.mainCanvas.scaleFactor;
+            _selectionImage.rectTransform.sizeDelta = size / Singleton.instance.gui.mainCanvas.scaleFactor;
+        }
     }
 }
