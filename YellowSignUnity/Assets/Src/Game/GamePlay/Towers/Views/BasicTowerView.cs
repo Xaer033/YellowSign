@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using ch.sycoforge.Decal;
 using UnityEngine;
 using TrueSync;
 using DG.Tweening;
@@ -14,6 +15,8 @@ public class BasicTowerView : UIView, ITowerView
 
     public GameObject fxPrefab;
     public Transform cannonHook;
+    [SerializeField]
+    private EasyDecal _selectedDecal;
 
     private TSTransform _transformTS;
     private Collider _collider;
@@ -32,7 +35,8 @@ public class BasicTowerView : UIView, ITowerView
     private bool _shouldShowRange;
     private GameObject _rangeView;
     private Tower _tower;
-
+    private bool _isSelected;
+    
     void Awake()
     {
         _transformTS = GetComponent<TSTransform>();
@@ -41,8 +45,12 @@ public class BasicTowerView : UIView, ITowerView
         setupFXPool();
 
         _shouldShowRange = false;
+        _isSelected = false;
+        
         _rangeView = GameObject.Instantiate(Singleton.instance.gameConfig.gameplayResources.towerRangePrefab, transform);
         _rangeView.transform.localPosition = Vector3.zero;
+
+        invalidateFlag = InvalidationFlag.ALL;
     }
 
     public Tower tower
@@ -97,23 +105,41 @@ public class BasicTowerView : UIView, ITowerView
         }
     }
 
+    public bool isSelected
+    {
+        get
+        {
+            return _isSelected; 
+        }
+        set
+        {
+            if (_isSelected != value)
+            {
+                _isSelected = value;
+                invalidateFlag = InvalidationFlag.DYNAMIC_DATA;
+            }
+        }
+    }
     protected override void OnViewUpdate()
     {
-        if (IsInvalid(InvalidationFlag.ALL))
+        if (IsInvalid(InvalidationFlag.ALL) && _tower != null)
         {
-            if (_tower != null)
+            if (_selectedDecal != null)
             {
-                if (_rangeView != null)
-                {
-                    _rangeView.SetActive(_shouldShowRange);
-                    _rangeView.transform.localScale = Vector3.one * _tower.state.range.AsFloat();
-                }
+                _selectedDecal.gameObject.SetActive(_isSelected);
+            }
+            
+            if (_rangeView != null)
+            {
+                _rangeView.SetActive(_shouldShowRange || _isSelected);
+                _rangeView.transform.localScale = Vector3.one * _tower.state.range.AsFloat();
             }
         }
     }
     
     public bool shouldShowRange
     {
+        get { return _shouldShowRange; }
         set
         {
             if (_shouldShowRange != value)
@@ -122,7 +148,6 @@ public class BasicTowerView : UIView, ITowerView
                 invalidateFlag = InvalidationFlag.DYNAMIC_DATA;
             }
         }
-        get { return _shouldShowRange; }
     }
 
     public FP VisualAttack(ICreepView target)

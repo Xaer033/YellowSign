@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     private ActorSelector _actorSelector;
     private int _selectionMask;
     private Tower _selectedTower;
+    
 
     private Vector3 _dragStartPos;
     private Vector3 _cameraStartPos;
@@ -82,6 +83,11 @@ public class PlayerController : MonoBehaviour
         _commander.onSyncStartLocalPlayer += OnSyncStartLocalPlayer;
 
         _selectionMask = LayerMask.GetMask(new []{"tower"});
+        
+        _highlighter = GameObject.Instantiate<TowerHighlighter>(_gameplayResources.highlighterPrefab);
+        _highlighter.gameObject.SetActive(false);
+        
+        SetCurrentTower("basic_tower");
     }
 
     public void CleanUp()
@@ -199,16 +205,13 @@ public class PlayerController : MonoBehaviour
         
         _hudController = new PlayerHudController(this);
         _hudController.Start(null);
-        
-        
-        _highlighter = GameObject.Instantiate<TowerHighlighter>(_gameplayResources.highlighterPrefab);
-        _highlighter.gameObject.SetActive(false);
-        
-        SetCurrentTower("basic_tower");
     }
 
     private void onPrimarySelect(GhostGen.GeneralEvent e)
     {
+        
+        _actorSelector.ClearSelectedActors();
+        
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 1.0f;
 
@@ -226,24 +229,23 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            
             ITowerView towerView;
             bool foundTower = _actorSelector.PickSelector<ITowerView>(ray, _selectionMask, out towerView);
             if (foundTower)
             {
-                if (_selectedTower != null)
+                if (!towerView.isSelected)
                 {
-                    _selectedTower.view.shouldShowRange = false;
+                    _actorSelector.SelectActor(towerView);
                 }
-                _selectedTower = towerView.tower;
-                Debug.Log("TowerView" + towerView.tower.ownerId);
-                towerView.shouldShowRange = true;
             }
         }
     }
 
     private void onSecondarySelect(GhostGen.GeneralEvent e)
     {
-        _commander.AddCommand(new SpawnCreepCommand("basic_creep", 20));
+        _actorSelector.ClearSelectedActors();
+//        _commander.AddCommand(new SpawnCreepCommand("basic_creep", 20));
     }
     private void onDragBegin(GhostGen.GeneralEvent e )
     {
@@ -279,16 +281,12 @@ public class PlayerController : MonoBehaviour
 
     private void _towerBuilderState()
     {
-        _canBuildTowerQuick = false;
-        
-       
-        
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 1.0f;
 
         Ray ray = (_camera != null) ? _camera.ScreenPointToRay(mousePos) : default(Ray);
         GridPosition pos;
-        _canBuildTowerQuick = _myGrid.CanBuildTower(ray, true, out pos);
+        bool canBuildTowerQuick = _myGrid.CanBuildTower(ray, true, out pos);
         
         // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
         if (_actorSelector != null)
@@ -298,7 +296,7 @@ public class PlayerController : MonoBehaviour
         
         if(_highlighter)
         {
-            if(_canBuildTowerQuick)
+            if(canBuildTowerQuick)
             {
                 _highlighter.gameObject.SetActive(true);
                 _highlighter.transform.position = pos.ToVector3();
@@ -313,18 +311,7 @@ public class PlayerController : MonoBehaviour
         {
             if (_isDragging && _hudController != null)
             {
-                Vector3 camStart = _cameraStartPos;
-                camStart.y = camStart.z;
-                camStart = _camera.WorldToScreenPoint(camStart);
-                
-                Vector3 camPos = _camera.transform.position;
-                camPos.y = camPos.z;
-                camPos = _camera.WorldToScreenPoint(camPos);
-
-                Vector3 camDelta = (camStart - camPos);// / Singleton.instance.gui.mainCanvas.scaleFactor;
-                Debug.Log("CamPos: " + camPos + ", " + _cameraStartPos);
-                camDelta.z = 0;
-                _hudController.SetDragPoints(_dragStartPos + camDelta, Input.mousePosition);
+                _hudController.SetDragPoints(_dragStartPos, Input.mousePosition);
             }
         }
     }

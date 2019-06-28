@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Pathfinding.Util;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -17,6 +18,8 @@ public class ActorSelector : GhostGen.EventDispatcher
     private Vector3 _dragEnd;
     private bool _dragStartEventSent;
 
+    private List<IActor> _selectedActors;
+    
     public struct DragEndEventData
     {
         public Vector3 startPoint;
@@ -25,6 +28,8 @@ public class ActorSelector : GhostGen.EventDispatcher
     
     public ActorSelector(byte ownerId, Camera camera, int maxSelection)
     {
+        _selectedActors = new List<IActor>(maxSelection);
+        
         _ownerId = ownerId;
         _camera = camera;
         _maxSelection = maxSelection;
@@ -32,6 +37,46 @@ public class ActorSelector : GhostGen.EventDispatcher
         _dragStartEventSent = false;
     }
 
+    public void SelectActor(IActor a)
+    {
+        if (a == null)
+        {
+            Debug.LogError("Cannot select actor, actor is null!");
+            return;
+        }
+
+        a.isSelected = true;
+        if (!_selectedActors.Contains(a))
+        {
+            _selectedActors.Add(a);
+        }
+    }
+
+    public void DeselectActor(IActor a)
+    {
+        if (a == null)
+        {
+            Debug.LogError("Cannot de-select actor, actor is null!");
+            return;
+        }
+
+        a.isSelected = false;
+        if (_selectedActors.Contains(a))
+        {
+            _selectedActors.Remove(a);
+        }
+    }
+
+    public void ClearSelectedActors()
+    {
+        for (int i = _selectedActors.Count - 1; i >= 0; --i)
+        {
+            _selectedActors[i].isSelected = false;
+        }
+        
+        _selectedActors.Clear();
+    }
+    
     public void Tick()
     {
         if (_camera == null)

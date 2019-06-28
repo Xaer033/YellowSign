@@ -12,9 +12,11 @@ public class BasicCreepView : MonoBehaviour, ICreepView
     private TSTransform _transform;
     private Collider _collider;
     private Seeker _seeker;
+    private bool _isSelected;
 
     void Awake()
     {
+        _isSelected = false;
         _transform = GetComponent<TSTransform>();
         _collider = GetComponent<Collider>();
         _seeker = GetComponent<Seeker>();
@@ -42,6 +44,17 @@ public class BasicCreepView : MonoBehaviour, ICreepView
         get { return _transform.rotation; }
     }
 
+    public bool isSelected
+    {
+        get { return _isSelected; }
+        set
+        {
+            if (_isSelected != value)
+            {
+                _isSelected = value;
+            }
+        }
+    }
     public Seeker seeker
     {
         get { return _seeker; }

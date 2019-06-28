@@ -433,6 +433,76 @@
             <e p="DOTween50.xml" t="Include" />
             <e p="readme.txt" t="Include" />
           </e>
+          <e p="EasyDecal" t="Include">
+            <e p="Editor Default Resources" t="Include">
+              <e p="nu Assets" t="Include">
+                <e p="Shared" t="Include">
+                  <e p="Shaders" t="Include">
+                    <e p="Canvas.shader" t="Include" />
+                    <e p="CanvasChannels.shader" t="Include" />
+                    <e p="CanvasOpaque.shader" t="Include" />
+                    <e p="CanvasSelection.shader" t="Include" />
+                    <e p="CanvasUtil.cginc" t="Include" />
+                    <e p="UnlitColorAlpha.shader" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="nu Assets" t="Include">
+              <e p="Easy Decal" t="Include">
+                <e p="readme.txt" t="Include" />
+                <e p="Scripts" t="Include">
+                  <e p="Editor" t="Include">
+                    <e p="DSSDShaderGUI.cs" t="Include" />
+                    <e p="EDStandardShaderGUI.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="Shader" t="Include">
+                  <e p="EDMultiply.shader" t="Include" />
+                  <e p="EDSandardVACutoff.shader" t="Include" />
+                  <e p="EDStandardSpecular.shader" t="Include" />
+                  <e p="EDStandardSpecularVACutoff.shader" t="Include" />
+                  <e p="EDVertexAlpha.shader" t="Include" />
+                  <e p="EDVertexAlphaN.shader" t="Include" />
+                  <e p="Legacy" t="Include">
+                    <e p="ED_AlphaBumpSpec.shader" t="Include" />
+                    <e p="ED_AlphaEdgeBleed.shader" t="Include" />
+                    <e p="ED_AlphaEdgeBleed_Mul.shader" t="Include" />
+                    <e p="ED_AlphaSimple.shader" t="Include" />
+                    <e p="ED_ReflBumpSpec.shader" t="Include" />
+                    <e p="ED_ReflBumpSpec_Cut.shader" t="Include" />
+                    <e p="ED_SoftUnlit.shader" t="Include" />
+                  </e>
+                  <e p="Particles" t="Include">
+                    <e p="ParticleAddSoft.shader" t="Include" />
+                    <e p="ParticleAlpha.shader" t="Include" />
+                  </e>
+                  <e p="SSD" t="Include">
+                    <e p="Legacy" t="Include">
+                      <e p="DSSD.shader" t="Include" />
+                      <e p="DSSDSignatures.cginc" t="Include" />
+                      <e p="Masking" t="Include">
+                        <e p="MaskStdMetallic.shader" t="Include" />
+                        <e p="MaskStdMetallicCG.shader" t="Include" />
+                        <e p="MaskStdMetallicCG_DoubleSided.shader" t="Include" />
+                        <e p="MaskStdSpecular.shader" t="Include" />
+                        <e p="MaskStdSpecularCG.shader" t="Include" />
+                      </e>
+                      <e p="SSD-M.shader" t="Include" />
+                      <e p="SycoDSSD.cginc" t="Include" />
+                      <e p="SycoFSSD.cginc" t="Include" />
+                      <e p="SycoSSD.cginc" t="Include" />
+                      <e p="Util.cginc" t="Include" />
+                    </e>
+                  </e>
+                  <e p="Unlit" t="Include">
+                    <e p="EDAlpha.shader" t="Include" />
+                    <e p="EDMultiply.shader" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+          </e>
           <e p="ListScrollRect" t="Include">
             <e p="Scripts" t="Include">
               <e p="Editor" t="Include">

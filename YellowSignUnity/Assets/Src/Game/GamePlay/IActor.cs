@@ -9,4 +9,6 @@ public interface IActor
     TSQuaternion rotation { get; }
     TSTransform transformTS { get; }
     GameObject gameObject { get; }
+    
+    bool isSelected { get; set; }
 }
