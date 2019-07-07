@@ -14,7 +14,7 @@ public class CreepHealthUISystem : MonoBehaviour
         get { return _guiCameraTag.dynamicCanvas; }
     }
 
-    public float scaleConst = 8.0f;
+    public float scaleConst = 15.0f;
 
     private Stack<CreepHealthUIView> _viewPool = new Stack<CreepHealthUIView>(kMaxUIView);
     private Dictionary<Creep, CreepHealthUIView> _inUseMap= new Dictionary<Creep, CreepHealthUIView>(kMaxUIView);

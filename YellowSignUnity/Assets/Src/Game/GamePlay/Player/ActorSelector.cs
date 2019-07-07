@@ -1,40 +1,42 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using Pathfinding.Util;
+using GhostGen;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class ActorSelector : GhostGen.EventDispatcher
+public class ActorSelector : EventDispatcher
 {
-    
-    
+
+    public const float DOUBLE_CLICK_DELAY = 0.3f;
     public const float MAG_DIST = 5f;
     
     private byte _ownerId;
-    private Camera _camera;
     private int _maxSelection;
     private RaycastHit[] _hitResults;
+    private Collider[] _colliderResults;
     private Vector3 _dragStart;
     private Vector3 _dragEnd;
     private bool _dragStartEventSent;
-
+    private float _lastClickTimestamp;
     private List<IActor> _selectedActors;
+
+    public event Action<Vector3> onPrimarySelect;
+    public event Action<Vector3> onPrimaryDoubleSelect;    
+    public event Action<Vector3> onSecondarySelect;   
+    public event Action<Vector3> onDragBegin;
+    public event Action<DragEndEventData> onDragEnd;
+
     
-    public struct DragEndEventData
-    {
-        public Vector3 startPoint;
-        public Vector3 endPoint;
-    }
-    
-    public ActorSelector(byte ownerId, Camera camera, int maxSelection)
+    public ActorSelector(byte ownerId, int maxSelection)
     {
         _selectedActors = new List<IActor>(maxSelection);
         
         _ownerId = ownerId;
-        _camera = camera;
         _maxSelection = maxSelection;
         _hitResults = new RaycastHit[_maxSelection];
+        _colliderResults = new Collider[_maxSelection];
         _dragStartEventSent = false;
+        _lastClickTimestamp = 0;
     }
 
     public void SelectActor(IActor a)
@@ -79,32 +81,38 @@ public class ActorSelector : GhostGen.EventDispatcher
     
     public void Tick()
     {
-        if (_camera == null)
-        {
-            Debug.LogError("Camera not set!");
-            return;
-        }
+        Vector3 mousePosition = Input.mousePosition;
         
         if (Input.GetMouseButtonDown(0))
         {
-            _dragStart = Input.mousePosition;
+            _dragStart = mousePosition;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            Vector3 clickPos = Input.mousePosition;
+            bool doubleClicked = Time.unscaledTime - _lastClickTimestamp < DOUBLE_CLICK_DELAY; 
+            _lastClickTimestamp = Time.unscaledTime;
+            
             if (_dragStartEventSent)
             {
-                _dragEnd = clickPos;
+                _dragEnd = mousePosition;
                 
                 DragEndEventData dragData = new DragEndEventData();
                 dragData.startPoint = _dragStart;
                 dragData.endPoint = _dragEnd;
-                DispatchEvent(PlayerUIEventType.DRAG_END, false, dragData);
+                
+                onDragEnd(dragData);
             }
             else
             {
-                DispatchEvent(PlayerUIEventType.PRIMARY_SELECT, false, clickPos);
+                if (doubleClicked)
+                {
+                    onPrimaryDoubleSelect(_dragStart);
+                }
+                else
+                {
+                    onPrimarySelect(_dragStart);
+                }
             }
 
             _dragStart = Vector3.zero;
@@ -114,8 +122,7 @@ public class ActorSelector : GhostGen.EventDispatcher
 
         if (Input.GetMouseButtonUp(1))
         {
-            Vector3 clickPos = Input.mousePosition;
-            DispatchEvent(PlayerUIEventType.SECONDARY_SELECT, false, clickPos);
+            onSecondarySelect(mousePosition);
         }
 
         if (Input.GetMouseButton(0))
@@ -123,10 +130,9 @@ public class ActorSelector : GhostGen.EventDispatcher
             if (!_dragStartEventSent)
             {
                 float mag = (Input.mousePosition - _dragStart).sqrMagnitude;
-                Debug.Log("Mag: " + mag);
                 if (mag > MAG_DIST)
                 {
-                    DispatchEvent(PlayerUIEventType.DRAG_BEGIN, false, _dragStart);
+                    onDragBegin(_dragStart);
                     _dragStartEventSent = true;
                 }
             }
@@ -135,9 +141,9 @@ public class ActorSelector : GhostGen.EventDispatcher
     public bool PickSelector<T>(Ray ray, int validLayers, out T view) where T: IActor
     {
         bool result = false;
-        view = default(T);
+        view = default;
 
-        int hitCount = Physics.RaycastNonAlloc(ray, _hitResults, 2000.0f, validLayers, QueryTriggerInteraction.Collide);
+        int hitCount = Physics.RaycastNonAlloc(ray, _hitResults, float.PositiveInfinity, validLayers, QueryTriggerInteraction.Collide);
         if (hitCount > 0)
         {
             RaycastHit hit = _hitResults[0]; // Only care about the first one
@@ -148,7 +154,7 @@ public class ActorSelector : GhostGen.EventDispatcher
         return result;
     }
     
-    public bool MultiPickSelector<T>(BoxCastParam param, int validLayers, ref List<T> viewList) where T: IActor
+    public bool MultiPickSelector<T>(Vector3 position, float radius, int validLayers, ref List<T> viewList) where T: IActor
     {
         bool result = false;
 
@@ -160,7 +166,8 @@ public class ActorSelector : GhostGen.EventDispatcher
         {
             viewList.Clear();
             
-            int hitCount = Physics.BoxCastNonAlloc(param.center, param.halfExtends, param.direction, _hitResults, Quaternion.identity, 2000.0f, validLayers, QueryTriggerInteraction.Collide);
+            
+            int hitCount = Physics.OverlapSphereNonAlloc(position, radius, _colliderResults, validLayers, QueryTriggerInteraction.Collide);
             for(int i = 0; i < hitCount; ++i)
             {
                 if (i >= _hitResults.Length)

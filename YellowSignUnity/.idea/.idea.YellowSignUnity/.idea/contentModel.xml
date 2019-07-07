@@ -32,6 +32,7 @@
               <e p="StateChecker.cs" t="Include" />
             </e>
             <e p="GamePlay" t="Include">
+              <e p="ActorLayers.cs" t="Include" />
               <e p="Attacking" t="Include">
                 <e p="AttackData.cs" t="Include" />
                 <e p="AttackResult.cs" t="Include" />
@@ -41,10 +42,10 @@
                 <e p="IAttackTarget.cs" t="Include" />
               </e>
               <e p="Camera" t="Include">
-                <e p="BoxCastParam.cs" t="Include" />
                 <e p="CameraMovement.cs" t="Include" />
                 <e p="GuiCameraTag.cs" t="Include" />
                 <e p="HoverDispatcher.cs" t="Include" />
+                <e p="SphereCastParams.cs" t="Include" />
               </e>
               <e p="Commands" t="Include">
                 <e p="BuildTowerCommand.cs" t="Include" />
@@ -89,6 +90,7 @@
               <e p="Player" t="Include">
                 <e p="ActorSelector.cs" t="Include" />
                 <e p="Commander.cs" t="Include" />
+                <e p="DragEndEventData.cs" t="Include" />
                 <e p="PlayerController.cs" t="Include" />
                 <e p="PlayerSpawn.cs" t="Include" />
                 <e p="PlayerState.cs" t="Include" />
@@ -124,6 +126,7 @@
               <e p="MainMenuView.cs" t="Include" />
               <e p="PlayerHudController.cs" t="Include" />
               <e p="PlayerHudView.cs" t="Include" />
+              <e p="Rotater.cs" t="Include" />
               <e p="StarScapeView.cs" t="Include" />
             </e>
             <e p="States" t="Include">
@@ -500,6 +503,59 @@
                     <e p="EDMultiply.shader" t="Include" />
                   </e>
                 </e>
+              </e>
+            </e>
+          </e>
+          <e p="Knife" t="Include">
+            <e p="Decal Master" t="Include">
+              <e p="Editor" t="Include">
+                <e p="Resources" t="Include">
+                  <e p="ShadowCreate.shader" t="Include" />
+                  <e p="Style" t="Include">
+                    <e p="Knife.DPT.GUIShader.shader" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="readme.txt" t="Include" />
+              <e p="Resources" t="Include">
+                <e p="Knife" t="Include">
+                  <e p="GPURaycast" t="Include">
+                    <e p="RenderTextureToBuffer.compute" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="Scripts" t="Include">
+                <e p="Decal.cs" t="Include" />
+                <e p="DeferredDecalsSystem.cs" t="Include" />
+                <e p="Editor" t="Include">
+                  <e p="AtlasSplitter.cs" t="Include" />
+                  <e p="DecalEditor.cs" t="Include" />
+                  <e p="DecalPlacementTool.cs" t="Include" />
+                  <e p="DecalPlacementToolOptionsEditor.cs" t="Include" />
+                  <e p="DecalSystemEditor.cs" t="Include" />
+                  <e p="DecalTemplateDrawer.cs" t="Include" />
+                  <e p="DecalTemplatesKit.cs" t="Include" />
+                  <e p="DecalTemplatesKitEditor.cs" t="Include" />
+                  <e p="DPTResourcesLoader.cs" t="Include" />
+                  <e p="MultiSelectionGrid.cs" t="Include" />
+                  <e p="TerrainMeshCreator.cs" t="Include" />
+                </e>
+                <e p="HeightmapsCollector.cs" t="Include" />
+                <e p="HeightTest.cs" t="Include" />
+                <e p="ReplacementTest.cs" t="Include" />
+                <e p="Texture2DArrayComposer.cs" t="Include" />
+                <e p="Tools" t="Include">
+                  <e p="GPURaycast.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Shaders" t="Include">
+                <e p="Decal PBR.shader" t="Include" />
+                <e p="Decal.shader" t="Include" />
+                <e p="DecalMain.cginc" t="Include" />
+                <e p="Depth.shader" t="Include" />
+                <e p="GPURaycastInfoShader.shader" t="Include" />
+                <e p="SpecSmoothnessBlitter.shader" t="Include" />
+                <e p="TerrainDecals.cginc" t="Include" />
               </e>
             </e>
           </e>

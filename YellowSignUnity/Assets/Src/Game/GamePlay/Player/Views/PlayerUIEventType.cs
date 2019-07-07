@@ -10,5 +10,6 @@
     public const string DRAG_BEGIN = "event_drag_begin";
     public const string DRAG_END = "event_drag_end";
     public const string PRIMARY_SELECT = "event_primary_select";
+    public const string PRIMARY_DOUBLE_SELECT = "event_primary_double_select";
     public const string SECONDARY_SELECT = "event_secondary_select";
 }

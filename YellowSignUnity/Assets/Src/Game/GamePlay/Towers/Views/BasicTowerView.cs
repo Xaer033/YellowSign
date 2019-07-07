@@ -16,7 +16,7 @@ public class BasicTowerView : UIView, ITowerView
     public GameObject fxPrefab;
     public Transform cannonHook;
     [SerializeField]
-    private EasyDecal _selectedDecal;
+    private GameObject _selectedIndicator;
 
     private TSTransform _transformTS;
     private Collider _collider;
@@ -46,6 +46,8 @@ public class BasicTowerView : UIView, ITowerView
 
         _shouldShowRange = false;
         _isSelected = false;
+        
+        _selectedIndicator.SetActive(false);
         
         _rangeView = GameObject.Instantiate(Singleton.instance.gameConfig.gameplayResources.towerRangePrefab, transform);
         _rangeView.transform.localPosition = Vector3.zero;
@@ -124,14 +126,14 @@ public class BasicTowerView : UIView, ITowerView
     {
         if (IsInvalid(InvalidationFlag.ALL) && _tower != null)
         {
-            if (_selectedDecal != null)
+            if (_selectedIndicator != null)
             {
-                _selectedDecal.gameObject.SetActive(_isSelected);
+                _selectedIndicator.SetActive(_isSelected);
             }
             
             if (_rangeView != null)
             {
-                _rangeView.SetActive(_shouldShowRange || _isSelected);
+                _rangeView.SetActive(_shouldShowRange);
                 _rangeView.transform.localScale = Vector3.one * _tower.state.range.AsFloat();
             }
         }

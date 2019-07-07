@@ -118,7 +118,7 @@ public class PlayerHudView : UIView
         }
         get
         {
-            return _selectionImage ? _selectionImage.IsActive() : false;
+            return _selectionImage && _selectionImage.IsActive();
         }
     }
     public void SetDragPoints(Vector3 startPos, Vector3 endPos)
@@ -139,8 +139,7 @@ public class PlayerHudView : UIView
             Vector3 size = max - min;
             
             size.y = -size.y;
-            
-            Debug.Log("Start: " + min + ", End: " + size);
+
             _selectionImage.rectTransform.anchoredPosition3D = min /  Singleton.instance.gui.mainCanvas.scaleFactor;
             _selectionImage.rectTransform.sizeDelta = size / Singleton.instance.gui.mainCanvas.scaleFactor;
         }

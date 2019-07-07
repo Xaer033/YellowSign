@@ -38,6 +38,7 @@ public class Tower : IAttacker, IAttackTarget
 
 
     public byte             ownerId         { get; private set; }
+    public string           type            { get; private set; }
     public TowerStats       stats           { get; private set; }
     public ITowerView       view            { get; private set; }
     public FP               spawnTime       { get; private set; }
@@ -55,6 +56,8 @@ public class Tower : IAttacker, IAttackTarget
         spawnTime = TrueSyncManager.Time;
         
         _towerBrain = def.brain;
+
+        type = def.id;
         
         stats = def.stats;
         state = TowerState.CreateFromStats(stats);

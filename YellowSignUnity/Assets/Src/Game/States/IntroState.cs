@@ -26,7 +26,8 @@ public class IntroState : IGameState
 	{
 		Debug.Log ("Entering In Intro State");
         DOTween.Init(true, true, LogBehaviour.ErrorsOnly);
-
+        ActorLayers.Init();
+        
         _networkManager.Connect();
         _networkManager.onJoinedLobby += OnJoinedLobby;
         _networkManager.onJoinedRoom += OnJoinedRoom;

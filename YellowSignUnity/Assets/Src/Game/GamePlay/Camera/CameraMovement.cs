@@ -15,9 +15,16 @@ public class CameraMovement : MonoBehaviour
     private Rect _worldLimit;
     private Camera _camera;
     private bool _isLocked;
+    private bool _isDebugLocked;
 
     public PlayerSpawn playerSpawn { get; set; }
 
+    public bool isLocked
+    {
+        get { return _isLocked || _isDebugLocked; }
+        set { _isLocked = value; }
+    }
+    
     public void Setup(PlayerSpawn spawn)
     {
         if(spawn != null)
@@ -41,7 +48,7 @@ public class CameraMovement : MonoBehaviour
             _currentPos = transform.localPosition;
             _startPos = _currentPos;
 
-            _isLocked = true;
+            _isDebugLocked = true;
         }
     }
 
@@ -62,10 +69,10 @@ public class CameraMovement : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Z))
         {
-            _isLocked = !_isLocked;
+            _isDebugLocked = !_isDebugLocked;
         }
 
-        if(_isLocked || playerSpawn == null || playerSpawn.cameraHook == null)
+        if(isLocked || playerSpawn == null || playerSpawn.cameraHook == null)
         {
             return;
         }
