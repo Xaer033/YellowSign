@@ -1,68 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="31d5fe2c-f077-47f7-9cad-253aa90e471b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Gameplay/CameraFX/LookAndFeel.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Gameplay/CameraFX/LookAndFeel.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Gameplay/CameraFX/selectableRT.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Gameplay/CameraFX/selectableRT.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Creeps/CreepDictionary.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Creeps/CreepDictionary.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Creeps/CreepType/AdvanceCreep/AdvanceCreepStats.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Creeps/CreepType/AdvanceCreep/AdvanceCreepStats.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Creeps/CreepType/BasicCreep/BasicCreepStats.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Creeps/CreepType/BasicCreep/BasicCreepStats.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Towers/Brains/DefaultTowerBrain.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Towers/Brains/DefaultTowerBrain.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Towers/TowerDictionary.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Towers/TowerDictionary.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Towers/TowerType/BasicTower/BasicTowerStats.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Towers/TowerType/BasicTower/BasicTowerStats.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Waves/WaveSequence.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Gameplay/Waves/WaveSequence.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Managers/GameConfig.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Managers/GameConfig.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Managers/GameInstaller.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Managers/GameInstaller.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Managers/GameplayResources.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Managers/GameplayResources.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/GameResources/Managers/TrueSyncConfig.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/GameResources/Managers/TrueSyncConfig.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameSceneMultiplayer/LightingData.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GameSceneMultiplayer/LightingData.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameSceneSingleplayer/LightingData.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GameSceneSingleplayer/LightingData.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Src/Game/GamePlay/Player/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Src/Game/GamePlay/Player/PlayerController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/DOTween/Resources/DOTweenSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/DOTween/Resources/DOTweenSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Apocalyptic.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Apocalyptic.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/BulletHoles.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/BulletHoles.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Grafiti DSSD.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Grafiti DSSD.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Grafiti FSSD.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Grafiti FSSD.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Grafiti.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Grafiti.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Puddles.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Puddles.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/PuddlesBlood.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/PuddlesBlood.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/PuddlesRadioactive.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/PuddlesRadioactive.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Sci-Fi.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Sci-Fi.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Sewers.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/EasyDecal/nu Assets/Easy Decal/Atlas/Sewers.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Knife/Decal Master/EditorLastUsedTemplates Kit.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Knife/Decal Master/EditorLastUsedTemplates Kit.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Networking/Photon Unity Networking/Editor/PhotonNetwork/PunSceneSettingsFile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Networking/Photon Unity Networking/Editor/PhotonNetwork/PunSceneSettingsFile.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Networking/Photon Unity Networking/Resources/PhotonServerSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Networking/Photon Unity Networking/Resources/PhotonServerSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Networking/TrueSync/Unity/Resources/TrueSyncGlobalConfig.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Networking/TrueSync/Unity/Resources/TrueSyncGlobalConfig.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/AOTGenerationConfig.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/AOTGenerationConfig.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/ColorPaletteManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/ColorPaletteManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/GeneralDrawerConfig.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/GeneralDrawerConfig.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/ImportSettingsConfig.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/ImportSettingsConfig.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/InspectorConfig.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Editor/InspectorConfig.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Resources/Sirenix/GlobalSerializationConfig.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/Plugins/Sirenix/Odin Inspector/Config/Resources/Sirenix/GlobalSerializationConfig.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/TextMesh Pro/Resources/Sprite Assets/EmojiOne.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/TextMesh Pro/Resources/Sprite Assets/EmojiOne.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/TextMesh Pro/Resources/Style Sheets/Default Style Sheet.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/TextMesh Pro/Resources/Style Sheets/Default Style Sheet.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/TextMesh Pro/Resources/TMP Settings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/TextMesh Pro/Resources/TMP Settings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/codeandweb.com/Editor/SettingsTexturePackerImporter.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/codeandweb.com/Editor/SettingsTexturePackerImporter.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/AudioManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/AudioManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ClusterInputManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ClusterInputManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/InputManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/InputManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/NetworkManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/NetworkManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/Physics2DSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/Physics2DSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/PresetManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/PresetManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TimeManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TimeManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/UnityConnectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/UnityConnectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/VFXManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/VFXManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/XRSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/XRSettings.asset" afterDir="false" />
-    </list>
+    <list default="true" id="31d5fe2c-f077-47f7-9cad-253aa90e471b" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,8 +15,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Assets/Src/Game/GamePlay/Player/PlayerController.cs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="101">
-                  <caret line="159" lean-forward="true" selection-start-line="159" selection-end-line="159" />
+                <state relative-caret-position="-653">
+                  <caret line="481" column="17" selection-start-line="481" selection-start-column="17" selection-end-line="481" selection-end-column="17" />
                   <folding>
                     <marker date="1562459618861" expanded="true" signature="6:99" ph="..." />
                     <marker date="1562459618861" expanded="true" signature="146:21282" ph="{...}" />
@@ -498,8 +437,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Assets/Src/Game/GamePlay/Camera/CameraMovement.cs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="374">
-                  <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
+                <state relative-caret-position="459">
+                  <caret line="36" column="62" lean-forward="true" selection-start-line="36" selection-start-column="62" selection-end-line="36" selection-end-column="62" />
                   <folding>
                     <marker date="1561890250986" expanded="true" signature="63:4187" ph="{...}" />
                     <marker date="1561890250986" expanded="true" signature="545:644" ph="{...}" />
@@ -872,12 +811,12 @@
       <workItem from="1561880355261" duration="5185000" />
       <workItem from="1561886632871" duration="13795000" />
       <workItem from="1562232351586" duration="28312000" />
-      <workItem from="1562459421713" duration="357000" />
+      <workItem from="1562459421713" duration="1557000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="144803000" />
+    <option name="totallyTimeSpent" value="146003000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2224,38 +2163,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Src/Game/GamePlay/Camera/CameraMovement.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
-          <folding>
-            <marker date="1561890250986" expanded="true" signature="63:4187" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="545:644" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="690:1535" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="722:1529" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="1561:1605" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="1621:1761" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="1787:2573" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="1833:1899" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="1978:2018" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="2075:2217" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="2258:2402" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="2441:2567" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="2683:4185" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="2755:2795" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="2993:3075" ph="/* Debug.Log(&quot;CamPos: &quot; + camPos); ... */" />
-            <marker date="1561890250986" expanded="true" signature="3139:3244" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="3330:3435" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="3498:3605" ph="{...}" />
-            <marker date="1561890250986" expanded="true" signature="3694:3803" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Src/Game/GamePlay/Player/PlayerController.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="159" lean-forward="true" selection-start-line="159" selection-end-line="159" />
+        <state relative-caret-position="-653">
+          <caret line="481" column="17" selection-start-line="481" selection-start-column="17" selection-end-line="481" selection-end-column="17" />
           <folding>
             <marker date="1562459618861" expanded="true" signature="6:99" ph="..." />
             <marker date="1562459618861" expanded="true" signature="146:21282" ph="{...}" />
@@ -2333,6 +2244,34 @@
             <marker date="1562459618861" expanded="true" signature="15014:15107" ph="{...}" />
             <marker date="1562459618861" expanded="true" signature="15996:16324" ph="{...}" />
             <marker date="1562459618861" expanded="true" signature="17925:21253" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Src/Game/GamePlay/Camera/CameraMovement.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="36" column="62" lean-forward="true" selection-start-line="36" selection-start-column="62" selection-end-line="36" selection-end-column="62" />
+          <folding>
+            <marker date="1561890250986" expanded="true" signature="63:4187" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="545:644" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="690:1535" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="722:1529" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="1561:1605" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="1621:1761" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="1787:2573" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="1833:1899" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="1978:2018" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="2075:2217" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="2258:2402" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="2441:2567" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="2683:4185" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="2755:2795" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="2993:3075" ph="/* Debug.Log(&quot;CamPos: &quot; + camPos); ... */" />
+            <marker date="1561890250986" expanded="true" signature="3139:3244" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="3330:3435" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="3498:3605" ph="{...}" />
+            <marker date="1561890250986" expanded="true" signature="3694:3803" ph="{...}" />
           </folding>
         </state>
       </provider>
