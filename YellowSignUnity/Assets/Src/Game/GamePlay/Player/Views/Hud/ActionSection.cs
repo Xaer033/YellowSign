@@ -5,7 +5,7 @@ using GhostGen;
 using TMPro;
 using UnityEngine;
 
-public class ActionSection : UIView
+public class ActionSection : EventDispatcherBehavior
 {
     public ActionButton[] _actionButtonList;
     public TMP_Text _titleText;

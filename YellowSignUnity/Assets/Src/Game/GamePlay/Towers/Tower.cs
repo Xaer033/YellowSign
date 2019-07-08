@@ -42,35 +42,37 @@ public class Tower : IAttacker, IAttackTarget
     public TowerStats       stats           { get; private set; }
     public ITowerView       view            { get; private set; }
     public FP               spawnTime       { get; private set; }
+    public TowerDef         def             { get; private set; }
 
     public Creep            targetCreep     { get; set; }
     public TowerState       state           { get; set; }
-
-
+    
+    
     private ITowerBrain _towerBrain;
 
 
-	public Tower(TowerDef def, TowerSpawnInfo spawnInfo)
+	public Tower(TowerDef towerDef, TowerSpawnInfo spawnInfo)
     {
         ownerId = spawnInfo.ownerId;
         spawnTime = TrueSyncManager.Time;
-        
-        _towerBrain = def.brain;
 
-        type = def.id;
+        def = towerDef;
         
-        stats = def.stats;
+        _towerBrain = towerDef.brain;
+
+        type = towerDef.id;
+        
+        stats = towerDef.stats;
         state = TowerState.CreateFromStats(stats);
 
         GameObject towerGameObject = TrueSyncManager.SyncedInstantiate(
-            def.view.gameObject, 
+            towerDef.view.gameObject, 
             spawnInfo.position, 
             spawnInfo.rotation);
 
         view = towerGameObject.GetComponent<ITowerView>();
         view.tower = this;
-       
-	}
+    }
 	
     public int health
     {

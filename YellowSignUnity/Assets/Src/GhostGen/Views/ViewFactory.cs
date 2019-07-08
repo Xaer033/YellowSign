@@ -152,8 +152,11 @@ namespace GhostGen
         {
             Transform viewParent = (parent != null) ? parent : canvas.transform;
             Assert.IsNotNull(viewBase);
-            UIView view = GameObject.Instantiate<UIView>(viewBase, viewParent, false);
-            Singleton.instance.diContainer.InjectGameObjectForComponent<UIView>(view.gameObject);
+            
+            GameObject g = GameObject.Instantiate(viewBase.gameObject, viewParent, false);
+            Singleton.instance.diContainer.InjectGameObject(g);
+            UIView view = g.GetComponent<UIView>();
+            
             return view;
         }
 

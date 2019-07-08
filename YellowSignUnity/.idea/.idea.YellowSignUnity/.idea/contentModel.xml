@@ -90,8 +90,6 @@
               </e>
               <e p="IActor.cs" t="Include" />
               <e p="Player" t="Include">
-                <e p="ActionButtonData.cs" t="Include" />
-                <e p="ActorActionType.cs" t="Include" />
                 <e p="ActorSelector.cs" t="Include" />
                 <e p="Commander.cs" t="Include" />
                 <e p="DragEndEventData.cs" t="Include" />
@@ -100,9 +98,15 @@
                 <e p="PlayerSpawn.cs" t="Include" />
                 <e p="PlayerState.cs" t="Include" />
                 <e p="Views" t="Include">
-                  <e p="ActionButton.cs" t="Include" />
-                  <e p="ActionSection.cs" t="Include" />
-                  <e p="PlayerHudView.cs" t="Include" />
+                  <e p="Hud" t="Include">
+                    <e p="ActionButton.cs" t="Include" />
+                    <e p="ActionButtonData.cs" t="Include" />
+                    <e p="ActionSection.cs" t="Include" />
+                    <e p="ActorActionType.cs" t="Include" />
+                    <e p="PlayerHudView.cs" t="Include" />
+                    <e p="SelectionViewData.cs" t="Include" />
+                    <e p="TowerSelectionView.cs" t="Include" />
+                  </e>
                   <e p="PlayerUIEventType.cs" t="Include" />
                 </e>
               </e>
@@ -120,7 +124,6 @@
                   <e p="BasicTowerView.cs" t="Include" />
                   <e p="ITowerView.cs" t="Include" />
                   <e p="TowerHighlighter.cs" t="Include" />
-                  <e p="TowerSelectionView.cs" t="Include" />
                 </e>
               </e>
               <e p="Waves" t="Include">
@@ -179,6 +182,7 @@
             </e>
             <e p="Views" t="Include">
               <e p="InvalidationFlag.cs" t="Include" />
+              <e p="IView.cs" t="Include" />
               <e p="UIView.cs" t="Include" />
               <e p="ViewFactory.cs" t="Include" />
             </e>

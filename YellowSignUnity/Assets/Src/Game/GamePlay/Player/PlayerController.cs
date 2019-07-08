@@ -652,7 +652,7 @@ public class PlayerController : MonoBehaviour
             {
                 _actorSelector.SelectActor(view);
             }
-            else
+            else if(!Input.GetKey(KeyCode.LeftShift))
             {
                 _actorSelector.DeselectActor(view);
             }

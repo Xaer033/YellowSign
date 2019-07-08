@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text;
 using GhostGen;
 using UnityEngine.UI;
 using TMPro;
@@ -7,6 +8,9 @@ using Zenject;
 
 public class PlayerHudView : UIView
 {
+    public TowerSelectionView _towerSelectionView;
+    public ActionSection _actionSection;
+
     public TMP_Text _killCount;
 
     public Button _towerButton;
@@ -26,7 +30,7 @@ public class PlayerHudView : UIView
     [Inject]
     private CreepSystem _creepSystem;
 
-    public void Awake()
+    public void Start()
     {
         _creepSystem.AddListener(GameplayEventType.CREEP_KILLED, onCreepKilled);
         _creepButton.onClick.AddListener(onCreepButton);
@@ -153,16 +157,40 @@ public class PlayerHudView : UIView
         // Update selected actor info panel, either clearing it, single item, or mutli selected view
         if (selectedActors.Count == 0)
         {
-            Debug.Log("Clear Selected");
+//            Debug.Log("Clear Selected");
+            _towerSelectionView.SetSelectionData(null);
         }
         else if (selectedActors.Count == 1)
         {
+            IActor actor = selectedActors[0] as IActor;
+            ITowerView tView = actor as ITowerView;
+            Tower t = tView.tower;
+            TowerState tState = tView.tower.state;
+            TowerStats tStats = tView.tower.stats;
+
+            StringBuilder descriptionBuilder = new StringBuilder();
+            descriptionBuilder.Append("Damage: ");
+            descriptionBuilder.Append(tState.attackDamage);
+            descriptionBuilder.Append("\nRange: ");
+            descriptionBuilder.Append(tState.range.ToString());
+            descriptionBuilder.Append("m (Meters)");
+            descriptionBuilder.Append("\nCooldown: ");
+            descriptionBuilder.Append(tState.reloadTimer.ToString());
+            descriptionBuilder.Append("s (Seconds)");
             
-            Debug.Log("Update Selected item");
+            SelectionViewData data = new SelectionViewData();
+            data.descriptionText = descriptionBuilder.ToString();
+            data.healthText = tState.health + "/" + tStats.maxHealth;
+            data.titleText = t.type;
+            data.mainIconName = t.def.icon.name;
+            
+            _towerSelectionView.SetSelectionData(data);
         }
         else
         {
-            Debug.Log("Multi Select Item Refresh: " + selectedActors.Count);
+            
+            _towerSelectionView.SetSelectionData(null);
+//            Debug.Log("Multi Select Item Refresh: " + selectedActors.Count);
         }
     }
 }

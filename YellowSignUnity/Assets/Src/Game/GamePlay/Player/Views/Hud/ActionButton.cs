@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using GhostGen;
+﻿using GhostGen;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,12 +6,14 @@ using UnityEngine.UI;
 public class ActionButton : UIView
 {
     public Button _button;
-
+    public Toggle _toggle;
     public TMP_Text _shortcutText;
 
     public Image _icon;
 
     private ActionButtonData _actionData;
+
+    private GameplayResources _gameplayResources;
     
     // Start is called before the first frame update
     void Awake()
@@ -22,6 +22,13 @@ public class ActionButton : UIView
         {
             _button.onClick.AddListener(onAction);
         }
+
+        if (_toggle)
+        {
+            _toggle.onValueChanged.AddListener(onToggle);
+        }
+
+        _gameplayResources = Singleton.instance.gameConfig.gameplayResources;
     }
 
     public void SetActionData(ActionButtonData data)
@@ -41,7 +48,14 @@ public class ActionButton : UIView
         {
             if (Input.GetKeyDown(_actionData.shortcutKey))
             {
-                onAction();
+                if (_actionData.isToggle)
+                {
+                    _toggle.isOn = !_toggle.isOn;
+                }
+                else
+                {
+                    onAction();
+                }
             }
         }
     }
@@ -52,7 +66,18 @@ public class ActionButton : UIView
         {
             if (_actionData != null)
             {
-                gameObject.SetActive(false);
+                gameObject.SetActive(true);
+
+                if (_toggle)
+                {
+                    _toggle.enabled = _actionData.isToggle;
+                    _toggle.SetIsOnWithoutNotify(_actionData.toggleValue);
+                }
+
+                if (_button)
+                {
+                    _button.enabled = !_actionData.isToggle;
+                }
                 
                 if (_shortcutText)
                 {
@@ -62,7 +87,7 @@ public class ActionButton : UIView
 
                 if (_icon)
                 {
-                    _icon.sprite = Singleton.instance.gameConfig.gameplayResources.GetIcon(_actionData.iconName);
+                    _icon.sprite = _gameplayResources.GetIcon(_actionData.iconName);
                 }
                 
             }
@@ -73,6 +98,14 @@ public class ActionButton : UIView
         }
     }
 
+    private void onToggle(bool value)
+    {
+        if (_actionData != null)
+        {
+            _actionData.toggleValue = value;
+            onAction();
+        }
+    }
     private void onAction()
     {
         if (_actionData != null)
@@ -80,5 +113,4 @@ public class ActionButton : UIView
             DispatchEvent(_actionData.actionId, true, _actionData);
         }
     }
-
 }
