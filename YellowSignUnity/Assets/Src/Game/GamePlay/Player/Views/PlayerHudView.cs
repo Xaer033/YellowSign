@@ -1,4 +1,5 @@
-﻿using GhostGen;
+﻿using System.Collections.ObjectModel;
+using GhostGen;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
@@ -13,8 +14,9 @@ public class PlayerHudView : UIView
 
     public Button _creepButton;
     public Image _creepPortrait;
-
     public Image _selectionImage;
+    
+    
     
     private string _killText;
     private int creepsKilled;
@@ -24,7 +26,7 @@ public class PlayerHudView : UIView
     [Inject]
     private CreepSystem _creepSystem;
 
-    public void Start()
+    public void Awake()
     {
         _creepSystem.AddListener(GameplayEventType.CREEP_KILLED, onCreepKilled);
         _creepButton.onClick.AddListener(onCreepButton);
@@ -73,7 +75,7 @@ public class PlayerHudView : UIView
             if(_currentCreepDef != null && _creepPortrait != null)
             {
                 _creepPortrait.overrideSprite = _currentCreepDef.icon;
-                _creepPortrait.color = UnityEngine.Color.white;
+                _creepPortrait.color = Color.white;
             }
         }
     }
@@ -142,6 +144,25 @@ public class PlayerHudView : UIView
 
             _selectionImage.rectTransform.anchoredPosition3D = min /  Singleton.instance.gui.mainCanvas.scaleFactor;
             _selectionImage.rectTransform.sizeDelta = size / Singleton.instance.gui.mainCanvas.scaleFactor;
+        }
+
+    }
+    
+    public void UpdateSelectedActors(ReadOnlyCollection<IActor> selectedActors)
+    {
+        // Update selected actor info panel, either clearing it, single item, or mutli selected view
+        if (selectedActors.Count == 0)
+        {
+            Debug.Log("Clear Selected");
+        }
+        else if (selectedActors.Count == 1)
+        {
+            
+            Debug.Log("Update Selected item");
+        }
+        else
+        {
+            Debug.Log("Multi Select Item Refresh: " + selectedActors.Count);
         }
     }
 }

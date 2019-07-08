@@ -6,6 +6,7 @@
     public const string DISMISS_VIEW = "dismiss_view";
     public const string TOGGLE_CREEP_VIEW = "toggle_creep_view";
     public const string TOGGLE_TOWER_VIEW = "toggle_tower_view";
+    public const string ACTION_BUTTON = "event_action_button";
     
     public const string DRAG_BEGIN = "event_drag_begin";
     public const string DRAG_END = "event_drag_end";

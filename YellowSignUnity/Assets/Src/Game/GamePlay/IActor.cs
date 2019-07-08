@@ -11,4 +11,6 @@ public interface IActor
     GameObject gameObject { get; }
     
     bool isSelected { get; set; }
+    
+    
 }

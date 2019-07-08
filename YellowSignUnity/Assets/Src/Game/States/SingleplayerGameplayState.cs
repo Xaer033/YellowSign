@@ -48,8 +48,6 @@ public class SingleplayerGameplayState : IGameState
         _gameSystemManager.Initialize();
 
         _guiManager.screenFader.FadeIn(1.5f);
-
-        Debug.Log("Tick: " + TrueSyncManager.Ticks);
         TrueSyncManager.RunSimulation();
     }
     

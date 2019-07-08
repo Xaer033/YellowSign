@@ -113,7 +113,7 @@ public class Grid : MonoBehaviour
         {
             RaycastHit hit = _hitResults[i];
             int gameObjLayer = hit.transform.gameObject.layer;
-            Debug.Log("Hit Layer: " + gameObjLayer);
+            
             if ((gameObjLayer & _ignoreClickLayer) == gameObjLayer)
             {
                 result = false;

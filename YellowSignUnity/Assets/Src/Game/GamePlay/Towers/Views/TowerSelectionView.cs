@@ -4,8 +4,9 @@ using GhostGen;
 using UnityEngine;
 using Zenject;
 
-public class SelectedTowersView : UIView
+public class TowerSelectionView : UIView
 {
+
     public CanvasGroup _canvasGroup;
     private GameplayResources _gameplayResources;
     private ViewFactory _viewFactory;
@@ -15,6 +16,11 @@ public class SelectedTowersView : UIView
         GameplayResources gameplayResources)
     {
         _gameplayResources = gameplayResources;
+    }
+
+    public void Awake()
+    {
+        
     }
     
 

@@ -23,3 +23,5 @@ MonoBehaviour:
   towerRangePrefab: {fileID: 7737568538416163388, guid: 4e4a113d8bd32eb4aa7c42fe281b64c2,
     type: 3}
   waveSequence: {fileID: 11400000, guid: 9e07c86e61efe634390112c149bda653, type: 2}
+  iconAtlas: {fileID: 4343727234628468602, guid: 935dcb10b246a6542ae6dcae347a1fed,
+    type: 2}

@@ -92,7 +92,7 @@ namespace GhostGen
             return _invalidateFlag.IsFlagSet(flag);         
         }
         
-        public virtual void Update()
+        protected virtual void Update()
         {
             if(invalidateFlag != InvalidationFlag.NONE)
             {

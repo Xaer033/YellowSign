@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using GhostGen;
 
@@ -24,8 +25,6 @@ public class PlayerHudController : BaseController
 
     public void Start(Action onViewCreated)
     {
-        Debug.Log("Building Hud");
-
         viewFactory.CreateAsync<PlayerHudView>("GUI/Gameplay/PlayerHudView", (x) =>
         {
             _hudView = x as PlayerHudView;
@@ -75,6 +74,14 @@ public class PlayerHudController : BaseController
         if (_hudView)
         {
             _hudView.SetDragPoints(startPos, endPos);
+        }
+    }
+
+    public void UpdateSelectedActors(ReadOnlyCollection<IActor> selectedActors)
+    {
+        if (_hudView)
+        {
+            _hudView.UpdateSelectedActors(selectedActors);
         }
     }
 

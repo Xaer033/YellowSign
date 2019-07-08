@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using GhostGen;
 using TrueSync;
 using UnityEngine;
@@ -103,6 +104,11 @@ public class PlayerController : MonoBehaviour
             _commander.onSyncedStep -= OnSyncStep;
             _commander.onSyncStartLocalPlayer -= OnSyncStartLocalPlayer;
         }
+        
+        if (_hudController != null)
+        {
+            _hudController.RemoveView(true);
+        }
 
         if (_actorSelector != null)
         {
@@ -112,16 +118,6 @@ public class PlayerController : MonoBehaviour
             _actorSelector.onDragBegin -= onDragBegin;
             _actorSelector.onDragEnd -= onDragEnd;
             _actorSelector = null;
-//            _actorSelector.RemoveListener(PlayerUIEventType.PRIMARY_SELECT, onPrimarySelect);
-//            _actorSelector.RemoveListener(PlayerUIEventType.SECONDARY_SELECT, onSecondarySelect);
-//            _actorSelector.RemoveListener(PlayerUIEventType.PRIMARY_DOUBLE_SELECT, onPrimaryDoubleSelect);
-//            _actorSelector.RemoveListener(PlayerUIEventType.DRAG_BEGIN, onDragBegin);
-//            _actorSelector.RemoveListener(PlayerUIEventType.DRAG_END, onDragEnd);
-        }
-
-        if (_hudController != null)
-        {
-            _hudController.RemoveView(true);
         }
     }
 
@@ -157,19 +153,7 @@ public class PlayerController : MonoBehaviour
                 _hudController.SetDragPoints(screenSpaceStart, screenSpaceCurrent);
             }
 
-
-            generateFrustum(_camera.camera, screenSpaceStart, screenSpaceCurrent, ref _selectionFrustumPlanes);
-            for (int i = 0; i < _gameState.towerList.Count; ++i)
-            {
-                if (GeometryUtility.TestPlanesAABB(_selectionFrustumPlanes, _gameState.towerList[i].view.bounds))
-                {
-                    _actorSelector.SelectActor(_gameState.towerList[i].view);
-                }
-                else
-                {
-                    _actorSelector.DeselectActor(_gameState.towerList[i].view);
-                }
-            }
+            _handleMarqueSelection(screenSpaceStart, screenSpaceCurrent);
         }
         
         
@@ -241,15 +225,17 @@ public class PlayerController : MonoBehaviour
         _camera = camObj.GetComponent<CameraMovement>();
         _camera.Setup(playerSpawn);
 
+        _hudController = new PlayerHudController(this);
+        _hudController.Start(null);
+        
         _actorSelector = new ActorSelector(owner.Id, 25);
         _actorSelector.onPrimarySelect += onPrimarySelect;
         _actorSelector.onPrimaryDoubleSelect += onPrimaryDoubleSelect;
         _actorSelector.onSecondarySelect += onSecondarySelect;
         _actorSelector.onDragBegin += onDragBegin;
         _actorSelector.onDragEnd += onDragEnd;
-        
-        _hudController = new PlayerHudController(this);
-        _hudController.Start(null);
+        _actorSelector.onSelectionChanged += onSelectionChanged;
+
     }
 
     private void onPrimarySelect(Vector3 mousePosition)
@@ -359,6 +345,14 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    private void onSelectionChanged(ReadOnlyCollection<IActor> selectedActors)
+    {
+        if (_hudController != null)
+        {
+            _hudController.UpdateSelectedActors(selectedActors);
+        }
+    }
+    
     private void _noneState()
     {
         if(_highlighter)
@@ -634,5 +628,34 @@ public class PlayerController : MonoBehaviour
             m.triangles = triangleList;
         }
         return true;
+    }
+
+    private void _handleMarqueSelection(Vector3 screenSpaceStart, Vector3 screenSpaceCurrent)
+    {
+        bool hasFrustum = generateFrustum(_camera.camera, screenSpaceStart, screenSpaceCurrent, ref _selectionFrustumPlanes);
+
+        if (!hasFrustum)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _gameState.towerList.Count; ++i)
+        {
+            Tower t = _gameState.towerList[i];
+            if (t == null)
+            {
+                continue;
+            }
+
+            IActor view = t.view;
+            if (GeometryUtility.TestPlanesAABB(_selectionFrustumPlanes, view.bounds))
+            {
+                _actorSelector.SelectActor(view);
+            }
+            else
+            {
+                _actorSelector.DeselectActor(view);
+            }
+        }
     }
 }

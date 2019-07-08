@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using GhostGen;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -26,6 +28,7 @@ public class ActorSelector : EventDispatcher
     public event Action<Vector3> onDragBegin;
     public event Action<DragEndEventData> onDragEnd;
 
+    public event Action<ReadOnlyCollection<IActor>> onSelectionChanged;
     
     public ActorSelector(byte ownerId, int maxSelection)
     {
@@ -51,6 +54,7 @@ public class ActorSelector : EventDispatcher
         if (!_selectedActors.Contains(a))
         {
             _selectedActors.Add(a);
+            onSelectionChanged(_selectedActors.AsReadOnly());
         }
     }
 
@@ -66,6 +70,7 @@ public class ActorSelector : EventDispatcher
         if (_selectedActors.Contains(a))
         {
             _selectedActors.Remove(a);
+            onSelectionChanged(_selectedActors.AsReadOnly());
         }
     }
 
@@ -77,6 +82,7 @@ public class ActorSelector : EventDispatcher
         }
         
         _selectedActors.Clear();
+        onSelectionChanged(_selectedActors.AsReadOnly());
     }
     
     public void Tick()
@@ -100,18 +106,27 @@ public class ActorSelector : EventDispatcher
                 DragEndEventData dragData = new DragEndEventData();
                 dragData.startPoint = _dragStart;
                 dragData.endPoint = _dragEnd;
-                
-                onDragEnd(dragData);
+
+                if (onDragEnd != null)
+                {
+                    onDragEnd(dragData);
+                }
             }
             else
             {
                 if (doubleClicked)
                 {
-                    onPrimaryDoubleSelect(_dragStart);
+                    if (onPrimaryDoubleSelect != null)
+                    {
+                        onPrimaryDoubleSelect(_dragStart);
+                    }
                 }
                 else
                 {
-                    onPrimarySelect(_dragStart);
+                    if (onPrimarySelect != null)
+                    {
+                        onPrimarySelect(_dragStart);
+                    }
                 }
             }
 
@@ -122,7 +137,10 @@ public class ActorSelector : EventDispatcher
 
         if (Input.GetMouseButtonUp(1))
         {
-            onSecondarySelect(mousePosition);
+            if (onSecondarySelect != null)
+            {
+                onSecondarySelect(mousePosition);
+            }
         }
 
         if (Input.GetMouseButton(0))
@@ -132,7 +150,10 @@ public class ActorSelector : EventDispatcher
                 float mag = (Input.mousePosition - _dragStart).sqrMagnitude;
                 if (mag > MAG_DIST)
                 {
-                    onDragBegin(_dragStart);
+                    if (onDragBegin != null)
+                    {
+                        onDragBegin(_dragStart);
+                    }
                     _dragStartEventSent = true;
                 }
             }

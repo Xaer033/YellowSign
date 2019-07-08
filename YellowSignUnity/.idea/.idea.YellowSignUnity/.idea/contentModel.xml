@@ -64,6 +64,8 @@
                 <e p="Views" t="Include">
                   <e p="BasicCreepView.cs" t="Include" />
                   <e p="CreepHealthUIView.cs" t="Include" />
+                  <e p="CreepSpawnerView.cs" t="Include" />
+                  <e p="CreepUIItemView.cs" t="Include" />
                   <e p="ICreepView.cs" t="Include" />
                 </e>
               </e>
@@ -88,13 +90,19 @@
               </e>
               <e p="IActor.cs" t="Include" />
               <e p="Player" t="Include">
+                <e p="ActionButtonData.cs" t="Include" />
+                <e p="ActorActionType.cs" t="Include" />
                 <e p="ActorSelector.cs" t="Include" />
                 <e p="Commander.cs" t="Include" />
                 <e p="DragEndEventData.cs" t="Include" />
                 <e p="PlayerController.cs" t="Include" />
+                <e p="PlayerHudController.cs" t="Include" />
                 <e p="PlayerSpawn.cs" t="Include" />
                 <e p="PlayerState.cs" t="Include" />
                 <e p="Views" t="Include">
+                  <e p="ActionButton.cs" t="Include" />
+                  <e p="ActionSection.cs" t="Include" />
+                  <e p="PlayerHudView.cs" t="Include" />
                   <e p="PlayerUIEventType.cs" t="Include" />
                 </e>
               </e>
@@ -111,8 +119,8 @@
                 <e p="Views" t="Include">
                   <e p="BasicTowerView.cs" t="Include" />
                   <e p="ITowerView.cs" t="Include" />
-                  <e p="SelectedTowersView.cs" t="Include" />
                   <e p="TowerHighlighter.cs" t="Include" />
+                  <e p="TowerSelectionView.cs" t="Include" />
                 </e>
               </e>
               <e p="Waves" t="Include">
@@ -120,12 +128,8 @@
               </e>
             </e>
             <e p="GUI" t="Include">
-              <e p="CreepSpawnerView.cs" t="Include" />
-              <e p="CreepUIItemView.cs" t="Include" />
               <e p="MainMenuController.cs" t="Include" />
               <e p="MainMenuView.cs" t="Include" />
-              <e p="PlayerHudController.cs" t="Include" />
-              <e p="PlayerHudView.cs" t="Include" />
               <e p="Rotater.cs" t="Include" />
               <e p="StarScapeView.cs" t="Include" />
             </e>

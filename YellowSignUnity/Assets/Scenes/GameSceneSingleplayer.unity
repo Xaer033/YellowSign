@@ -34,7 +34,7 @@ RenderSettings:
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
   m_DefaultReflectionMode: 0
-  m_DefaultReflectionResolution: 128
+  m_DefaultReflectionResolution: 256
   m_ReflectionBounces: 2
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
@@ -53,7 +53,7 @@ LightmapSettings:
     m_AlbedoBoost: 1.6
     m_EnvironmentLightingMode: 1
     m_EnableBakedLightmaps: 1
-    m_EnableRealtimeLightmaps: 1
+    m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 12
     m_Resolution: 2
@@ -77,7 +77,7 @@ LightmapSettings:
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 16
     m_PVRSampleCount: 128
-    m_PVRBounces: 1
+    m_PVRBounces: 2
     m_PVREnvironmentSampleCount: 128
     m_PVREnvironmentReferencePointCount: 2048
     m_PVRFilteringMode: 1
@@ -87,7 +87,7 @@ LightmapSettings:
     m_PVRFilterTypeDirect: 0
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
-    m_PVREnvironmentMIS: 0
+    m_PVREnvironmentMIS: 1
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
@@ -9474,12 +9474,12 @@ PrefabInstance:
     - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
         type: 3}
       propertyPath: temporalAntialiasing.jitterSpread
-      value: 1
+      value: 0.961
       objectReference: {fileID: 0}
     - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
         type: 3}
       propertyPath: temporalAntialiasing.sharpness
-      value: 0
+      value: 0.16
       objectReference: {fileID: 0}
     - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
         type: 3}
@@ -9489,7 +9489,7 @@ PrefabInstance:
     - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
         type: 3}
       propertyPath: temporalAntialiasing.stationaryBlending
-      value: 0.99
+      value: 0.959
       objectReference: {fileID: 0}
     - target: {fileID: 114929738247479324, guid: e61e7243322a37b428e92da265080831,
         type: 3}
