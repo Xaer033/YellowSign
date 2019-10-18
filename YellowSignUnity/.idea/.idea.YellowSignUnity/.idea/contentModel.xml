@@ -52,7 +52,9 @@
                 <e p="CommandFactory.cs" t="Include" />
                 <e p="CommandType.cs" t="Include" />
                 <e p="ICommand.cs" t="Include" />
+                <e p="SellTowerCommand.cs" t="Include" />
                 <e p="SpawnCreepCommand.cs" t="Include" />
+                <e p="UpgradeTowerCommand.cs" t="Include" />
               </e>
               <e p="Creeps" t="Include">
                 <e p="Creep.cs" t="Include" />
@@ -103,6 +105,7 @@
                     <e p="ActionButtonData.cs" t="Include" />
                     <e p="ActionSection.cs" t="Include" />
                     <e p="ActorActionType.cs" t="Include" />
+                    <e p="MiniSelectIcon.cs" t="Include" />
                     <e p="PlayerHudView.cs" t="Include" />
                     <e p="SelectionViewData.cs" t="Include" />
                     <e p="TowerSelectionView.cs" t="Include" />

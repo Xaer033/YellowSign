@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ActionButton : UIView
 {
+    public CanvasGroup _canvasGroup;
+    
     public Button _button;
     public Toggle _toggle;
     public TMP_Text _shortcutText;
@@ -66,8 +68,13 @@ public class ActionButton : UIView
         {
             if (_actionData != null)
             {
-                gameObject.SetActive(true);
-
+//                gameObject.SetActive(true);
+                if (_canvasGroup)
+                {
+                    _canvasGroup.interactable = true;
+                    _canvasGroup.alpha = 1;
+                }
+                
                 if (_toggle)
                 {
                     _toggle.enabled = _actionData.isToggle;
@@ -87,13 +94,17 @@ public class ActionButton : UIView
 
                 if (_icon)
                 {
-                    _icon.sprite = _gameplayResources.GetIcon(_actionData.iconName);
+                    _icon.overrideSprite = _gameplayResources.GetIcon(_actionData.iconName);
                 }
                 
             }
             else
             {
-                gameObject.SetActive(false);
+                if (_canvasGroup)
+                {
+                    _canvasGroup.interactable = false;
+                    _canvasGroup.alpha = 0;
+                }
             }
         }
     }

@@ -11,9 +11,10 @@ public class TowerStats : ScriptableObject
     public int  maxHealth;
     public int  baseDamage;
     public int  baseRange;
+    public int  goldPrice;
     public float   reloadTime;
     public float   idleTime;
-
+    
     public static TowerStats FromJson(string json)
     {
         return JsonUtility.FromJson<TowerStats>(json);

@@ -18,6 +18,7 @@ public class TowerState
 
     public int  health;
     public int  attackDamage;
+    public int  upgradeTier;
 
     public FP   reloadTimer;
     public FP   idleTimer;
@@ -49,7 +50,7 @@ public class TowerState
         rotation = TSQuaternion.identity;
 
         behaviorMode = BehaviorMode.SPAWNING;
-
+        upgradeTier = 0;
     }
 
     public static TowerState CreateFromStats(TowerStats stats)

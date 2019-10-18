@@ -9,5 +9,5 @@ public class ActionButtonData
     public KeyCode shortcutKey;
     public bool isToggle;
     public bool toggleValue;
-
+    public IActor actor;
 }

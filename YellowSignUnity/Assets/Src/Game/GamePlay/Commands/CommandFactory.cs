@@ -14,6 +14,12 @@ public class CommandFactory
             case CommandType.SPAWN_CREEP:
                 command = JsonUtility.FromJson<SpawnCreepCommand>(jsonString);
                 break;
+            case CommandType.UPGRADE_TOWER:
+                command = JsonUtility.FromJson<UpgradeTowerCommand>(jsonString);
+                break;
+            case CommandType.SELL_TOWER:
+                command = JsonUtility.FromJson<SellTowerCommand>(jsonString);
+                break;
             default:
                 Debug.LogError("Don't have Command for Type: " + type + ", jsonString: " + jsonString);
                 break;

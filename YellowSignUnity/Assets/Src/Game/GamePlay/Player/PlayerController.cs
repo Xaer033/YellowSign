@@ -166,8 +166,6 @@ public class PlayerController : MonoBehaviour
 
     public void AddCommand(ICommand command)
     {
-        Debug.Log("Base commander: " + _commander.ownerIndex);
-        Debug.Log("PlayerIndex: " + _playerSpawn.playerNumber);
         _commander.AddCommand(command);
     }
 
@@ -186,6 +184,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void SendSellTowerCommand(ActionButtonData data)
+    {
+        ITowerView view = data.actor as ITowerView;
+        Tower t = view.tower;
+        GridPosition position = _myGrid.GetGridPosition(t.state.position.ToVector());
+        
+        ICommand command = new SellTowerCommand(position);
+        _commander.AddCommand(command);
+    }
+    
+    public void SendUpgradeTowerCommand(ActionButtonData data)
+    {
+        ITowerView view = data.actor as ITowerView;
+        Tower t = view.tower;
+        GridPosition position = _myGrid.GetGridPosition(t.state.position.ToVector());
+        
+        ICommand command = new UpgradeTowerCommand(t.state.upgradeTier + 1, position);
+        _commander.AddCommand(command);
+    }
+    
     private void OnCommandExecute(byte ownerId, CommandType type, ICommand command)
     {
         switch(type)
@@ -200,6 +218,18 @@ public class PlayerController : MonoBehaviour
             {
                 BuildTowerCommand btc = (BuildTowerCommand)command;
                 buildTower(ownerId, btc);
+                break;
+            }
+            case CommandType.UPGRADE_TOWER:
+            {
+                UpgradeTowerCommand utc = (UpgradeTowerCommand)command;
+                Debug.Log("Upgrade Tower: " + utc.upgradeTier);
+                break;
+            }
+            case CommandType.SELL_TOWER:
+            {
+                SellTowerCommand stc = (SellTowerCommand)command;
+                Debug.Log("Sell Tower: " + stc.position);
                 break;
             }
         }
@@ -235,7 +265,6 @@ public class PlayerController : MonoBehaviour
         _actorSelector.onDragBegin += onDragBegin;
         _actorSelector.onDragEnd += onDragEnd;
         _actorSelector.onSelectionChanged += onSelectionChanged;
-
     }
 
     private void onPrimarySelect(Vector3 mousePosition)

@@ -37,7 +37,7 @@ public class TowerSelectionView : UIView
         {
             if (_mainIcon)
             {
-                _mainIcon.sprite = _selectionData != null ? _gameplayResources.GetIcon(_selectionData.mainIconName) : null;
+                _mainIcon.overrideSprite = _selectionData != null ? _gameplayResources.GetIcon(_selectionData.mainIconName) : null;
             }
 
             if (_healthText)

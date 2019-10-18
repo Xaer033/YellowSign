@@ -24,10 +24,13 @@ public class GameplayResources : ScriptableObject
         
         if (iconAtlas != null)
         {
-            result = iconAtlas.GetSprite(name);
-            if (result == null)
+            if (!string.IsNullOrEmpty(name))
             {
-                Debug.LogErrorFormat("Could not find sprite with name: {0}", name);
+                result = iconAtlas.GetSprite(name);
+                if (result == null)
+                {
+                    Debug.LogErrorFormat("Could not find sprite with name: {0}", name);
+                }
             }
         }
         else

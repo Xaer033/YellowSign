@@ -31,7 +31,9 @@ public class PlayerHudController : BaseController
             _hudView.AddListener(HoverDispatcher.EVENT_HOVER, onHoverUI);
             _hudView.AddListener(PlayerUIEventType.TOGGLE_CREEP_VIEW, onToggleCreepView);
             _hudView.AddListener(PlayerUIEventType.TOGGLE_TOWER_VIEW, onToggleTowerView);
-            
+            _hudView.AddListener(PlayerUIEventType.SELL_TOWER, onSellTower);
+            _hudView.AddListener(PlayerUIEventType.UPGRADE_TOWER, onUpgradeTower);
+
             if(onViewCreated != null)
             {
                 onViewCreated();
@@ -136,8 +138,6 @@ public class PlayerHudController : BaseController
     {
         SpawnCreepCommand command = (SpawnCreepCommand)e.data;
         _controller.AddCommand(command);
-
-        Debug.Log("Creep 2 " +  _controller.owner.Id);
     }
 
     private void onDismissCreepSpawner(GeneralEvent e)
@@ -163,6 +163,18 @@ public class PlayerHudController : BaseController
         _creepSpawnerView.currentCreepDef = def;
     }
 
+    private void onSellTower(GeneralEvent e)
+    {
+        ActionButtonData data = e.data as ActionButtonData;
+        _controller.SendSellTowerCommand(data);
+    }
+
+    private void onUpgradeTower(GeneralEvent e)
+    {
+        ActionButtonData data = e.data as ActionButtonData;
+        _controller.SendUpgradeTowerCommand(data);
+    }
+    
     private List<CreepDef> _getCreepList()
     {
         var creeps = _creepDictionary.GetValues();

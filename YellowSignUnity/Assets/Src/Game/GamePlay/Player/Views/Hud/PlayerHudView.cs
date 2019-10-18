@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using GhostGen;
 using UnityEngine.UI;
@@ -185,6 +186,21 @@ public class PlayerHudView : UIView
             data.mainIconName = t.def.icon.name;
             
             _towerSelectionView.SetSelectionData(data);
+
+
+            List<ActionButtonData> actionList = new List<ActionButtonData>();
+            ActionButtonData sellAction = new ActionButtonData();
+            sellAction.actionId = PlayerUIEventType.SELL_TOWER;
+            sellAction.shortcutKey = KeyCode.S;
+            
+            ActionButtonData upgradeAction = new ActionButtonData();
+            upgradeAction.actionId = PlayerUIEventType.UPGRADE_TOWER;
+            upgradeAction.shortcutKey = KeyCode.U;
+            
+            actionList.Add(sellAction);
+            actionList.Add(upgradeAction);
+            _actionSection.SetActions(actor, actionList);
+            
         }
         else
         {

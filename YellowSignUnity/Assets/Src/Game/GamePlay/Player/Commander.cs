@@ -110,10 +110,10 @@ public class Commander : TrueSyncBehaviour
             byte[] byteCommand = TrueSyncInput.GetByteArray(ownerId, iterKey++);
             ICommand command = CommandFactory.CreateFromByteArray(type, byteCommand);
 
-            Debug.LogWarningFormat("Owner: {0}, Type: {1}", ownerId, command.commandType);
 
             if(_onCommandExecute != null && type > 0 && command != null)
             {
+                Debug.LogWarningFormat("Owner: {0}, Type: {1}", ownerId, command.commandType);
                 _onCommandExecute(ownerId, type, command);
             }
         }
