@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Photon.Pun;
+using Photon.Realtime;
 
 namespace TrueSync {
     /**
@@ -221,10 +223,10 @@ namespace TrueSync {
             Application.runInBackground = true;
 
             ICommunicator communicator = null;
-            if (!PhotonNetwork.connected || !PhotonNetwork.inRoom) {
+            if (!PhotonNetwork.IsConnected || !PhotonNetwork.InRoom) {
                 Debug.LogWarning("You are not connected to Photon. TrueSync will start in offline mode.");
             } else {
-                communicator = new PhotonTrueSyncCommunicator(PhotonNetwork.networkingPeer);
+                communicator = new PhotonTrueSyncCommunicator(PhotonNetwork.NetworkingClient.LoadBalancingPeer);
             }
 
             TrueSyncConfig activeConfig = ActiveConfig;
@@ -269,12 +271,12 @@ namespace TrueSync {
                 if (communicator == null) {
                     lockstep.AddPlayer(0, "Local_Player", true);
                 } else {
-                    List<PhotonPlayer> players = new List<PhotonPlayer>(PhotonNetwork.playerList);
+                    List<Player> players = new List<Player>(PhotonNetwork.PlayerList);
                     players.Sort(UnityUtils.playerComparer);
 
                     for (int index = 0, length = players.Count; index < length; index++) {
-                        PhotonPlayer p = players[index];
-                        lockstep.AddPlayer((byte) p.ID, p.NickName, p.IsLocal);
+                        Player p = players[index];
+                        lockstep.AddPlayer((byte) p.ActorNumber, p.NickName, p.IsLocal);
                     }
                 }
             }

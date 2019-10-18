@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Reflection;
+using Photon.Realtime;
 
 namespace TrueSync {
 
@@ -12,10 +13,10 @@ namespace TrueSync {
         /**
          *  @brief Comparer class to guarantee PhotonPlayer order.
          **/
-        public class PlayerComparer : Comparer<PhotonPlayer> {
+        public class PlayerComparer : Comparer<Player> {
 
-            public override int Compare(PhotonPlayer x, PhotonPlayer y) {
-                return x.ID - y.ID;
+            public override int Compare(Player x, Player y) {
+                return x.ActorNumber - y.ActorNumber;
             }
 
         }
