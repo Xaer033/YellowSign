@@ -4,9 +4,7 @@ using System.Collections.Generic;
 namespace Pathfinding.Voxels {
 	using Pathfinding.Util;
 
-	/** Various utilities for voxel rasterization.
-	 * \astarpro
-	 */
+	/// <summary>Various utilities for voxel rasterization.</summary>
 	public class Utility {
 		public static float Min (float a, float b, float c) {
 			a = a < b ? a : b;
@@ -18,42 +16,13 @@ namespace Pathfinding.Voxels {
 			return a > c ? a : c;
 		}
 
-		public static int Max (int a, int b, int c, int d) {
-			a = a > b ? a : b;
-			a = a > c ? a : c;
-			return a > d ? a : d;
-		}
-
-		public static int Min (int a, int b, int c, int d) {
-			a = a < b ? a : b;
-			a = a < c ? a : c;
-			return a < d ? a : d;
-		}
-
-		public static float Max (float a, float b, float c, float d) {
-			a = a > b ? a : b;
-			a = a > c ? a : c;
-			return a > d ? a : d;
-		}
-
-		public static float Min (float a, float b, float c, float d) {
-			a = a < b ? a : b;
-			a = a < c ? a : c;
-			return a < d ? a : d;
-		}
-
-		public static void CopyVector (float[] a, int i, Vector3 v) {
-			a[i] = v.x;
-			a[i+1] = v.y;
-			a[i+2] = v.z;
-		}
-
-		/** Removes duplicate vertices from the array and updates the triangle array.
-		 * \returns The new array of vertices
-		 */
+		/// <summary>
+		/// Removes duplicate vertices from the array and updates the triangle array.
+		/// Returns: The new array of vertices
+		/// </summary>
 		public static Int3[] RemoveDuplicateVertices (Int3[] vertices, int[] triangles) {
 			// Get a dictionary from an object pool to avoid allocating a new one
-			var firstVerts = ObjectPoolSimple<Dictionary<Int3, int> >.Claim();
+			var firstVerts = ObjectPoolSimple<Dictionary<Int3, int> >.Claim ();
 
 			firstVerts.Clear();
 
@@ -74,7 +43,7 @@ namespace Pathfinding.Voxels {
 			}
 
 			firstVerts.Clear();
-			ObjectPoolSimple<Dictionary<Int3, int> >.Release(ref firstVerts);
+			ObjectPoolSimple<Dictionary<Int3, int> >.Release (ref firstVerts);
 
 			for (int i = 0; i < triangles.Length; i++) {
 				triangles[i] = compressedPointers[triangles[i]];

@@ -46,7 +46,7 @@ public class ActionButton : UIView
     {
         base.Update();
         
-        if (_actionData != null && gameObject.GetActive())
+        if (_actionData != null && gameObject.activeSelf)
         {
             if (Input.GetKeyDown(_actionData.shortcutKey))
             {

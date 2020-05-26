@@ -5,26 +5,28 @@ using UnityEngine;
 namespace Pathfinding {
 	using Pathfinding.Util;
 
-	/** Implements the funnel algorithm as well as various related methods.
-	 * \see http://digestingduck.blogspot.se/2010/03/simple-stupid-funnel-algorithm.html
-	 * \see FunnelModifier for the component that you can attach to objects to use the funnel algorithm.
-	 */
+	/// <summary>
+	/// Implements the funnel algorithm as well as various related methods.
+	/// See: http://digestingduck.blogspot.se/2010/03/simple-stupid-funnel-algorithm.html
+	/// See: FunnelModifier for the component that you can attach to objects to use the funnel algorithm.
+	/// </summary>
 	public class Funnel {
-		/** Funnel in which the path to the target will be */
+		/// <summary>Funnel in which the path to the target will be</summary>
 		public struct FunnelPortals {
 			public List<Vector3> left;
 			public List<Vector3> right;
 		}
 
-		/** Part of a path.
-		* This is either a sequence of adjacent triangles
-		* or a link.
-		* \see NodeLink2
-		*/
+		/// <summary>
+		/// Part of a path.
+		/// This is either a sequence of adjacent triangles
+		/// or a link.
+		/// See: NodeLink2
+		/// </summary>
 		public struct PathPart {
-			/** Index of the first node in this part */
+			/// <summary>Index of the first node in this part</summary>
 			public int startIndex;
-			/** Index of the last node in this part */
+			/// <summary>Index of the last node in this part</summary>
 			public int endIndex;
 			public Vector3 startPoint, endPoint;
 			public bool isLink;
@@ -33,7 +35,7 @@ namespace Pathfinding {
 		public static List<PathPart> SplitIntoParts (Path path) {
 			var nodes = path.path;
 
-			var result = ListPool<PathPart>.Claim();
+			var result = ListPool<PathPart>.Claim ();
 
 			if (nodes == null || nodes.Count == 0) {
 				return result;
@@ -108,14 +110,14 @@ namespace Pathfinding {
 
 		public static FunnelPortals ConstructFunnelPortals (List<GraphNode> nodes, PathPart part) {
 			if (nodes == null || nodes.Count == 0) {
-				return new FunnelPortals { left = ListPool<Vector3>.Claim(0), right = ListPool<Vector3>.Claim(0) };
+				return new FunnelPortals { left = ListPool<Vector3>.Claim (0), right = ListPool<Vector3>.Claim (0) };
 			}
 
 			if (part.endIndex < part.startIndex || part.startIndex < 0 || part.endIndex > nodes.Count) throw new System.ArgumentOutOfRangeException();
 
 			// Claim temporary lists and try to find lists with a high capacity
-			var left = ListPool<Vector3>.Claim(nodes.Count+1);
-			var right = ListPool<Vector3>.Claim(nodes.Count+1);
+			var left = ListPool<Vector3>.Claim (nodes.Count+1);
+			var right = ListPool<Vector3>.Claim (nodes.Count+1);
 
 			// Add start point
 			left.Add(part.startPoint);
@@ -180,16 +182,17 @@ namespace Pathfinding {
 			return true;
 		}
 
-		/** Unwraps the funnel portals from 3D space to 2D space.
-		 * The result is stored in the \a left and \a right arrays which must be at least as large as the funnel.left and funnel.right lists.
-		 *
-		 * The input is a funnel like in the image below. It may be rotated and twisted.
-		 * \shadowimage{funnel_unwrap_input.png}
-		 * The output will be a funnel in 2D space like in the image below. All twists and bends will have been straightened out.
-		 * \shadowimage{funnel_unwrap_output.png}
-		 *
-		 * \see #Calculate(FunnelPortals,bool,bool)
-		 */
+		/// <summary>
+		/// Unwraps the funnel portals from 3D space to 2D space.
+		/// The result is stored in the left and right arrays which must be at least as large as the funnel.left and funnel.right lists.
+		///
+		/// The input is a funnel like in the image below. It may be rotated and twisted.
+		/// [Open online documentation to see images]
+		/// The output will be a funnel in 2D space like in the image below. All twists and bends will have been straightened out.
+		/// [Open online documentation to see images]
+		///
+		/// See: <see cref="Calculate(FunnelPortals,bool,bool)"/>
+		/// </summary>
 		public static void Unwrap (FunnelPortals funnel, Vector2[] left, Vector2[] right) {
 			int startingIndex = 1;
 			var normal = Vector3.Cross(funnel.right[1] - funnel.left[0], funnel.left[1] - funnel.left[0]);
@@ -230,9 +233,10 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Try to fix degenerate or invalid funnels.
-		 * \returns The number of vertices at the start of both arrays that should be ignored or -1 if the algorithm failed.
-		 */
+		/// <summary>
+		/// Try to fix degenerate or invalid funnels.
+		/// Returns: The number of vertices at the start of both arrays that should be ignored or -1 if the algorithm failed.
+		/// </summary>
 		static int FixFunnel (Vector2[] left, Vector2[] right, int numPortals) {
 			if (numPortals > left.Length || numPortals > right.Length) throw new System.ArgumentException("Arrays do not have as many elements as specified");
 
@@ -264,39 +268,40 @@ namespace Pathfinding {
 			return new Vector3(p.x, 0, p.y);
 		}
 
-		/** True if b is to the right of or on the line from (0,0) to a*/
+		/// <summary>True if b is to the right of or on the line from (0,0) to a</summary>
 		protected static bool RightOrColinear (Vector2 a, Vector2 b) {
 			return (a.x*b.y - b.x*a.y) <= 0;
 		}
 
-		/** True if b is to the left of or on the line from (0,0) to a */
+		/// <summary>True if b is to the left of or on the line from (0,0) to a</summary>
 		protected static bool LeftOrColinear (Vector2 a, Vector2 b) {
 			return (a.x*b.y - b.x*a.y) >= 0;
 		}
 
-		/** Calculate the shortest path through the funnel.
-		 * \param funnel The portals of the funnel. The first and last vertices portals must be single points (so for example left[0] == right[0]).
-		 * \param unwrap Determines if twists and bends should be straightened out before running the funnel algorithm.
-		 * \param splitAtEveryPortal If true, then a vertex will be inserted every time the path crosses a portal
-		 *  instead of only at the corners of the path. The result will have exactly one vertex per portal if this is enabled.
-		 *  This may introduce vertices with the same position in the output (esp. in corners where many portals meet).
-		 *
-		 * If the unwrap option is disabled the funnel will simply be projected onto the XZ plane.
-		 * If the unwrap option is enabled then the funnel may be oriented arbitrarily and may have twists and bends.
-		 * This makes it possible to support the funnel algorithm in XY space as well as in more complicated cases, such
-		 * as on curved worlds.
-		 * \shadowimage{funnel_unwrap_illustration.png}
-		 *
-		 * \shadowimage{funnel_split_at_every_portal.png}
-		 *
-		 * \see Unwrap
-		 */
+		/// <summary>
+		/// Calculate the shortest path through the funnel.
+		///
+		/// If the unwrap option is disabled the funnel will simply be projected onto the XZ plane.
+		/// If the unwrap option is enabled then the funnel may be oriented arbitrarily and may have twists and bends.
+		/// This makes it possible to support the funnel algorithm in XY space as well as in more complicated cases, such
+		/// as on curved worlds.
+		/// [Open online documentation to see images]
+		///
+		/// [Open online documentation to see images]
+		///
+		/// See: Unwrap
+		/// </summary>
+		/// <param name="funnel">The portals of the funnel. The first and last vertices portals must be single points (so for example left[0] == right[0]).</param>
+		/// <param name="unwrap">Determines if twists and bends should be straightened out before running the funnel algorithm.</param>
+		/// <param name="splitAtEveryPortal">If true, then a vertex will be inserted every time the path crosses a portal
+		///  instead of only at the corners of the path. The result will have exactly one vertex per portal if this is enabled.
+		///  This may introduce vertices with the same position in the output (esp. in corners where many portals meet).</param>
 		public static List<Vector3> Calculate (FunnelPortals funnel, bool unwrap, bool splitAtEveryPortal) {
 			if (funnel.left.Count != funnel.right.Count) throw new System.ArgumentException("funnel.left.Count != funnel.right.Count");
 
 			// Get arrays at least as large as the number of portals
-			var leftArr = ArrayPool<Vector2>.Claim(funnel.left.Count);
-			var rightArr = ArrayPool<Vector2>.Claim(funnel.left.Count);
+			var leftArr = ArrayPool<Vector2>.Claim (funnel.left.Count);
+			var rightArr = ArrayPool<Vector2>.Claim (funnel.left.Count);
 
 			if (unwrap) {
 				Unwrap(funnel, leftArr, rightArr);
@@ -309,7 +314,7 @@ namespace Pathfinding {
 			}
 
 			int startIndex = FixFunnel(leftArr, rightArr, funnel.left.Count);
-			var intermediateResult = ListPool<int>.Claim();
+			var intermediateResult = ListPool<int>.Claim ();
 			if (startIndex == -1) {
 				// If funnel algorithm failed, fall back to a simple line
 				intermediateResult.Add(0);
@@ -320,7 +325,7 @@ namespace Pathfinding {
 			}
 
 			// Get list for the final result
-			var result = ListPool<Vector3>.Claim(intermediateResult.Count);
+			var result = ListPool<Vector3>.Claim (intermediateResult.Count);
 
 			Vector2 prev2D = leftArr[0];
 			var prevIdx = 0;
@@ -347,20 +352,21 @@ namespace Pathfinding {
 			}
 
 			// Release lists back to the pool
-			ListPool<int>.Release(ref intermediateResult);
-			ArrayPool<Vector2>.Release(ref leftArr);
-			ArrayPool<Vector2>.Release(ref rightArr);
+			ListPool<int>.Release (ref intermediateResult);
+			ArrayPool<Vector2>.Release (ref leftArr);
+			ArrayPool<Vector2>.Release (ref rightArr);
 			return result;
 		}
 
-		/** Funnel algorithm.
-		* \a funnelPath will be filled with the result.
-		* The result is the indices of the vertices that were picked, a non-negative value refers to the corresponding index in the
-		* \a left array, a negative value refers to the corresponding index in the right array.
-		* So e.g 5 corresponds to left[5] and -2 corresponds to right[2]
-		*
-		* \see http://digestingduck.blogspot.se/2010/03/simple-stupid-funnel-algorithm.html
-		*/
+		/// <summary>
+		/// Funnel algorithm.
+		/// funnelPath will be filled with the result.
+		/// The result is the indices of the vertices that were picked, a non-negative value refers to the corresponding index in the
+		/// left array, a negative value refers to the corresponding index in the right array.
+		/// So e.g 5 corresponds to left[5] and -2 corresponds to right[2]
+		///
+		/// See: http://digestingduck.blogspot.se/2010/03/simple-stupid-funnel-algorithm.html
+		/// </summary>
 		static void Calculate (Vector2[] left, Vector2[] right, int numPortals, int startIndex, List<int> funnelPath, int maxCorners, out bool lastCorner) {
 			if (left.Length != right.Length) throw new System.ArgumentException();
 

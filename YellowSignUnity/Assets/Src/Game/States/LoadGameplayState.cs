@@ -1,5 +1,6 @@
 ﻿using GhostGen;
 using System.Collections;
+using Photon.Pun;
 using Zenject;
 
 public class LoadGameplayState : IGameState

@@ -26,6 +26,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IInitializable, ILateDi
 
     public void Initialize()
     {
+        PhotonNetwork.GameVersion = kGameVersion;
 //        PhotonNetwork.OnEventCall += onCustomEventCallback;
     }
 
@@ -119,7 +120,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IInitializable, ILateDi
     public override void OnConnectedToMaster()
     {
         //Debug.Log("-Joining Lobby-");
-        //PhotonNetwork.JoinLobby();
+        PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()

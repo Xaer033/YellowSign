@@ -22,19 +22,19 @@ namespace Pathfinding {
 		[JsonMember]
 		public GridPivot pivot;
 
-		/** Cached gui style */
+		/// <summary>Cached gui style</summary>
 		static GUIStyle lockStyle;
 
-		/** Cached gui style */
+		/// <summary>Cached gui style</summary>
 		static GUIStyle gridPivotSelectBackground;
 
-		/** Cached gui style */
+		/// <summary>Cached gui style</summary>
 		static GUIStyle gridPivotSelectButton;
 
 		static readonly float standardIsometric = 90-Mathf.Atan(1/Mathf.Sqrt(2))*Mathf.Rad2Deg;
 		static readonly float standardDimetric = Mathf.Acos(1/2f)*Mathf.Rad2Deg;
 
-		/** Rounds a vector's components to multiples of 0.5 (i.e 0.5, 1.0, 1.5, etc.) if very close to them */
+		/// <summary>Rounds a vector's components to multiples of 0.5 (i.e 0.5, 1.0, 1.5, etc.) if very close to them</summary>
 		public static Vector3 RoundVector3 (Vector3 v) {
 			const int Multiplier = 2;
 
@@ -136,6 +136,12 @@ namespace Pathfinding {
 			}
 		}
 
+		GUIContent[] hexagonSizeContents = {
+			new GUIContent("Hexagon Width", "Distance between two opposing sides on the hexagon"),
+			new GUIContent("Hexagon Diameter", "Distance between two opposing vertices on the hexagon"),
+			new GUIContent("Node Size", "Raw node size value, this doesn't correspond to anything particular on the hexagon."),
+		};
+
 		void DrawFirstSection (GridGraph graph) {
 			float prevRatio = graph.aspectRatio;
 
@@ -149,7 +155,22 @@ namespace Pathfinding {
 
 			DrawWidthDepthFields(graph, out newWidth, out newDepth);
 
-			var newNodeSize = EditorGUILayout.FloatField(new GUIContent("Node size", "The size of a single node. The size is the side of the node square in world units"), graph.nodeSize);
+			EditorGUI.BeginChangeCheck();
+			float newNodeSize;
+			if (graph.inspectorGridMode == InspectorGridMode.Hexagonal) {
+				EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.BeginVertical();
+				graph.inspectorHexagonSizeMode = (InspectorGridHexagonNodeSize)EditorGUILayout.EnumPopup(new GUIContent("Hexagon Dimension"), graph.inspectorHexagonSizeMode);
+				float hexagonSize = GridGraph.ConvertNodeSizeToHexagonSize(graph.inspectorHexagonSizeMode, graph.nodeSize);
+				hexagonSize = (float)System.Math.Round(hexagonSize, 5);
+				newNodeSize = GridGraph.ConvertHexagonSizeToNodeSize(graph.inspectorHexagonSizeMode, EditorGUILayout.FloatField(hexagonSizeContents[(int)graph.inspectorHexagonSizeMode], hexagonSize));
+				EditorGUILayout.EndVertical();
+				if (graph.inspectorHexagonSizeMode != InspectorGridHexagonNodeSize.NodeSize) GUILayout.Box("", AstarPathEditor.astarSkin.FindStyle(graph.inspectorHexagonSizeMode == InspectorGridHexagonNodeSize.Diameter ? "HexagonDiameter" : "HexagonWidth"));
+				EditorGUILayout.EndHorizontal();
+			} else {
+				newNodeSize = EditorGUILayout.FloatField(new GUIContent("Node size", "The size of a single node. The size is the side of the node square in world units"), graph.nodeSize);
+			}
+			bool nodeSizeChanged = EditorGUI.EndChangeCheck();
 
 			newNodeSize = newNodeSize <= 0.01F ? 0.01F : newNodeSize;
 
@@ -159,7 +180,7 @@ namespace Pathfinding {
 				DrawIsometricField(graph);
 			}
 
-			if ((graph.nodeSize != newNodeSize && locked) || (newWidth != graph.width || newDepth != graph.depth) || prevRatio != graph.aspectRatio) {
+			if ((nodeSizeChanged && locked) || (newWidth != graph.width || newDepth != graph.depth) || prevRatio != graph.aspectRatio) {
 				graph.nodeSize = newNodeSize;
 				graph.SetDimensions(newWidth, newDepth, newNodeSize);
 
@@ -172,7 +193,7 @@ namespace Pathfinding {
 				AutoScan();
 			}
 
-			if ((graph.nodeSize != newNodeSize && !locked)) {
+			if ((nodeSizeChanged && !locked)) {
 				graph.nodeSize = newNodeSize;
 				graph.UpdateTransform();
 			}
@@ -360,12 +381,12 @@ namespace Pathfinding {
 			if (graph.erodeIterations > 0) {
 				EditorGUI.indentLevel++;
 				graph.erosionUseTags = EditorGUILayout.Toggle(new GUIContent("Erosion Uses Tags", "Instead of making nodes unwalkable, " +
-						"nodes will have their tag set to a value corresponding to their erosion level, " +
-						"which is a quite good measurement of their distance to the closest wall.\nSee online documentation for more info."),
+					"nodes will have their tag set to a value corresponding to their erosion level, " +
+					"which is a quite good measurement of their distance to the closest wall.\nSee online documentation for more info."),
 					graph.erosionUseTags);
 				if (graph.erosionUseTags) {
 					EditorGUI.indentLevel++;
-					graph.erosionFirstTag = EditorGUILayoutx.TagField("First Tag", graph.erosionFirstTag);
+					graph.erosionFirstTag = EditorGUILayoutx.TagField("First Tag", graph.erosionFirstTag, () => AstarPathEditor.EditTags());
 					EditorGUI.indentLevel--;
 				}
 				EditorGUI.indentLevel--;
@@ -439,7 +460,7 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Draws the inspector for a \link Pathfinding.GraphCollision GraphCollision class \endlink */
+		/// <summary>Draws the inspector for a \link Pathfinding.GraphCollision GraphCollision class \endlink</summary>
 		protected virtual void DrawCollisionEditor (GraphCollision collision) {
 			collision = collision ?? new GraphCollision();
 
@@ -555,9 +576,7 @@ namespace Pathfinding {
 
 		protected static readonly string[] ChannelUseNames = { "None", "Penalty", "Height", "Walkability and Penalty" };
 
-		/** Draws settings for using a texture as source for a grid.
-		 * \astarpro
-		 */
+		/// <summary>Draws settings for using a texture as source for a grid.</summary>
 		protected virtual void DrawTextureData (GridGraph.TextureData data, GridGraph graph) {
 			if (data == null) {
 				return;

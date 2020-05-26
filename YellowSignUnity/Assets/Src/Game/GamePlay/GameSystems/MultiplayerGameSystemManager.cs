@@ -6,6 +6,8 @@ using GhostGen;
 using Zenject;
 using TrueSync;
 using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class MultiplayerGameSystemManager : EventDispatcher
 {
@@ -115,9 +117,9 @@ public class MultiplayerGameSystemManager : EventDispatcher
 
         Hashtable table = new Hashtable();
         table["tick"] = TrueSyncManager.Ticks;
-        table["id"] = PhotonNetwork.player.ID;
+        table["id"] = PhotonNetwork.LocalPlayer.UserId;
         table["checksum"] = _gameState.GetMd5();
-        PhotonNetwork.RaiseEvent(2, table, true, options);
+        PhotonNetwork.RaiseEvent(2, table, options, SendOptions.SendReliable);
     }
     
     private void onTowerBuilt(GeneralEvent e)

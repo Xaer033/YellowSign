@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using GhostGen;
+using Photon.Pun;
 using TrueSync;
 using UnityEngine;
 using Zenject;
@@ -442,7 +443,7 @@ public class PlayerController : MonoBehaviour
     private void spawnCreeps(byte ownerId, SpawnCreepCommand command)
     {
         // TODO: do this better...
-        if (PhotonNetwork.countOfPlayers == 1)
+        if (PhotonNetwork.CountOfPlayers == 1)
         {
             addWave(_myGrid, ownerId, command);
         }
