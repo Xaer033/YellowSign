@@ -1,21 +1,17 @@
 using UnityEngine;
 
 namespace Pathfinding.RVO {
-	/**
-	 * Square Obstacle for RVO Simulation.
-	 *
-	 * \astarpro
-	 */
+	/// <summary>Square Obstacle for RVO Simulation.</summary>
 	[AddComponentMenu("Pathfinding/Local Avoidance/Square Obstacle")]
 	[HelpURL("http://arongranberg.com/astar/docs/class_pathfinding_1_1_r_v_o_1_1_r_v_o_square_obstacle.php")]
 	public class RVOSquareObstacle : RVOObstacle {
-		/** Height of the obstacle */
+		/// <summary>Height of the obstacle</summary>
 		public float height = 1;
 
-		/** Size of the square */
+		/// <summary>Size of the square</summary>
 		public Vector2 size = Vector3.one;
 
-		/** Center of the square */
+		/// <summary>Center of the square</summary>
 		public Vector2 center = Vector3.zero;
 
 		protected override bool StaticObstacle { get { return false; } }
@@ -24,22 +20,22 @@ namespace Pathfinding.RVO {
 		protected override float Height { get { return height; } }
 
 		//If UNITY_EDITOR to save a few bytes, these are only needed in the editor
-	#if UNITY_EDITOR
+#if UNITY_EDITOR
 		private Vector2 _size;
 		private Vector2 _center;
 		private float _height;
-	#endif
+#endif
 
 		protected override bool AreGizmosDirty () {
-	#if UNITY_EDITOR
+#if UNITY_EDITOR
 			bool ret = _size != size || _height != height || _center != center;
 			_size = size;
 			_center = center;
 			_height = height;
 			return ret;
-	#else
+#else
 			return false;
-	#endif
+#endif
 		}
 
 		protected override void CreateObstacles () {

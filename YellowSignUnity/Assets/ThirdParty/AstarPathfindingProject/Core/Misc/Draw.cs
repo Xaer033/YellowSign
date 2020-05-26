@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Pathfinding.Util {
-	/** Helper methods for drawing gizmos and debug lines */
+	/// <summary>Helper methods for drawing gizmos and debug lines</summary>
 	public class Draw {
 		public static readonly Draw Debug = new Draw { gizmos = false };
 		public static readonly Draw Gizmos = new Draw { gizmos = true };
@@ -11,6 +11,13 @@ namespace Pathfinding.Util {
 
 		void SetColor (Color color) {
 			if (gizmos && UnityEngine.Gizmos.color != color) UnityEngine.Gizmos.color = color;
+		}
+
+		public void Polyline (System.Collections.Generic.List<Vector3> points, Color color, bool cycle = false) {
+			for (int i = 0; i < points.Count - 1; i++) {
+				Line(points[i], points[i+1], color);
+			}
+			if (cycle && points.Count > 1) Line(points[points.Count - 1], points[0], color);
 		}
 
 		public void Line (Vector3 a, Vector3 b, Color color) {

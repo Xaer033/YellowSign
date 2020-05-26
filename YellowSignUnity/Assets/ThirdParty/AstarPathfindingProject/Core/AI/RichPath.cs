@@ -9,15 +9,16 @@ namespace Pathfinding {
 
 		public Seeker seeker;
 
-		/** Transforms points from path space to world space.
-		 * If null the identity transform will be used.
-		 *
-		 * This is used when the world position of the agent does not match the
-		 * corresponding position on the graph. This is the case in the example
-		 * scene called 'Moving'.
-		 *
-		 * \see #Pathfinding.Examples.LocalSpaceRichAI
-		 */
+		/// <summary>
+		/// Transforms points from path space to world space.
+		/// If null the identity transform will be used.
+		///
+		/// This is used when the world position of the agent does not match the
+		/// corresponding position on the graph. This is the case in the example
+		/// scene called 'Moving'.
+		///
+		/// See: <see cref="Pathfinding.Examples.LocalSpaceRichAI"/>
+		/// </summary>
 		public ITransform transform;
 
 		public RichPath () {
@@ -30,17 +31,15 @@ namespace Pathfinding {
 			Endpoint = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 		}
 
-		/** Use this for initialization.
-		 *
-		 * \param seeker Optionally provide in order to take tag penalties into account. May be null if you do not use a Seeker\
-		 * \param path Path to follow
-		 * \param mergePartEndpoints If true, then adjacent parts that the path is split up in will
-		 * try to use the same start/end points. For example when using a link on a navmesh graph
-		 * Instead of first following the path to the center of the node where the link is and then
-		 * follow the link, the path will be adjusted to go to the exact point where the link starts
-		 * which usually makes more sense.
-		 * \param simplificationMode The path can optionally be simplified. This can be a bit expensive for long paths.
-		 */
+		/// <summary>Use this for initialization.</summary>
+		/// <param name="seeker">Optionally provide in order to take tag penalties into account. May be null if you do not use a Seeker\</param>
+		/// <param name="path">Path to follow</param>
+		/// <param name="mergePartEndpoints">If true, then adjacent parts that the path is split up in will
+		/// try to use the same start/end points. For example when using a link on a navmesh graph
+		/// Instead of first following the path to the center of the node where the link is and then
+		/// follow the link, the path will be adjusted to go to the exact point where the link starts
+		/// which usually makes more sense.</param>
+		/// <param name="simplificationMode">The path can optionally be simplified. This can be a bit expensive for long paths.</param>
 		public void Initialize (Seeker seeker, Path path, bool mergePartEndpoints, bool simplificationMode) {
 			if (path.error) throw new System.ArgumentException("Path has an error");
 
@@ -53,8 +52,8 @@ namespace Pathfinding {
 			for (int i = 0; i < parts.Count; i++) {
 				var funnelPart = parts[i] as RichFunnel;
 				var specialPart = parts[i] as RichSpecial;
-				if (funnelPart != null) ObjectPool<RichFunnel>.Release(ref funnelPart);
-				else if (specialPart != null) ObjectPool<RichSpecial>.Release(ref specialPart);
+				if (funnelPart != null) ObjectPool<RichFunnel>.Release (ref funnelPart);
+				else if (specialPart != null) ObjectPool<RichSpecial>.Release (ref specialPart);
 			}
 
 			Clear();
@@ -68,7 +67,7 @@ namespace Pathfinding {
 					var graph = AstarData.GetGraph(nodes[i]) as NavmeshBase;
 					if (graph == null) throw new System.Exception("Found a TriangleMeshNode that was not in a NavmeshBase graph");
 
-					RichFunnel f = ObjectPool<RichFunnel>.Claim().Initialize(this, graph);
+					RichFunnel f = ObjectPool<RichFunnel>.Claim ().Initialize(this, graph);
 
 					f.funnelSimplification = simplificationMode;
 
@@ -118,7 +117,7 @@ namespace Pathfinding {
 						continue;
 					}
 
-					RichSpecial rps = ObjectPool<RichSpecial>.Claim().Initialize(nl, nodes[sIndex]);
+					RichSpecial rps = ObjectPool<RichSpecial>.Claim ().Initialize(nl, nodes[sIndex]);
 					parts.Add(rps);
 				}
 			}
@@ -126,14 +125,14 @@ namespace Pathfinding {
 
 		public Vector3 Endpoint { get; private set; }
 
-		/** True if we have completed (called NextPart for) the last part in the path */
+		/// <summary>True if we have completed (called NextPart for) the last part in the path</summary>
 		public bool CompletedAllParts {
 			get {
 				return currentPart >= parts.Count;
 			}
 		}
 
-		/** True if we are traversing the last part of the path */
+		/// <summary>True if we are traversing the last part of the path</summary>
 		public bool IsLastPart {
 			get {
 				return currentPart >= parts.Count - 1;
@@ -147,6 +146,29 @@ namespace Pathfinding {
 		public RichPathPart GetCurrentPart () {
 			if (parts.Count == 0) return null;
 			return currentPart < parts.Count ? parts[currentPart] : parts[parts.Count - 1];
+		}
+
+		/// <summary>
+		/// Replaces the buffer with the remaining path.
+		/// See: <see cref="Pathfinding.IAstarAI.GetRemainingPath"/>
+		/// </summary>
+		public void GetRemainingPath (List<Vector3> buffer, Vector3 currentPosition, out bool requiresRepath) {
+			buffer.Clear();
+			buffer.Add(currentPosition);
+			requiresRepath = false;
+			for (int i = currentPart; i < parts.Count; i++) {
+				var part = parts[i];
+				if (part is RichFunnel funnel) {
+					bool lastCorner;
+					if (i != 0) buffer.Add(funnel.exactStart);
+					funnel.Update(i == 0 ? currentPosition : funnel.exactStart, buffer, int.MaxValue, out lastCorner, out requiresRepath);
+					if (requiresRepath) {
+						return;
+					}
+				} else if (part is RichSpecial link) {
+					// By adding all points above the link will look like just a stright line, which is reasonable
+				}
+			}
 		}
 	}
 
@@ -167,17 +189,17 @@ namespace Pathfinding {
 		RichPath path;
 		int[] triBuffer = new int[3];
 
-		/** Post process the funnel corridor or not */
+		/// <summary>Post process the funnel corridor or not</summary>
 		public bool funnelSimplification = true;
 
 		public RichFunnel () {
-			left = Pathfinding.Util.ListPool<Vector3>.Claim();
-			right = Pathfinding.Util.ListPool<Vector3>.Claim();
+			left = Pathfinding.Util.ListPool<Vector3>.Claim ();
+			right = Pathfinding.Util.ListPool<Vector3>.Claim ();
 			nodes = new List<TriangleMeshNode>();
 			this.graph = null;
 		}
 
-		/** Works like a constructor, but can be used even for pooled objects. Returns \a this for easy chaining */
+		/// <summary>Works like a constructor, but can be used even for pooled objects. Returns this for easy chaining</summary>
 		public RichFunnel Initialize (RichPath path, NavmeshBase graph) {
 			if (graph == null) throw new System.ArgumentNullException("graph");
 			if (this.graph != null) throw new System.InvalidOperationException("Trying to initialize an already initialized object. " + graph);
@@ -206,13 +228,13 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Build a funnel corridor from a node list slice.
-		 * The nodes are assumed to be of type TriangleMeshNode.
-		 *
-		 * \param nodes Nodes to build the funnel corridor from
-		 * \param start Start index in the nodes list
-		 * \param end End index in the nodes list, this index is inclusive
-		 */
+		/// <summary>
+		/// Build a funnel corridor from a node list slice.
+		/// The nodes are assumed to be of type TriangleMeshNode.
+		/// </summary>
+		/// <param name="nodes">Nodes to build the funnel corridor from</param>
+		/// <param name="start">Start index in the nodes list</param>
+		/// <param name="end">End index in the nodes list, this index is inclusive</param>
 		public void BuildFunnelCorridor (List<GraphNode> nodes, int start, int end) {
 			//Make sure start and end points are on the correct nodes
 			exactStart = (nodes[start] as MeshNode).ClosestPointOnNode(exactStart);
@@ -226,7 +248,7 @@ namespace Pathfinding {
 			this.nodes.Clear();
 
 			if (funnelSimplification) {
-				List<GraphNode> tmp = Pathfinding.Util.ListPool<GraphNode>.Claim(end-start);
+				List<GraphNode> tmp = Pathfinding.Util.ListPool<GraphNode>.Claim (end-start);
 
 				SimplifyPath(graph, nodes, start, end, tmp, exactStart, exactEnd);
 
@@ -238,7 +260,7 @@ namespace Pathfinding {
 					if (node != null) this.nodes.Add(node);
 				}
 
-				Pathfinding.Util.ListPool<GraphNode>.Release(ref tmp);
+				Pathfinding.Util.ListPool<GraphNode>.Release (ref tmp);
 			} else {
 				if (this.nodes.Capacity < end-start) this.nodes.Capacity = (end-start);
 				for (int i = start; i <= end; i++) {
@@ -249,7 +271,7 @@ namespace Pathfinding {
 			}
 
 			for (int i = 0; i < this.nodes.Count-1; i++) {
-				/** \todo should use return value in future versions */
+				/// <summary>TODO: should use return value in future versions</summary>
 				this.nodes[i].GetPortal(this.nodes[i+1], left, right, false);
 			}
 
@@ -257,18 +279,48 @@ namespace Pathfinding {
 			right.Add(exactEnd);
 		}
 
-		/** Simplifies a funnel path using linecasting.
-		 * Running time is roughly O(n^2 log n) in the worst case (where n = end-start)
-		 * Actually it depends on how the graph looks, so in theory the actual upper limit on the worst case running time is O(n*m log n) (where n = end-start and m = nodes in the graph)
-		 * but O(n^2 log n) is a much more realistic worst case limit.
-		 *
-		 * Requires #graph to implement IRaycastableGraph
-		 */
+		/// <summary>
+		/// Simplifies a funnel path using linecasting.
+		/// Running time is roughly O(n^2 log n) in the worst case (where n = end-start)
+		/// Actually it depends on how the graph looks, so in theory the actual upper limit on the worst case running time is O(n*m log n) (where n = end-start and m = nodes in the graph)
+		/// but O(n^2 log n) is a much more realistic worst case limit.
+		///
+		/// Requires <see cref="graph"/> to implement IRaycastableGraph
+		/// </summary>
 		void SimplifyPath (IRaycastableGraph graph, List<GraphNode> nodes, int start, int end, List<GraphNode> result, Vector3 startPoint, Vector3 endPoint) {
 			if (graph == null) throw new System.ArgumentNullException("graph");
 
 			if (start > end) {
 				throw new System.ArgumentException("start >= end");
+			}
+
+			// Do a straight line of sight check to see if the path can be simplified to a single line
+			{
+				GraphHitInfo hit;
+				if (!graph.Linecast(startPoint, endPoint, nodes[start], out hit) && hit.node == nodes[end]) {
+					graph.Linecast(startPoint, endPoint, nodes[start], out hit, result);
+
+					long penaltySum = 0;
+					long penaltySum2 = 0;
+					for (int i = start; i <= end; i++) {
+						penaltySum += nodes[i].Penalty + (path.seeker != null ? path.seeker.tagPenalties[nodes[i].Tag] : 0);
+					}
+
+					for (int i = 0; i < result.Count; i++) {
+						penaltySum2 += result[i].Penalty + (path.seeker != null ? path.seeker.tagPenalties[result[i].Tag] : 0);
+					}
+
+					// Allow 40% more penalty on average per node
+					if ((penaltySum*1.4*result.Count) < (penaltySum2*(end-start+1))) {
+						// The straight line penalties are much higher than the original path.
+						// Revert the simplification
+						result.Clear();
+					} else {
+						// The straight line simplification looks good.
+						// We are done here.
+						return;
+					}
+				}
 			}
 
 			int ostart = start;
@@ -287,6 +339,7 @@ namespace Pathfinding {
 
 				int resCount = result.Count;
 
+				// Run a binary search to find the furthest node that we have a clear line of sight to
 				int mx = end+1;
 				int mn = start+1;
 				bool anySucceded = false;
@@ -297,7 +350,9 @@ namespace Pathfinding {
 					Vector3 sp = start == ostart ? startPoint : (Vector3)nodes[start].position;
 					Vector3 ep = mid == end ? endPoint : (Vector3)nodes[mid].position;
 
-					if (graph.Linecast(sp, ep, nodes[start], out hit)) {
+					// Check if there is an obstacle between these points, or if there is no obstacle, but we didn't end up at the right node.
+					// The second case can happen for example in buildings with multiple floors.
+					if (graph.Linecast(sp, ep, nodes[start], out hit) || hit.node != nodes[mid]) {
 						mx = mid;
 					} else {
 						anySucceded = true;
@@ -308,10 +363,11 @@ namespace Pathfinding {
 				if (!anySucceded) {
 					result.Add(nodes[start]);
 
-					//It is guaranteed that mn = start+1
+					// It is guaranteed that mn = start+1
 					start = mn;
 				} else {
-					//Need to redo the linecast to get the trace
+					// Replace a part of the path with the straight path to the furthest node we had line of sight to.
+					// Need to redo the linecast to get the trace (i.e. list of nodes along the line of sight).
 					GraphHitInfo hit;
 					Vector3 sp = start == ostart ? startPoint : (Vector3)nodes[start].position;
 					Vector3 ep = mn == end ? endPoint : (Vector3)nodes[mn].position;
@@ -328,19 +384,16 @@ namespace Pathfinding {
 					}
 
 					// Allow 40% more penalty on average per node
-					if ((penaltySum*1.4*(mn-start+1)) < (penaltySum2*(result.Count-resCount)) || result[result.Count-1] != nodes[mn]) {
-						//Debug.Log ((penaltySum*1.4*(mn-start+1)) + " < "+ (penaltySum2*(result.Count-resCount)));
+					if ((penaltySum*1.4*(result.Count-resCount)) < (penaltySum2*(mn-start+1)) || result[result.Count-1] != nodes[mn]) {
 						//Debug.DrawLine ((Vector3)nodes[start].Position, (Vector3)nodes[mn].Position, Color.red);
-						//Linecast hit the wrong node
+						// Linecast hit the wrong node
 						result.RemoveRange(resCount, result.Count-resCount);
 
 						result.Add(nodes[start]);
 						//Debug.Break();
 						start = start+1;
 					} else {
-						//Debug.Log ("!! " + (penaltySum*1.4*(mn-start+1)) + " < "+ (penaltySum2*(result.Count-resCount)));
 						//Debug.DrawLine ((Vector3)nodes[start].Position, (Vector3)nodes[mn].Position, Color.green);
-						//Debug.Break ();
 						//Remove nodes[end]
 						result.RemoveAt(result.Count-1);
 						start = mn;
@@ -349,9 +402,10 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Split funnel at node index \a splitIndex and throw the nodes up to that point away and replace with \a prefix.
-		 * Used when the AI has happened to get sidetracked and entered a node outside the funnel.
-		 */
+		/// <summary>
+		/// Split funnel at node index splitIndex and throw the nodes up to that point away and replace with prefix.
+		/// Used when the AI has happened to get sidetracked and entered a node outside the funnel.
+		/// </summary>
 		void UpdateFunnelCorridor (int splitIndex, List<TriangleMeshNode> prefix) {
 			nodes.RemoveRange(0, splitIndex);
 			nodes.InsertRange(0, prefix);
@@ -370,7 +424,7 @@ namespace Pathfinding {
 			right.Add(exactEnd);
 		}
 
-		/** True if any node in the path is destroyed */
+		/// <summary>True if any node in the path is destroyed</summary>
 		bool CheckForDestroyedNodes () {
 			// Loop through all nodes and check if they are destroyed
 			// If so, we really need a recalculation of our path quickly
@@ -384,20 +438,22 @@ namespace Pathfinding {
 			return false;
 		}
 
-		/** Approximate distance (as the crow flies) to the endpoint of this path part.
-		 * \see #exactEnd
-		 */
+		/// <summary>
+		/// Approximate distance (as the crow flies) to the endpoint of this path part.
+		/// See: <see cref="exactEnd"/>
+		/// </summary>
 		public float DistanceToEndOfPath {
 			get {
 				var currentNode = CurrentNode;
-				Vector3 closestOnNode = currentNode != null ? currentNode.ClosestPointOnNode(currentPosition) : currentPosition;
+				Vector3 closestOnNode = currentNode != null? currentNode.ClosestPointOnNode (currentPosition) : currentPosition;
 				return (exactEnd - closestOnNode).magnitude;
 			}
 		}
 
-		/** Clamps the position to the navmesh and repairs the path if the agent has moved slightly outside it.
-		 * You should not call this method with anything other than the agent's position.
-		 */
+		/// <summary>
+		/// Clamps the position to the navmesh and repairs the path if the agent has moved slightly outside it.
+		/// You should not call this method with anything other than the agent's position.
+		/// </summary>
 		public Vector3 ClampToNavmesh (Vector3 position) {
 			if (path.transform != null) position = path.transform.InverseTransform(position);
 			ClampToNavmeshInternal(ref position);
@@ -405,16 +461,16 @@ namespace Pathfinding {
 			return position;
 		}
 
-		/** Find the next points to move towards and clamp the position to the navmesh.
-		 *
-		 * \param position The position of the agent.
-		 * \param buffer Will be filled with up to \a numCorners points which are the next points in the path towards the target.
-		 * \param numCorners See buffer.
-		 * \param lastCorner True if the buffer contains the end point of the path.
-		 * \param requiresRepath True if nodes along the path have been destroyed and a path recalculation is necessary.
-		 *
-		 * \returns The position of the agent clamped to make sure it is inside the navmesh.
-		 */
+		/// <summary>
+		/// Find the next points to move towards and clamp the position to the navmesh.
+		///
+		/// Returns: The position of the agent clamped to make sure it is inside the navmesh.
+		/// </summary>
+		/// <param name="position">The position of the agent.</param>
+		/// <param name="buffer">Will be filled with up to numCorners points which are the next points in the path towards the target.</param>
+		/// <param name="numCorners">See buffer.</param>
+		/// <param name="lastCorner">True if the buffer contains the end point of the path.</param>
+		/// <param name="requiresRepath">True if nodes along the path have been destroyed and a path recalculation is necessary.</param>
 		public Vector3 Update (Vector3 position, List<Vector3> buffer, int numCorners, out bool lastCorner, out bool requiresRepath) {
 			if (path.transform != null) position = path.transform.InverseTransform(position);
 
@@ -455,19 +511,20 @@ namespace Pathfinding {
 			return position;
 		}
 
-		/** Cached object to avoid unnecessary allocations */
+		/// <summary>Cached object to avoid unnecessary allocations</summary>
 		static Queue<TriangleMeshNode> navmeshClampQueue = new Queue<TriangleMeshNode>();
-		/** Cached object to avoid unnecessary allocations */
+		/// <summary>Cached object to avoid unnecessary allocations</summary>
 		static List<TriangleMeshNode> navmeshClampList = new List<TriangleMeshNode>();
-		/** Cached object to avoid unnecessary allocations */
+		/// <summary>Cached object to avoid unnecessary allocations</summary>
 		static Dictionary<TriangleMeshNode, TriangleMeshNode> navmeshClampDict = new Dictionary<TriangleMeshNode, TriangleMeshNode>();
 
-		/** Searches for the node the agent is inside.
-		 * This will also clamp the position to the navmesh
-		 * and repair the funnel cooridor if the agent moves slightly outside it.
-		 *
-		 * \returns True if nodes along the path have been destroyed so that a path recalculation is required
-		 */
+		/// <summary>
+		/// Searches for the node the agent is inside.
+		/// This will also clamp the position to the navmesh
+		/// and repair the funnel cooridor if the agent moves slightly outside it.
+		///
+		/// Returns: True if nodes along the path have been destroyed so that a path recalculation is required
+		/// </summary>
 		bool ClampToNavmeshInternal (ref Vector3 position) {
 			var previousNode = nodes[currentNode];
 
@@ -567,9 +624,10 @@ namespace Pathfinding {
 			return currentNode + 1 < nodes.Count && nodes[currentNode+1].Destroyed;
 		}
 
-		/** Fill wallBuffer with all navmesh wall segments close to the current position.
-		 * A wall segment is a node edge which is not shared by any other neighbour node, i.e an outer edge on the navmesh.
-		 */
+		/// <summary>
+		/// Fill wallBuffer with all navmesh wall segments close to the current position.
+		/// A wall segment is a node edge which is not shared by any other neighbour node, i.e an outer edge on the navmesh.
+		/// </summary>
 		public void FindWalls (List<Vector3> wallBuffer, float range) {
 			FindWalls(currentNode, wallBuffer, currentPosition, range);
 		}
@@ -675,7 +733,7 @@ namespace Pathfinding {
 				return true;
 			}
 
-			#if ASTARDEBUG
+#if ASTARDEBUG
 			for (int i = startIndex; i < left.Count-1; i++) {
 				Debug.DrawLine(left[i], left[i+1], Color.red);
 				Debug.DrawLine(right[i], right[i+1], Color.magenta);
@@ -684,7 +742,7 @@ namespace Pathfinding {
 			for (int i = 0; i < left.Count; i++) {
 				Debug.DrawLine(right[i], left[i], Color.cyan);
 			}
-			#endif
+#endif
 
 			//Remove identical vertices
 			while (left[startIndex+1] == left[startIndex+2] && right[startIndex+1] == right[startIndex+2]) {
@@ -706,10 +764,10 @@ namespace Pathfinding {
 
 			//Test
 			while (VectorMath.IsColinearXZ(origin, left[startIndex+1], right[startIndex+1]) || VectorMath.RightOrColinearXZ(left[startIndex+1], right[startIndex+1], swPoint) == VectorMath.RightOrColinearXZ(left[startIndex+1], right[startIndex+1], origin)) {
-	#if ASTARDEBUG
+#if ASTARDEBUG
 				Debug.DrawLine(left[startIndex+1], right[startIndex+1], new Color(0, 0, 0, 0.5F));
 				Debug.DrawLine(origin, swPoint, new Color(0, 0, 0, 0.5F));
-	#endif
+#endif
 				//left.RemoveAt (1);
 				//right.RemoveAt (1);
 				startIndex++;
@@ -817,7 +875,7 @@ namespace Pathfinding {
 			nodeLink = null;
 		}
 
-		/** Works like a constructor, but can be used even for pooled objects. Returns \a this for easy chaining */
+		/// <summary>Works like a constructor, but can be used even for pooled objects. Returns this for easy chaining</summary>
 		public RichSpecial Initialize (NodeLink2 nodeLink, GraphNode first) {
 			this.nodeLink = nodeLink;
 			if (first == nodeLink.startNode) {

@@ -4,10 +4,12 @@ namespace Pathfinding {
 	using UnityEngine;
 	using System.Collections.Generic;
 
-	/** Internal utility class for looking up editor resources */
+	/// <summary>Internal utility class for looking up editor resources</summary>
 	public static class EditorResourceHelper {
-		/** Path to the editor assets folder for the A* Pathfinding Project. If this path turns out to be incorrect, the script will try to find the correct path
-		 * \see LoadStyles */
+		/// <summary>
+		/// Path to the editor assets folder for the A* Pathfinding Project. If this path turns out to be incorrect, the script will try to find the correct path
+		/// See: LoadStyles
+		/// </summary>
 		public static string editorAssets;
 
 		static EditorResourceHelper () {
@@ -30,8 +32,21 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Locates the editor assets folder in case the user has moved it */
+		/// <summary>Locates the editor assets folder in case the user has moved it</summary>
 		public static bool LocateEditorAssets () {
+#if UNITY_2019_3_OR_NEWER
+			var package = UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(EditorResourceHelper).Assembly);
+			if (package != null) {
+				editorAssets = package.assetPath + "/Editor/EditorAssets";
+				if (System.IO.File.Exists(package.resolvedPath + "/Editor/EditorAssets/AstarEditorSkinLight.guiskin")) {
+					return true;
+				} else {
+					Debug.LogError("Could not find editor assets folder in package at " + editorAssets + ". Is the package corrupt?");
+					return false;
+				}
+			}
+#endif
+
 			string projectPath = Application.dataPath;
 
 			if (projectPath.EndsWith("/Assets")) {

@@ -67,7 +67,7 @@ public class CameraMovement : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Z))
+        if(Input.GetKeyDown(KeyCode.F1))
         {
             _isDebugLocked = !_isDebugLocked;
         }
@@ -78,12 +78,12 @@ public class CameraMovement : MonoBehaviour
         }
 
         //Debug
-        if(Input.GetButtonDown("Jump"))
+        if(Input.GetKeyDown(KeyCode.F2))
         {
             Cursor.lockState = (Cursor.lockState == CursorLockMode.None) ? CursorLockMode.Confined : CursorLockMode.None;
         }
 
-        if(Input.GetKeyDown(KeyCode.C))
+        if(Input.GetKeyDown(KeyCode.F3))
         {
             _velocity = Vector3.zero;
             _currentPos = _startPos;

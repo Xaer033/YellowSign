@@ -2,6 +2,7 @@
 using TrueSync;
 using UnityEngine;
 using GhostGen;
+using Photon.Pun;
 using Zenject;
 
 [CreateAssetMenu(menuName = "YellowSign/Towers/Basic Tower Brain")]
@@ -178,7 +179,7 @@ public class BasicTowerBrain : AbstractTowerBrain
             }
 
             // Self explanatory
-            bool isPlayerOwnedCreep = PhotonNetwork.countOfPlayers != 1 && c.ownerId == tower.ownerId;
+            bool isPlayerOwnedCreep = PhotonNetwork.CountOfPlayers != 1 && c.ownerId == tower.ownerId;
             if(isPlayerOwnedCreep)
             {
                 continue;

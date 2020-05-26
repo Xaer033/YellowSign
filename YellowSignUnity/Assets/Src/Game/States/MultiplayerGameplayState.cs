@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GhostGen;
+using Photon.Pun;
 using TrueSync;
 using UnityEngine.SceneManagement;
 using Zenject;

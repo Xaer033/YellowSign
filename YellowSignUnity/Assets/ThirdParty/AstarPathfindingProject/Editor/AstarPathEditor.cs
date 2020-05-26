@@ -6,16 +6,16 @@ using System.Reflection;
 namespace Pathfinding {
 	[CustomEditor(typeof(AstarPath))]
 	public class AstarPathEditor : Editor {
-		/** List of all graph editors available (e.g GridGraphEditor) */
+		/// <summary>List of all graph editors available (e.g GridGraphEditor)</summary>
 		static Dictionary<string, CustomGraphEditorAttribute> graphEditorTypes = new Dictionary<string, CustomGraphEditorAttribute>();
 
-		/**
-		 * Holds node counts for each graph to avoid calculating it every frame.
-		 * Only used for visualization purposes
-		 */
+		/// <summary>
+		/// Holds node counts for each graph to avoid calculating it every frame.
+		/// Only used for visualization purposes
+		/// </summary>
 		static Dictionary<NavGraph, KeyValuePair<float, KeyValuePair<int, int> > > graphNodeCounts;
 
-		/** List of all graph editors for the graphs */
+		/// <summary>List of all graph editors for the graphs</summary>
 		GraphEditor[] graphEditors;
 
 		System.Type[] graphTypes {
@@ -26,7 +26,7 @@ namespace Pathfinding {
 
 		static int lastUndoGroup = -1000;
 
-		/** Used to make sure correct behaviour when handling undos */
+		/// <summary>Used to make sure correct behaviour when handling undos</summary>
 		static uint ignoredChecksum;
 
 		const string scriptsFolder = "Assets/AstarPathfindingProject";
@@ -50,7 +50,7 @@ namespace Pathfinding {
 
 		#endregion
 
-		/** AstarPath instance that is being inspected */
+		/// <summary>AstarPath instance that is being inspected</summary>
 		public AstarPath script { get; private set; }
 
 		#region Styles
@@ -68,11 +68,10 @@ namespace Pathfinding {
 
 		#endregion
 
-		/** Holds defines found in script files, used for optimizations.
-		 * \astarpro */
+		/// <summary>Holds defines found in script files, used for optimizations.</summary>
 		List<OptimizationHandler.DefineDefinition> defines;
 
-		/** Enables editor stuff. Loads graphs, reads settings and sets everything up */
+		/// <summary>Enables editor stuff. Loads graphs, reads settings and sets everything up</summary>
 		public void OnEnable () {
 			script = target as AstarPath;
 
@@ -117,7 +116,7 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Cleans up editor stuff */
+		/// <summary>Cleans up editor stuff</summary>
 		public void OnDisable () {
 			Undo.undoRedoPerformed -= OnUndoRedoPerformed;
 
@@ -131,7 +130,7 @@ namespace Pathfinding {
 			SaveGraphsAndUndo();
 		}
 
-		/** Reads settings frome EditorPrefs */
+		/// <summary>Reads settings frome EditorPrefs</summary>
 		void GetAstarEditorSettings () {
 			FadeArea.fancyEffects = EditorPrefs.GetBool("EditorGUILayoutx.fancyEffects", true);
 		}
@@ -140,12 +139,16 @@ namespace Pathfinding {
 			EditorPrefs.SetBool("EditorGUILayoutx.fancyEffects", FadeArea.fancyEffects);
 		}
 
-		/** Checks if JS support is enabled. This is done by checking if the directory 'Assets/AstarPathfindingEditor/Editor' exists */
+		/// <summary>Checks if JS support is enabled. This is done by checking if the directory 'Assets/AstarPathfindingEditor/Editor' exists</summary>
 		static bool IsJsEnabled () {
 			return System.IO.Directory.Exists(Application.dataPath+"/AstarPathfindingEditor/Editor");
 		}
 
-		/** Enables JS support. This is done by restructuring folders in the project */
+		/// <summary>
+		/// Enables JS support.
+		/// This is done by restructuring folders in the project.
+		/// See: javascript (view in online documentation for working links)
+		/// </summary>
 		static void EnableJs () {
 			// Path to the project folder (with /Assets at the end)
 			string projectPath = Application.dataPath;
@@ -179,7 +182,7 @@ namespace Pathfinding {
 			AssetDatabase.Refresh();
 		}
 
-		/** Disables JS support if it was enabled. This is done by restructuring folders in the project */
+		/// <summary>Disables JS support if it was enabled. This is done by restructuring folders in the project</summary>
 		static void DisableJs () {
 			if (System.IO.Directory.Exists(Application.dataPath+"/Plugins/AstarPathfindingProject")) {
 				string error = AssetDatabase.MoveAsset("Assets/Plugins/AstarPathfindingProject", scriptsFolder);
@@ -210,13 +213,15 @@ namespace Pathfinding {
 			AssetDatabase.Refresh();
 		}
 
-		/** Repaints Scene View.
-		 * \warning Uses Undocumented Unity Calls (should be safe for Unity 3.x though) */
+		/// <summary>
+		/// Repaints Scene View.
+		/// Warning: Uses Undocumented Unity Calls (should be safe for Unity 3.x though)
+		/// </summary>
 		void RepaintSceneView () {
 			if (!Application.isPlaying || EditorApplication.isPaused) SceneView.RepaintAll();
 		}
 
-		/** Tell Unity that we want to use the whole inspector width */
+		/// <summary>Tell Unity that we want to use the whole inspector width</summary>
 		public override bool UseDefaultMargins () {
 			return false;
 		}
@@ -232,6 +237,10 @@ namespace Pathfinding {
 					"Skin loading is done in the AstarPathEditor.cs --> LoadStyles method", MessageType.Error);
 				return;
 			}
+
+#if ASTAR_ATAVISM
+			EditorGUILayout.HelpBox("This is a special version of the A* Pathfinding Project for Atavism. This version only supports scanning recast graphs and exporting them, but no pathfinding during runtime.", MessageType.Info);
+#endif
 
 			EditorGUI.BeginChangeCheck();
 
@@ -257,13 +266,13 @@ namespace Pathfinding {
 			}
 
 
-	#if ProfileAstar
+#if ProfileAstar
 			if (GUILayout.Button("Log Profiles")) {
 				AstarProfiler.PrintResults();
 				AstarProfiler.PrintFastResults();
 				AstarProfiler.Reset();
 			}
-	#endif
+#endif
 
 			// Handle undo
 			SaveGraphsAndUndo(storedEventType, storedEventCommand);
@@ -274,10 +283,11 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Loads GUISkin and sets up styles.
-		 * \see EditorResourceHelper.LocateEditorAssets
-		 * \returns True if all styles were found, false if there was an error somewhere
-		 */
+		/// <summary>
+		/// Loads GUISkin and sets up styles.
+		/// See: EditorResourceHelper.LocateEditorAssets
+		/// Returns: True if all styles were found, false if there was an error somewhere
+		/// </summary>
 		static bool LoadStyles () {
 			if (stylesLoaded) return true;
 
@@ -326,7 +336,7 @@ namespace Pathfinding {
 			return true;
 		}
 
-		/** Draws the main area in the inspector */
+		/// <summary>Draws the main area in the inspector</summary>
 		void DrawMainArea () {
 			CheckGraphEditors();
 
@@ -379,9 +389,7 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Draws optimizations settings.
-		 * \astarpro
-		 */
+		/// <summary>Draws optimizations settings.</summary>
 		void DrawOptimizationSettings () {
 			optimizationSettingsArea.Begin();
 			optimizationSettingsArea.Header("Optimization");
@@ -424,15 +432,26 @@ namespace Pathfinding {
 			optimizationSettingsArea.End();
 		}
 
-		/** Returns a version with all fields fully defined.
-		 * This is used because by default new Version(3,0,0) > new Version(3,0).
-		 * This is not the desired behaviour so we make sure that all fields are defined here
-		 */
+		/// <summary>
+		/// Returns a version with all fields fully defined.
+		/// This is used because by default new Version(3,0,0) > new Version(3,0).
+		/// This is not the desired behaviour so we make sure that all fields are defined here
+		/// </summary>
 		public static System.Version FullyDefinedVersion (System.Version v) {
 			return new System.Version(Mathf.Max(v.Major, 0), Mathf.Max(v.Minor, 0), Mathf.Max(v.Build, 0), Mathf.Max(v.Revision, 0));
 		}
 
 		void DrawAboutArea () {
+			aboutArea.Begin();
+
+			GUILayout.BeginHorizontal();
+
+			if (GUILayout.Button("About", level0LabelStyle)) {
+				aboutArea.open = !aboutArea.open;
+				GUI.changed = true;
+			}
+
+#if !ASTAR_ATAVISM
 			System.Version newVersion = AstarUpdateChecker.latestVersion;
 			bool beta = false;
 
@@ -444,15 +463,6 @@ namespace Pathfinding {
 				}
 			}
 
-			aboutArea.Begin();
-
-			GUILayout.BeginHorizontal();
-
-			if (GUILayout.Button("About", level0LabelStyle)) {
-				aboutArea.open = !aboutArea.open;
-				GUI.changed = true;
-			}
-
 			// Check if the latest version is newer than this version
 			if (FullyDefinedVersion(newVersion) > FullyDefinedVersion(AstarPath.Version)) {
 				GUIUtilityx.PushTint(Color.green);
@@ -462,12 +472,14 @@ namespace Pathfinding {
 				GUIUtilityx.PopTint();
 				GUILayout.Space(20);
 			}
+#endif
 
 			GUILayout.EndHorizontal();
 
 			if (aboutArea.BeginFade()) {
 				GUILayout.Label("The A* Pathfinding Project was made by Aron Granberg\nYour current version is "+AstarPath.Version);
 
+#if !ASTAR_ATAVISM
 				if (FullyDefinedVersion(newVersion) > FullyDefinedVersion(AstarPath.Version)) {
 					EditorGUILayout.HelpBox("A new "+(beta ? "beta " : "")+"version of the A* Pathfinding Project is available, the new version is "+
 						newVersion, MessageType.Info);
@@ -488,6 +500,7 @@ namespace Pathfinding {
 
 					GUIUtilityx.PopTint();
 				}
+#endif
 
 				if (GUILayout.Button(new GUIContent("Documentation", "Open the documentation for the A* Pathfinding Project"))) {
 					Application.OpenURL(AstarUpdateChecker.GetURL("documentation"));
@@ -501,7 +514,7 @@ namespace Pathfinding {
 			aboutArea.End();
 		}
 
-		/** Graph editor which has its 'name' field focused */
+		/// <summary>Graph editor which has its 'name' field focused</summary>
 		GraphEditor graphNameFocused;
 
 		void DrawGraphHeader (GraphEditor graphEditor) {
@@ -635,7 +648,7 @@ namespace Pathfinding {
 			graphEditor.infoFadeArea.End();
 		}
 
-		/** Draws the inspector for the given graph with the given graph editor */
+		/// <summary>Draws the inspector for the given graph with the given graph editor</summary>
 		void DrawGraph (GraphEditor graphEditor) {
 			graphEditor.fadeArea.Begin();
 			DrawGraphHeader(graphEditor);
@@ -651,6 +664,8 @@ namespace Pathfinding {
 
 		public void OnSceneGUI () {
 			script = target as AstarPath;
+
+			DrawSceneGUISettings();
 
 			// OnSceneGUI may be called from EditorUtility.DisplayProgressBar
 			// which is called repeatedly while the graphs are scanned in the
@@ -683,6 +698,35 @@ namespace Pathfinding {
 				EditorUtility.SetDirty(target);
 			}
 		}
+
+		void DrawSceneGUISettings () {
+			var darkSkin = EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene);
+
+			Handles.BeginGUI();
+			float width = 180;
+			float height = 76;
+			float margin = 10;
+
+			var origWidth = EditorGUIUtility.labelWidth;
+			EditorGUIUtility.labelWidth = 144;
+			GUILayout.BeginArea(new Rect(Camera.current.pixelWidth - width, Camera.current.pixelHeight - height, width - margin, height - margin), "Graph Display", astarSkin.FindStyle("SceneBoxDark"));
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.PrefixLabel("Show Graphs", darkSkin.toggle, astarSkin.FindStyle("ScenePrefixLabel"));
+			script.showNavGraphs = EditorGUILayout.Toggle(script.showNavGraphs, darkSkin.toggle);
+			EditorGUILayout.EndHorizontal();
+
+			if (GUILayout.Button("Scan", darkSkin.button)) {
+				MenuScan();
+			}
+
+			// Invisible button to capture clicks. This prevents a click inside the box from causing some other GameObject to be selected.
+			GUI.Button(new Rect(0, 0, width - margin, height - margin), "", GUIStyle.none);
+			GUILayout.EndArea();
+
+			EditorGUIUtility.labelWidth = origWidth;
+			Handles.EndGUI();
+		}
+
 
 		TextAsset SaveGraphData (byte[] bytes, TextAsset target = null) {
 			string projectPath = System.IO.Path.GetDirectoryName(Application.dataPath) + "/";
@@ -750,7 +794,7 @@ namespace Pathfinding {
 					serializationSettings.nodes = true;
 
 					if (EditorUtility.DisplayDialog("Scan before generating cache?", "Do you want to scan the graphs before saving the cache.\n" +
-							"If the graphs have not been scanned then the cache may not contain node data and then the graphs will have to be scanned at startup anyway.", "Scan", "Don't scan")) {
+						"If the graphs have not been scanned then the cache may not contain node data and then the graphs will have to be scanned at startup anyway.", "Scan", "Don't scan")) {
 						MenuScan();
 					}
 
@@ -789,12 +833,12 @@ namespace Pathfinding {
 					if (path != "") {
 						var serializationSettings = Pathfinding.Serialization.SerializeSettings.Settings;
 						if (EditorUtility.DisplayDialog("Include node data?", "Do you want to include node data in the save file. " +
-								"If node data is included the graph can be restored completely without having to scan it first.", "Include node data", "Only settings")) {
+							"If node data is included the graph can be restored completely without having to scan it first.", "Include node data", "Only settings")) {
 							serializationSettings.nodes = true;
 						}
 
 						if (serializationSettings.nodes && EditorUtility.DisplayDialog("Scan before saving?", "Do you want to scan the graphs before saving? " +
-								"\nNot scanning can cause node data to be omitted from the file if the graph is not yet scanned.", "Scan", "Don't scan")) {
+							"\nNot scanning can cause node data to be omitted from the file if the graph is not yet scanned.", "Scan", "Don't scan")) {
 							MenuScan();
 						}
 
@@ -845,12 +889,13 @@ namespace Pathfinding {
 			alwaysVisibleArea.HeaderLabel("Pathfinding");
 			alwaysVisibleArea.BeginFade();
 
+#if !ASTAR_ATAVISM
 			EditorGUI.BeginDisabledGroup(Application.isPlaying);
 
 			script.threadCount = (ThreadCount)EditorGUILayout.EnumPopup(new GUIContent("Thread Count", "Number of threads to run the pathfinding in (if any). More threads " +
-					"can boost performance on multi core systems. \n" +
-					"Use None for debugging or if you dont use pathfinding that much.\n " +
-					"See docs for more info"), script.threadCount);
+				"can boost performance on multi core systems. \n" +
+				"Use None for debugging or if you dont use pathfinding that much.\n " +
+				"See docs for more info"), script.threadCount);
 
 			EditorGUI.EndDisabledGroup();
 
@@ -866,8 +911,8 @@ namespace Pathfinding {
 			}
 
 			script.maxNearestNodeDistance = EditorGUILayout.FloatField(new GUIContent("Max Nearest Node Distance",
-					"Normally, if the nearest node to e.g the start point of a path was not walkable" +
-					" a search will be done for the nearest node which is walkble. This is the maximum distance (world units) which it will serarch"),
+				"Normally, if the nearest node to e.g the start point of a path was not walkable" +
+				" a search will be done for the nearest node which is walkble. This is the maximum distance (world units) which it will search"),
 				script.maxNearestNodeDistance);
 
 			script.heuristic = (Heuristic)EditorGUILayout.EnumPopup("Heuristic", script.heuristic);
@@ -890,8 +935,14 @@ namespace Pathfinding {
 				EditorGUI.indentLevel--;
 			}
 
+			// Only show if there is actually a navmesh/recast graph in the scene
+			// to help reduce clutter for other users.
+			if (script.data.FindGraphWhichInheritsFrom(typeof(NavmeshBase)) != null) {
+				script.navmeshUpdates.updateInterval = EditorGUILayout.FloatField(new GUIContent("Navmesh Cutting Update Interval (s)", "How often to check if any navmesh cut has changed."), script.navmeshUpdates.updateInterval);
+			}
+
 			script.prioritizeGraphs = EditorGUILayout.Toggle(new GUIContent("Prioritize Graphs", "Normally, the system will search for the closest node in all graphs and choose the closest one" +
-					"but if Prioritize Graphs is enabled, the first graph which has a node closer than Priority Limit will be chosen and additional search (e.g for the closest WALKABLE node) will be carried out on that graph only"),
+				"but if Prioritize Graphs is enabled, the first graph which has a node closer than Priority Limit will be chosen and additional search (e.g for the closest WALKABLE node) will be carried out on that graph only"),
 				script.prioritizeGraphs);
 			if (script.prioritizeGraphs) {
 				EditorGUI.indentLevel++;
@@ -900,8 +951,9 @@ namespace Pathfinding {
 			}
 
 			script.fullGetNearestSearch = EditorGUILayout.Toggle(new GUIContent("Full Get Nearest Node Search", "Forces more accurate searches on all graphs. " +
-					"Normally only the closest graph in the initial fast check will perform additional searches, " +
-					"if this is toggled, all graphs will do additional searches. Slower, but more accurate"), script.fullGetNearestSearch);
+				"Normally only the closest graph in the initial fast check will perform additional searches, " +
+				"if this is toggled, all graphs will do additional searches. Slower, but more accurate"), script.fullGetNearestSearch);
+#endif
 			script.scanOnStartup = EditorGUILayout.Toggle(new GUIContent("Scan on Awake", "Scan all graphs on Awake. If this is false, you must call AstarPath.active.Scan () yourself. Useful if you want to make changes to the graphs with code."), script.scanOnStartup);
 
 			alwaysVisibleArea.End();
@@ -913,26 +965,26 @@ namespace Pathfinding {
 			EditorGUI.indentLevel++;
 			if (script.euclideanEmbedding.mode == HeuristicOptimizationMode.Random) {
 				script.euclideanEmbedding.spreadOutCount = EditorGUILayout.IntField(new GUIContent("Count", "Number of optimization points, higher numbers give better heuristics and could make it faster, " +
-						"but too many could make the overhead too great and slow it down. Try to find the optimal value for your map. Recommended value < 100"), script.euclideanEmbedding.spreadOutCount);
+					"but too many could make the overhead too great and slow it down. Try to find the optimal value for your map. Recommended value < 100"), script.euclideanEmbedding.spreadOutCount);
 			} else if (script.euclideanEmbedding.mode == HeuristicOptimizationMode.Custom) {
 				script.euclideanEmbedding.pivotPointRoot = EditorGUILayout.ObjectField(new GUIContent("Pivot point root",
-						"All children of this transform are going to be used as pivot points. " +
-						"Recommended count < 100"), script.euclideanEmbedding.pivotPointRoot, typeof(Transform), true) as Transform;
+					"All children of this transform are going to be used as pivot points. " +
+					"Recommended count < 100"), script.euclideanEmbedding.pivotPointRoot, typeof(Transform), true) as Transform;
 				if (script.euclideanEmbedding.pivotPointRoot == null) {
 					EditorGUILayout.HelpBox("Please assign an object", MessageType.Error);
 				}
 			} else if (script.euclideanEmbedding.mode == HeuristicOptimizationMode.RandomSpreadOut) {
 				script.euclideanEmbedding.pivotPointRoot = EditorGUILayout.ObjectField(new GUIContent("Pivot point root",
-						"All children of this transform are going to be used as pivot points. " +
-						"They will seed the calculation of more pivot points. " +
-						"Recommended count < 100"), script.euclideanEmbedding.pivotPointRoot, typeof(Transform), true) as Transform;
+					"All children of this transform are going to be used as pivot points. " +
+					"They will seed the calculation of more pivot points. " +
+					"Recommended count < 100"), script.euclideanEmbedding.pivotPointRoot, typeof(Transform), true) as Transform;
 
 				if (script.euclideanEmbedding.pivotPointRoot == null) {
 					EditorGUILayout.HelpBox("No root is assigned. A random node will be choosen as the seed.", MessageType.Info);
 				}
 
 				script.euclideanEmbedding.spreadOutCount = EditorGUILayout.IntField(new GUIContent("Count", "Number of optimization points, higher numbers give better heuristics and could make it faster, " +
-						"but too many could make the overhead too great and slow it down. Try to find the optimal value for your map. Recommended value < 100"), script.euclideanEmbedding.spreadOutCount);
+					"but too many could make the overhead too great and slow it down. Try to find the optimal value for your map. Recommended value < 100"), script.euclideanEmbedding.spreadOutCount);
 			}
 
 			if (script.euclideanEmbedding.mode != HeuristicOptimizationMode.None) {
@@ -943,7 +995,7 @@ namespace Pathfinding {
 			EditorGUI.indentLevel--;
 		}
 
-		/** Opens the A* Inspector and shows the section for editing tags */
+		/// <summary>Opens the A* Inspector and shows the section for editing tags</summary>
 		public static void EditTags () {
 			AstarPath astar = GameObject.FindObjectOfType<AstarPath>();
 
@@ -1026,6 +1078,14 @@ namespace Pathfinding {
 			script.logPathResults = (PathLog)EditorGUILayout.EnumPopup("Path Logging", script.logPathResults);
 			script.debugMode = (GraphDebugMode)EditorGUILayout.EnumPopup("Graph Coloring", script.debugMode);
 
+			if (script.debugMode == GraphDebugMode.SolidColor) {
+				EditorGUI.BeginChangeCheck();
+				script.colorSettings._SolidColor = EditorGUILayout.ColorField(new GUIContent("Color", "Color used for the graph when 'Graph Coloring'='Solid Color'"), script.colorSettings._SolidColor);
+				if (EditorGUI.EndChangeCheck()) {
+					script.colorSettings.PushToStatic(script);
+				}
+			}
+
 			if (script.debugMode == GraphDebugMode.G || script.debugMode == GraphDebugMode.H || script.debugMode == GraphDebugMode.F || script.debugMode == GraphDebugMode.Penalty) {
 				script.manualDebugFloorRoof = !EditorGUILayout.Toggle("Automatic Limits", !script.manualDebugFloorRoof);
 				DrawColorSlider(ref script.debugFloor, ref script.debugRoof, script.manualDebugFloorRoof);
@@ -1056,7 +1116,7 @@ namespace Pathfinding {
 				// Make sure the object is not null
 				AstarColor colors = script.colorSettings = script.colorSettings ?? new AstarColor();
 
-				colors._NodeConnection = EditorGUILayout.ColorField(new GUIContent("Node Connection", "Color used for node connections when 'Path Debug Mode'='Connections'"), colors._NodeConnection);
+				colors._SolidColor = EditorGUILayout.ColorField(new GUIContent("Solid Color", "Color used for the graph when 'Graph Coloring'='Solid Color'"), colors._SolidColor);
 				colors._UnwalkableNode = EditorGUILayout.ColorField("Unwalkable Node", colors._UnwalkableNode);
 				colors._BoundsHandles = EditorGUILayout.ColorField("Bounds Handles", colors._BoundsHandles);
 
@@ -1129,14 +1189,14 @@ namespace Pathfinding {
 				}
 
 				if (GUI.changed) {
-					colors.OnEnable();
+					colors.PushToStatic(script);
 				}
 			}
 
 			colorSettingsArea.End();
 		}
 
-		/** Make sure every graph has a graph editor */
+		/// <summary>Make sure every graph has a graph editor</summary>
 		void CheckGraphEditors (bool forceRebuild = false) {
 			if (forceRebuild || graphEditors == null || script.graphs == null || script.graphs.Length != graphEditors.Length) {
 				if (script.data.graphs == null) {
@@ -1187,7 +1247,7 @@ namespace Pathfinding {
 			GUI.changed = true;
 		}
 
-		/** Creates a GraphEditor for a graph */
+		/// <summary>Creates a GraphEditor for a graph</summary>
 		GraphEditor CreateGraphEditor (NavGraph graph) {
 			var graphType = graph.GetType().Name;
 			GraphEditor result;
@@ -1218,7 +1278,7 @@ namespace Pathfinding {
 			return false;
 		}
 
-		/** Hashes the contents of a byte array */
+		/// <summary>Hashes the contents of a byte array</summary>
 		static int ByteArrayHash (byte[] arr) {
 			if (arr == null) return -1;
 			int hash = -1;
@@ -1249,7 +1309,7 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Called when an undo or redo operation has been performed */
+		/// <summary>Called when an undo or redo operation has been performed</summary>
 		void OnUndoRedoPerformed () {
 			if (!this) return;
 
@@ -1293,7 +1353,7 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Load graphs from serialized data */
+		/// <summary>Load graphs from serialized data</summary>
 		public void LoadGraphs () {
 			DeserializeGraphs();
 		}
@@ -1384,35 +1444,43 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Searches in the current assembly for GraphEditor and NavGraph types */
+		/// <summary>Searches in the current assembly for GraphEditor and NavGraph types</summary>
 		void FindGraphTypes () {
 			graphEditorTypes = new Dictionary<string, CustomGraphEditorAttribute>();
 
-			Assembly asm = Assembly.GetAssembly(typeof(AstarPathEditor));
-			System.Type[] types = asm.GetTypes();
 			var graphList = new List<System.Type>();
+			foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies()) {
+				System.Type[] types = null;
+				try {
+					types = assembly.GetTypes();
+				} catch {
+					// Ignore type load exceptions and things like that.
+					// We might not be able to read all assemblies for some reason, but hopefully the relevant types exist in the assemblies that we can read
+					continue;
+				}
 
-			// Iterate through the assembly for classes which inherit from GraphEditor
-			foreach (var type in types) {
-				System.Type baseType = type.BaseType;
-				while (!System.Type.Equals(baseType, null)) {
-					if (System.Type.Equals(baseType, typeof(GraphEditor))) {
-						System.Object[] att = type.GetCustomAttributes(false);
+				// Iterate through the assembly for classes which inherit from GraphEditor
+				foreach (var type in types) {
+					System.Type baseType = type.BaseType;
+					while (!System.Type.Equals(baseType, null)) {
+						if (System.Type.Equals(baseType, typeof(GraphEditor))) {
+							System.Object[] att = type.GetCustomAttributes(false);
 
-						// Loop through the attributes for the CustomGraphEditorAttribute attribute
-						foreach (System.Object attribute in att) {
-							var cge = attribute as CustomGraphEditorAttribute;
+							// Loop through the attributes for the CustomGraphEditorAttribute attribute
+							foreach (System.Object attribute in att) {
+								var cge = attribute as CustomGraphEditorAttribute;
 
-							if (cge != null && !System.Type.Equals(cge.graphType, null)) {
-								cge.editorType = type;
-								graphList.Add(cge.graphType);
-								graphEditorTypes.Add(cge.graphType.Name, cge);
+								if (cge != null && !System.Type.Equals(cge.graphType, null)) {
+									cge.editorType = type;
+									graphList.Add(cge.graphType);
+									graphEditorTypes.Add(cge.graphType.Name, cge);
+								}
 							}
+							break;
 						}
-						break;
-					}
 
-					baseType = baseType.BaseType;
+						baseType = baseType.BaseType;
+					}
 				}
 			}
 

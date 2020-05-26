@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using ch.sycoforge.Decal;
-using UnityEngine;
-using TrueSync;
-using DG.Tweening;
+﻿using DG.Tweening;
 using GhostGen;
-using Sirenix.OdinInspector;
+using TrueSync;
+using UnityEngine;
 
 [RequireComponent(typeof(TSTransform), typeof(Collider))]
 public class BasicTowerView : UIView, ITowerView
@@ -236,7 +231,7 @@ public class BasicTowerView : UIView, ITowerView
 
         for(int i = 0; i < kFXPoolSize; ++i)
         {
-            GameObject fxObj = GameObject.Instantiate<GameObject>(fxPrefab, transform.position, transform.rotation);
+            GameObject fxObj = Instantiate<GameObject>(fxPrefab, transform.position, transform.rotation);
             _fxPool[i] = fxObj.GetComponent<TrailRenderer>();
             _fxPool[i].emitting = (false);
         }

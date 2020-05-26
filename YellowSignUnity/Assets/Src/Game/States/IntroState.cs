@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using GhostGen;
 using DG.Tweening;
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
+using Hashtable = System.Collections.Hashtable;
 
 public class IntroState : IGameState
 {
@@ -33,7 +36,7 @@ public class IntroState : IGameState
         _networkManager.onJoinedRoom += OnJoinedRoom;
         _networkManager.onCustomEvent += OnCustomEvent;
     
-        PhotonNetwork.automaticallySyncScene = true;
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
     
     public void Step( float p_deltaTime )
@@ -67,10 +70,10 @@ public class IntroState : IGameState
         RaiseEventOptions options = new RaiseEventOptions();
         options.Receivers = ReceiverGroup.All;
 
-        Debug.Log("JOINED ROOM: Player count: " + PhotonNetwork.playerList.Length);
-        if(PhotonNetwork.playerList.Length == _playersTemp)
+        Debug.Log("JOINED ROOM: Player count: " + PhotonNetwork.PlayerList.Length);
+        if(PhotonNetwork.PlayerList.Length == _playersTemp)
         {
-            PhotonNetwork.RaiseEvent(1, null, true, options);
+            PhotonNetwork.RaiseEvent(1, null, options, SendOptions.SendReliable);
         }
     }
 

@@ -1,13 +1,13 @@
-﻿using Zenject;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 [ShowOdinSerializedPropertiesInInspector]
-[System.Serializable]
+[Serializable]
 public class DefinitionDictionary<T> : SerializedScriptableObject
 {
-    [System.Serializable]
+    [Serializable]
     public class DefDisplay
     {
         public string id;

@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12,81 +13,7 @@ MonoBehaviour:
   m_Name: InspectorConfig
   m_EditorClassIdentifier: 
   enableOdinInInspector: 1
-  defaultEditorBehaviour: 1
+  defaultEditorBehaviour: 11
   processMouseMoveInInspector: 1
   drawingConfig:
-    configs:
-    - DrawnTypeName: PhotonLagSimulationGui, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: PhotonHandler, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: PhotonConverter, Assembly-CSharp-Editor
-      EditorTypeName: 
-    - DrawnTypeName: PunSceneSettings, Assembly-CSharp-Editor
-      EditorTypeName: 
-    - DrawnTypeName: PunPlayerScores, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: PickupItem, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: PickupItemSimple, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: PickupItemSyncer, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: PunTurnManager, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: QuitOnEscapeOrBack, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: ServerTime, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: ShowInfoOfPlayer, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: ShowStatusWhenConnecting, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: SmoothSyncMovement, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: StarScapeView, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TemporalReprojection, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: ExitGames.UtilityScripts.ButtonInsideScrollList, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: ExitGames.UtilityScripts.TextButtonTransition, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: ExitGames.UtilityScripts.TextToggleIsOnTransition, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: VelocityBufferTag, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: VelocityBuffer, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: Pathfinding.UnityReferenceHelper, Assembly-CSharp
-      EditorTypeName: Sirenix.OdinInspector.Editor.OdinEditor, Sirenix.OdinInspector.Editor
-    - DrawnTypeName: Photon.MonoBehaviour, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: Photon.PunBehaviour, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TrueSyncManager, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSBoxCollider, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSBoxCollider2D, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSCapsuleCollider, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSCircleCollider2D, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSMaterial, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSMeshCollider, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSPolygonCollider2D, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSRigidBody2D, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSSphereCollider, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSTerrainCollider, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSTransform, Assembly-CSharp
-      EditorTypeName: 
-    - DrawnTypeName: TrueSync.TSTransform2D, Assembly-CSharp
-      EditorTypeName: 
+    configs: []

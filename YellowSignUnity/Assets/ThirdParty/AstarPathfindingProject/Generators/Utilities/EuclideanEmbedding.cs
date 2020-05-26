@@ -10,20 +10,24 @@ namespace Pathfinding {
 		Custom
 	}
 
-	/** Implements heuristic optimizations.
-	 *
-	 * \see heuristic-opt
-	 * \see Game AI Pro - Pathfinding Architecture Optimizations by Steve Rabin and Nathan R. Sturtevant
-	 *
-	 * \astarpro
-	 */
+	/// <summary>
+	/// Implements heuristic optimizations.
+	///
+	/// See: heuristic-opt
+	/// See: Game AI Pro - Pathfinding Architecture Optimizations by Steve Rabin and Nathan R. Sturtevant
+	/// </summary>
 	[System.Serializable]
 	public class EuclideanEmbedding {
+		/// <summary>
+		/// If heuristic optimization should be used and how to place the pivot points.
+		/// See: heuristic-opt
+		/// See: Game AI Pro - Pathfinding Architecture Optimizations by Steve Rabin and Nathan R. Sturtevant
+		/// </summary>
 		public HeuristicOptimizationMode mode;
 
 		public int seed;
 
-		/** All children of this transform will be used as pivot points */
+		/// <summary>All children of this transform will be used as pivot points</summary>
 		public Transform pivotPointRoot;
 
 		public int spreadOutCount = 1;
@@ -31,13 +35,13 @@ namespace Pathfinding {
 		[System.NonSerialized]
 		public bool dirty;
 
-		/**
-		 * Costs laid out as n*[int],n*[int],n*[int] where n is the number of pivot points.
-		 * Each node has n integers which is the cost from that node to the pivot node.
-		 * They are at around the same place in the array for simplicity and for cache locality.
-		 *
-		 * cost(nodeIndex, pivotIndex) = costs[nodeIndex*pivotCount+pivotIndex]
-		 */
+		/// <summary>
+		/// Costs laid out as n*[int],n*[int],n*[int] where n is the number of pivot points.
+		/// Each node has n integers which is the cost from that node to the pivot node.
+		/// They are at around the same place in the array for simplicity and for cache locality.
+		///
+		/// cost(nodeIndex, pivotIndex) = costs[nodeIndex*pivotCount+pivotIndex]
+		/// </summary>
 		uint[] costs = new uint[8];
 		int maxNodeIndex;
 
@@ -62,11 +66,12 @@ namespace Pathfinding {
 		 */
 		uint rval;
 
-		System.Object lockObj = new object ();
+		System.Object lockObj = new object();
 
-		/** Simple linear congruential generator.
-		 * \see http://en.wikipedia.org/wiki/Linear_congruential_generator
-		 */
+		/// <summary>
+		/// Simple linear congruential generator.
+		/// See: http://en.wikipedia.org/wiki/Linear_congruential_generator
+		/// </summary>
 		uint GetRandom () {
 			rval = (ra*rval + rc);
 			return rval;
@@ -115,16 +120,17 @@ namespace Pathfinding {
 			}
 		}
 
-		/** Pick N random walkable nodes from all nodes in all graphs and add them to the buffer.
-		 *
-		 * Here we select N random nodes from a stream of nodes.
-		 * Probability of choosing the first N nodes is 1
-		 * Probability of choosing node i is min(N/i,1)
-		 * A selected node will replace a random node of the previously
-		 * selected ones.
-		 *
-		 * \see https://en.wikipedia.org/wiki/Reservoir_sampling
-		 */
+		/// <summary>
+		/// Pick N random walkable nodes from all nodes in all graphs and add them to the buffer.
+		///
+		/// Here we select N random nodes from a stream of nodes.
+		/// Probability of choosing the first N nodes is 1
+		/// Probability of choosing node i is min(N/i,1)
+		/// A selected node will replace a random node of the previously
+		/// selected ones.
+		///
+		/// See: https://en.wikipedia.org/wiki/Reservoir_sampling
+		/// </summary>
 		void PickNRandomNodes (int count, List<GraphNode> buffer) {
 			int n = 0;
 
@@ -175,12 +181,12 @@ namespace Pathfinding {
 			rval = (uint)seed;
 
 			// Get a List<GraphNode> from a pool
-			var pivotList = Pathfinding.Util.ListPool<GraphNode>.Claim();
+			var pivotList = Pathfinding.Util.ListPool<GraphNode>.Claim ();
 
 			switch (mode) {
 			case HeuristicOptimizationMode.Custom:
 				if (pivotPointRoot == null) throw new System.Exception("heuristicOptimizationMode is HeuristicOptimizationMode.Custom, " +
-						"but no 'customHeuristicOptimizationPivotsRoot' is set");
+					"but no 'customHeuristicOptimizationPivotsRoot' is set");
 
 				GetClosestWalkableNodesToChildrenRecursively(pivotPointRoot, pivotList);
 				break;
@@ -200,7 +206,7 @@ namespace Pathfinding {
 						pivotList.Add(first);
 					} else {
 						Debug.LogError("Could not find any walkable node in any of the graphs.");
-						Pathfinding.Util.ListPool<GraphNode>.Release(ref pivotList);
+						Pathfinding.Util.ListPool<GraphNode>.Release (ref pivotList);
 						return;
 					}
 				}
@@ -215,7 +221,7 @@ namespace Pathfinding {
 
 			pivots = pivotList.ToArray();
 
-			Pathfinding.Util.ListPool<GraphNode>.Release(ref pivotList);
+			Pathfinding.Util.ListPool<GraphNode>.Release (ref pivotList);
 		}
 
 		public void RecalculateCosts () {
@@ -346,14 +352,15 @@ namespace Pathfinding {
 			dirty = false;
 		}
 
-		/** Special case necessary for paths to unwalkable nodes right next to walkable nodes to be able to use good heuristics.
-		 *
-		 * This will find all unwalkable nodes in all grid graphs with walkable nodes as neighbours
-		 * and set the cost to reach them from each of the pivots as the minimum of the cost to
-		 * reach the neighbours of each node.
-		 *
-		 * \see ABPath.EndPointGridGraphSpecialCase
-		 */
+		/// <summary>
+		/// Special case necessary for paths to unwalkable nodes right next to walkable nodes to be able to use good heuristics.
+		///
+		/// This will find all unwalkable nodes in all grid graphs with walkable nodes as neighbours
+		/// and set the cost to reach them from each of the pivots as the minimum of the cost to
+		/// reach the neighbours of each node.
+		///
+		/// See: ABPath.EndPointGridGraphSpecialCase
+		/// </summary>
 		void ApplyGridGraphEndpointSpecialCase () {
 #if !ASTAR_NO_GRID_GRAPH
 			var graphs = AstarPath.active.graphs;
